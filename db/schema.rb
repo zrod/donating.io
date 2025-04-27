@@ -42,6 +42,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_27_033315) do
     t.index ["weight"], name: "index_countries_on_weight"
   end
 
+  create_table "geo_terms", force: :cascade do |t|
+    t.string "term"
+    t.json "response"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["term"], name: "index_geo_terms_on_term", unique: true
+  end
+
   create_table "place_feedbacks", force: :cascade do |t|
     t.string "reason"
     t.text "details"
@@ -95,14 +103,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_27_033315) do
     t.index ["status"], name: "index_places_on_status"
     t.index ["tax_receipt"], name: "index_places_on_tax_receipt"
     t.index ["used_ok"], name: "index_places_on_used_ok"
-  end
-
-  create_table "terms", force: :cascade do |t|
-    t.string "term"
-    t.text "response"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["term"], name: "index_terms_on_term", unique: true
   end
 
   add_foreign_key "place_feedbacks", "places"
