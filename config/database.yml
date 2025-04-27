@@ -8,6 +8,14 @@ default: &default
   adapter: sqlite3
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   timeout: 5000
+  options:
+    - foreign_keys=ON
+    - journal_mode=WAL
+    - synchronous=NORMAL
+    - busy_timeout=5000
+    - cache_size=-1000000
+  # extensions:
+  #   - uuid
 
 development:
   <<: *default

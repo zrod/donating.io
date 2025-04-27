@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  iso_alpha3: MyString
+  weight: 1
+  active: false
+
+two:
+  name: MyString
+  iso_alpha3: MyString
+  weight: 1
+  active: false

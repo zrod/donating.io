@@ -1,0 +1,43 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  description: MyText
+  address: MyString
+  url: MyString
+  logo: MyString
+  slug: MyString
+  city: MyString
+  region: MyString
+  phone: MyString
+  charity_support: MyText
+  location_instructions: MyText
+  osm_id: 1
+  status: 1
+  pickup: false
+  used_ok: false
+  postal_code: MyString
+  email: MyString
+  is_bin: false
+  issues_tax_receipt: false
+
+two:
+  name: MyString
+  description: MyText
+  address: MyString
+  url: MyString
+  logo: MyString
+  slug: MyString
+  city: MyString
+  region: MyString
+  phone: MyString
+  charity_support: MyText
+  location_instructions: MyText
+  osm_id: 1
+  status: 1
+  pickup: false
+  used_ok: false
+  postal_code: MyString
+  email: MyString
+  is_bin: false
+  issues_tax_receipt: false
