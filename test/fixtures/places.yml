@@ -1,43 +1,26 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
-one:
-  name: MyString
-  description: MyText
-  address: MyString
-  url: MyString
-  logo: MyString
-  slug: MyString
-  city: MyString
-  region: MyString
-  phone: MyString
-  charity_support: MyText
-  location_instructions: MyText
-  osm_id: 1
-  status: 1
+donation_bin_published_one:
+  name: Donation Bin One
+  slug: donation_bin_one
+  description: Donation Bin One
+  address: 123 front street
+  lat: 43.65107
+  lng: -79.347015
+  city: Toronto
+  region: Ontario
+  phone: 416-555-1234
+  url: https://donationbins.local
+  logo: Donation Bin One
+  postal_code: M1M 1A1
+  email: one@donationbins.local
+  charity_support: Donated items might be sold to "Donation army"
+  location_instructions: Donations to be dropped off at the Shipping and Receiving Department.
   pickup: false
-  used_ok: false
-  postal_code: MyString
-  email: MyString
-  is_bin: false
-  issues_tax_receipt: false
-
-two:
-  name: MyString
-  description: MyText
-  address: MyString
-  url: MyString
-  logo: MyString
-  slug: MyString
-  city: MyString
-  region: MyString
-  phone: MyString
-  charity_support: MyText
-  location_instructions: MyText
-  osm_id: 1
+  used_ok: true
+  is_bin: true
+  tax_receipt: false
+  osm_id: 123
   status: 1
-  pickup: false
-  used_ok: false
-  postal_code: MyString
-  email: MyString
-  is_bin: false
-  issues_tax_receipt: false
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>
+  country: canada
+  user: user_one

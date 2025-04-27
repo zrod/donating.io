@@ -1,5 +1,6 @@
 class PlaceFeedback < ApplicationRecord
   belongs_to :place
+  belongs_to :user
 
   validates :reason, presence: true
 

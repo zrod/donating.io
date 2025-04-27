@@ -1,13 +1,17 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
-one:
-  name: MyString
-  iso_alpha3: MyString
+canada:
+  name: Canada
+  iso_alpha3: CAN
   weight: 1
-  active: false
+  active: true
 
-two:
-  name: MyString
-  iso_alpha3: MyString
+brazil:
+  name: Brazil
+  iso_alpha3: BRA
   weight: 1
+  active: true
+
+iceland:
+  name: Iceland
+  iso_alpha3: ISL
+  weight: 0
   active: false

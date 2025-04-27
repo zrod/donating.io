@@ -3,7 +3,7 @@ class PlaceHour < ApplicationRecord
 
   validate :from_lower_than_to
 
-  validates :day,
+  validates :day_of_week,
             presence: true,
             numericality: { greater_than: 0, less_than: 8 }
 
@@ -17,10 +17,10 @@ class PlaceHour < ApplicationRecord
             format: { with: /\A[+-]?\d+\z/, message: I18n.t("activerecord.attributes.place_hour.to_hour_format") },
             numericality: { greater_than: 29, less_than: 2401, message: I18n.t("activerecord.attributes.place_hour.to_hour_range") }
 
-  default_scope { order("day ASC") }
+  default_scope { order("day_of_week ASC") }
 
   def key
-    [ from_hour, to_hour, day.to_s ].compact.join("")
+    [ from_hour, to_hour, day_of_week.to_s ].compact.join("")
   end
 
   private

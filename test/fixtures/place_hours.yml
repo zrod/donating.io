@@ -1,0 +1,5 @@
+donation_bin_published_one_place_hours_set_one:
+  place: donation_bin_published_one
+  day_of_week: 1
+  from_hour: 9
+  to_hour: 17

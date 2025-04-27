@@ -5,7 +5,7 @@ class Place < ApplicationRecord
     removed: 2
   }.freeze
 
-  # belongs_to :user
+  belongs_to :user
   belongs_to :country
 
   has_many :categories_places, dependent: :destroy
@@ -21,7 +21,7 @@ class Place < ApplicationRecord
   reverse_geocoded_by :lat, :lng
 
   before_create { self.status = STATUSES[:pending] }
-  before_save   { self.slug = name.parameterize + lat.to_s + lng.to_s }
+  before_save   { self.slug = (name + lat.to_s + lng.to_s).parameterize }
 
   validates :name,                presence: true, length: { minimum: 4 }
   validates :categories_places,   presence: true
@@ -38,7 +38,7 @@ class Place < ApplicationRecord
   validates_associated :categories
 
   def full_address
-    [ address, city, region, zip_code, country.name ].compact.join(", ")
+    [ address, city, region, postal_code, country.name ].compact.join(", ")
   end
 
   def geo_location
