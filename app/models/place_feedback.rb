@@ -2,13 +2,13 @@ class PlaceFeedback < ApplicationRecord
   belongs_to :place
   belongs_to :user
 
-  validates :reason, presence: true
+  enum :reason, {
+    incorrect_address: 0,
+    closed: 1,
+    no_longer_accepts_donations: 2,
+    wrong_information: 3,
+    other: 4
+  }
 
-  VALID_REASONS = %w[
-    incorrect_address
-    closed
-    no_longer_accepts_donations
-    wrong_information
-    other
-  ].freeze
+  validates :reason, presence: true
 end
