@@ -1,0 +1,93 @@
+@import "tailwindcss";
+@source "../../../public/*.html";
+@source "../../../app/helpers/**/*.rb";
+@source "../../../app/javascript/**/*.js";
+@source "../../../app/views/**/*";
+
+@plugin "./daisyui.js";
+
+/* barlow-semi-condensed - latin */
+@font-face {
+  font-family: 'Barlow Semi Condensed';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('barlow-semi-condensed-v6-latin-300.woff2') format('woff2'),
+       url('barlow-semi-condensed-v6-latin-300.woff') format('woff');
+}
+@font-face {
+  font-family: 'Barlow Semi Condensed';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('barlow-semi-condensed-v6-latin-regular.woff2') format('woff2'),
+       url('barlow-semi-condensed-v6-latin-regular.woff') format('woff');
+}
+@font-face {
+  font-family: 'Barlow Semi Condensed';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('barlow-semi-condensed-v6-latin-500.woff2') format('woff2'),
+       url('barlow-semi-condensed-v6-latin-500.woff') format('woff');
+}
+@font-face {
+  font-family: 'Barlow Semi Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('barlow-semi-condensed-v6-latin-600.woff2') format('woff2'),
+       url('barlow-semi-condensed-v6-latin-600.woff') format('woff');
+}
+@font-face {
+  font-family: 'Barlow Semi Condensed';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('barlow-semi-condensed-v6-latin-700.woff2') format('woff2'),
+       url('barlow-semi-condensed-v6-latin-700.woff') format('woff');
+}
+
+/* Global font settings */
+body {
+  font-family: 'Barlow Semi Condensed', 'Helvetica', 'Arial', sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom theme configuration */
+@plugin "./daisyui-theme.js" {
+  name: "donatingio";
+  default: true;
+  prefersdark: false;
+  color-scheme: "light";
+  --color-base-100: #fcfcfc;
+  --color-base-200: oklch(96% 0.007 247.896);
+  --color-base-300: oklch(92% 0.013 255.508);
+  --color-base-content: oklch(20% 0.042 265.755);
+  --color-primary: #00B5AD;
+  --color-primary-content: oklch(97% 0.014 308.299);
+  --color-secondary: oklch(72% 0.219 149.579);
+  --color-secondary-content: oklch(98% 0.018 155.826);
+  --color-accent: #f6d8ae;
+  --color-accent-content: oklch(20% 0.042 265.755);
+  --color-neutral: #333452;
+  --color-neutral-content: oklch(98% 0.003 247.858);
+  --color-info: oklch(71% 0.143 215.221);
+  --color-info-content: oklch(98% 0.019 200.873);
+  --color-success: oklch(70% 0.14 182.503);
+  --color-success-content: oklch(98% 0.014 180.72);
+  --color-warning: oklch(79% 0.184 86.047);
+  --color-warning-content: oklch(98% 0.026 102.212);
+  --color-error: oklch(63% 0.237 25.331);
+  --color-error-content: oklch(97% 0.013 17.38);
+  --radius-selector: 1rem;
+  --radius-field: 0.5rem;
+  --radius-box: 1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 1px;
+  --depth: 0;
+  --noise: 0;
+}
