@@ -1,0 +1,22 @@
+<div class="grid grid-cols-2 gap-4">
+    <div class="col-span-1">
+        <h1 class="text-3xl font-bold text-base-content mb-4">New User Account</h1>
+    </div>
+    <div class="col-span-1">
+        <%= form_with model: @user, url: user_path, method: :post, class: "form-control" do |form| %>
+            <%= form.label :username %>
+            <%= form.text_field :username, class: "input" %>
+
+            <%= form.label :email_address %>
+            <%= form.email_field :email_address, class: "input" %>
+
+            <%= form.label :password %>
+            <%= form.password_field :password, class: "input" %>
+
+            <%= form.label :password_confirmation %>
+            <%= form.password_field :password_confirmation, class: "input" %>
+
+            <%= form.submit "Create Account", class: "btn btn-primary mt-4" %>
+        <% end %>
+    </div>
+</div>

@@ -1,4 +1,9 @@
 en:
+  models:
+    user:
+      invalid_username_format: "can only contain letters, numbers, periods, and underscores"
+      reserved_username: "is reserved and cannot be used"
+
   activerecord:
     attributes:
       place_hour:

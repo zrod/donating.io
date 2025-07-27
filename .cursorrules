@@ -1,0 +1,29 @@
+# Cursor Rules for Proper Problem Solving
+
+## NEVER do these lazy approaches:
+- Do NOT suggest inline styles when CSS frameworks are in use
+- Do NOT suggest workarounds when the proper solution exists
+- Do NOT abandon framework tools (Tailwind, DaisyUI, etc.) for native CSS
+- Do NOT say "this works" when it bypasses the intended architecture
+
+## ALWAYS follow this diagnostic process:
+1. **Investigate the root cause** - Use tools to examine configs, build processes, file structures
+2. **Understand the framework** - Check how Tailwind/DaisyUI compilation works in the specific setup
+3. **Fix the underlying issue** - Address configuration, build process, or setup problems
+4. **Verify the fix** - Ensure the framework works as intended
+
+## For CSS framework issues specifically:
+- Check build configuration files (tailwind.config.js, etc.)
+- Verify content paths and purging settings
+- Examine the compilation process and output
+- Test that utility classes are being generated
+- Fix the build chain, don't bypass it
+
+## Quality standards:
+- Provide solutions that work with the chosen architecture
+- Explain WHY something isn't working, not just HOW to bypass it
+- Maintain consistency with project's technology choices
+- Leave the codebase better, not more fragmented
+
+## If you catch yourself suggesting a workaround:
+STOP. Go back and properly diagnose the real issue.
