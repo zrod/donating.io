@@ -1,5 +1,44 @@
 en:
+  controllers:
+    sessions:
+      create:
+        too_many_requests: "Too many login attempts. Please try again later."
+        invalid_credentials: "Invalid email address or password."
+
   views:
+    menu:
+      common:
+        directory: "Directory"
+        contribute: "Contribute"
+        about: "About"
+      authenticated:
+        greeting: "%{username}"
+        profile: "Profile"
+        settings: "Settings"
+        logout: "Logout"
+      public:
+        register: "Register"
+        login: "Login"
+    passwords:
+      new:
+        email_address_placeholder: "Email address"
+        submit_button: "Email reset instructions"
+        title: "Forgot your password?"
+        subheader: "Enter your email address and we'll send you instructions to reset your password."
+      edit:
+        title: "Update your password"
+        subheader: "Enter your new password and confirm it."
+        password_placeholder: "New password"
+        password_confirmation_placeholder: "Confirm new password"
+        save_button: "Save"
+    sessions:
+      new:
+        email_address_placeholder: "Email address"
+        password_placeholder: "Password"
+        login_button: "Login"
+        login_title: "Login"
+        subheader: "New user? %{signup_link}."
+        forgot_password_link: "I forgot my password."
     users:
       new:
         username_placeholder: "Username"

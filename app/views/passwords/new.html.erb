@@ -1,8 +1,21 @@
-<h1>Forgot your password?</h1>
+<h1 class="text-5xl font-semibold text-primary mb-6">
+  <%= I18n.t("views.passwords.new.title") %>
+</h1>
 
-<%= tag.div(flash[:alert], style: "color:red") if flash[:alert] %>
+<p class="text-lg text-base-content mb-6">
+  <%= I18n.t("views.passwords.new.subheader") %>
+</p>
 
 <%= form_with url: passwords_path do |form| %>
-  <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address] %><br>
-  <%= form.submit "Email reset instructions" %>
+  <div class="mb-4">
+    <%= form.email_field :email_address,
+      class: "input input-bordered w-full text-lg",
+      required: true,
+      autofocus: true,
+      autocomplete: "username",
+        placeholder: I18n.t("views.passwords.new.email_address_placeholder"),
+        value: params[:email_address] %>
+  </div>
+
+  <%= form.submit I18n.t("views.passwords.new.submit_button"), class: "btn btn-neutral text-lg mt-2" %>
 <% end %>

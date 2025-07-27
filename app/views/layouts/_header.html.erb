@@ -7,17 +7,17 @@
             </a>
         </div>
         <div class="flex-none">
-            <ul class="menu menu-lg menu-horizontal px-1 font-medium text-lg text-neutral-content">
+            <ul class="menu menu-lg menu-horizontal font-medium text-lg text-neutral-content">
                 <li>
-                    <a>Directory</a>
+                    <a><%= I18n.t("views.menu.common.directory") %></a>
                 </li>
                 <li>
-                    <a>Contribute</a>
+                    <a><%= I18n.t("views.menu.common.contribute") %></a>
                 </li>
                 <li>
-                    <a>About</a>
+                    <a><%= I18n.t("views.menu.common.about") %></a>
                 </li>
-                <%= render authenticated? ? "layouts/authenticated_menu" : "layouts/public_menu" %>
+                <%= render authenticated? ? "layouts/menu/authenticated_menu" : "layouts/menu/public_menu" %>
             </ul>
         </div>
     </div>

@@ -1,16 +1,15 @@
-<% flash_class = ->(type) {
-  "alert alert-soft alert-#{{
-    "notice" => "success",
-    "alert" => "error",
-    "error" => "error",
-    "warning" => "warning"
-  }[type.to_s] || "info"}"
-} %>
-
 <% if flash.any? %>
   <div class="mb-6">
     <% flash.each do |type, message| %>
-      <div class="alert alert-outline <%= flash_alert_class(type) %> mb-4">
+      <%
+        alert_type = case type.to_s
+          when "notice" then "success"
+          when "alert", "error" then "error"
+          when "warning" then "warning"
+          else "info"
+        end
+      %>
+      <div class="alert alert-outline alert-soft alert-<%= alert_type %> mb-4">
         <span><%= message %></span>
       </div>
     <% end %>
