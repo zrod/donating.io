@@ -64,8 +64,6 @@ group :development do
 
   # Hot reload for development [https://github.com/hotwired/hotwire-spark]
   gem "hotwire-spark"
-
-  gem "foreman", "~> 0.88.1"
 end
 
 group :test do
