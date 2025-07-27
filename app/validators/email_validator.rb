@@ -17,7 +17,7 @@ class EmailValidator < ActiveModel::EachValidator
   ].freeze
 
   def validate_each(record, attribute, value)
-    unless value.match?(URI::MailTo::EMAIL_REGEXP)
+    unless value.present? && value.match?(URI::MailTo::EMAIL_REGEXP)
       record.errors.add(attribute, (options[:message] || "is invalid"))
       return
     end
