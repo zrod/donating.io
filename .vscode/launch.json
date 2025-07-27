@@ -7,9 +7,19 @@
       "name": "Run Rails server",
       "program": "${workspaceFolder}/bin/rails server",
       "env": {
+        "RAILS_ENV": "development",
+        "PORT": "3000",
+        "RUBY_DEBUG_OPEN": "true",
+        "RUBY_DEBUG_LAZY": "true"
+      }
+    },
+    {
+      "type": "ruby_lsp",
+      "request": "launch",
+      "name": "Run TailwindCSS watch",
+      "program": "${workspaceFolder}/bin/rails tailwindcss:watch",
+      "env": {
         "RAILS_ENV": "development"
-        // "RAILS_MASTER_KEY": "your_master_key_here"
-        // "DATABASE_URL": "your_dev_db_url_here"
       }
     }
   ]

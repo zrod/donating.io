@@ -44,6 +44,9 @@ gem "rack-attack"
 
 gem "geocoder"
 
+gem "tailwindcss-ruby", "~> 4.1"
+gem "tailwindcss-rails", "~> 4.3"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
@@ -61,6 +64,8 @@ group :development do
 
   # Hot reload for development [https://github.com/hotwired/hotwire-spark]
   gem "hotwire-spark"
+
+  gem "foreman", "~> 0.88.1"
 end
 
 group :test do
@@ -68,8 +73,3 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver"
 end
-
-gem "tailwindcss-ruby", "~> 4.1"
-gem "tailwindcss-rails", "~> 4.2"
-
-gem "foreman", "~> 0.88.1"

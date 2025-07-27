@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  USERNAME_MIN_LENGTH = 3
+  USERNAME_MAX_LENGTH = 20
   USERNAME_BLACKLIST = %w[
     admin
     administrator
@@ -19,11 +21,18 @@ class User < ApplicationRecord
             presence: true,
             uniqueness: true,
             format: {
-                with: /\A[a-zA-Z0-9_.]+\z/s,
-                message: I18n.t("models.user.invalid_username_format")
+              with: /\A[a-zA-Z0-9_.]+\z/s,
+              message: I18n.t("models.user.invalid_username_format")
             },
             exclusion: {
-                in: USERNAME_BLACKLIST,
-                message: I18n.t("models.user.reserved_username")
+              in: USERNAME_BLACKLIST,
+              message: I18n.t("models.user.reserved_username")
+            },
+            length: {
+              minimum: USERNAME_MIN_LENGTH,
+              maximum: USERNAME_MAX_LENGTH,
+              message: I18n.t("models.user.username_length", min: USERNAME_MIN_LENGTH, max: USERNAME_MAX_LENGTH)
             }
+
+  validates :email_address, presence: true, email: true, uniqueness: true
 end

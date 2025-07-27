@@ -1,8 +1,24 @@
 en:
+  views:
+    users:
+      new:
+        username_placeholder: "Username"
+        email_address_placeholder: "Email address"
+        password_placeholder: "Password"
+        password_confirmation_placeholder: "Confirm password"
+        create_account_button: "Create account"
+        create_account_title: "Create an account"
+        subheader: "With an account you will be able to contribute with locations and suggest modifications."
+        terms_of_service: "By creating an account, you agree to our %{terms_link} and %{privacy_link}."
+        email_address_explanation: "Please enter a valid email address. You will need to confirm your account through this email address."
+      create:
+        success: "Account created successfully! Please check your email for a confirmation link."
+
   models:
     user:
       invalid_username_format: "can only contain letters, numbers, periods, and underscores"
       reserved_username: "is reserved and cannot be used"
+      username_length: "must be between %{min} and %{max} characters"
 
   activerecord:
     attributes:
