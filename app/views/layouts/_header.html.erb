@@ -12,10 +12,10 @@
                     <a><%= I18n.t("views.menu.common.directory") %></a>
                 </li>
                 <li>
-                    <a><%= I18n.t("views.menu.common.contribute") %></a>
+                    <%= link_to I18n.t("views.menu.common.contribute"), new_place_path %>
                 </li>
                 <li>
-                    <a><%= I18n.t("views.menu.common.about") %></a>
+                    <%= link_to I18n.t("views.menu.common.about"), about_path %>
                 </li>
                 <%= render authenticated? ? "layouts/menu/authenticated_menu" : "layouts/menu/public_menu" %>
             </ul>

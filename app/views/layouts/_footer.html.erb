@@ -1,0 +1,18 @@
+<footer class="w-full">
+  <div class="bg-base-300 py-3 px-4">
+    <div class="flex justify-end">
+      <p class="text-sm text-base-content opacity-80">
+        &copy; <a href="/" class="hover:underline">Donating.io</a>
+        <span class="text-yellow-500">🤝</span>
+        <%= link_to I18n.t("views.menu.common.about"), about_path, class: "link" %>
+        <%= " &middot; ".html_safe %>
+        <%= link_to I18n.t("views.users.new.privacy_policy_link"), privacy_path, class: "link" %>
+        <%= " &middot; ".html_safe %>
+        <%= link_to I18n.t("views.users.new.terms_of_service_link"), terms_path, class: "link" %>
+        <%= " &middot; ".html_safe %>
+
+        <a href="https://github.com/zrod/donating.io" target="_blank" class="link">GitHub</a>
+      </p>
+    </div>
+  </div>
+</footer>

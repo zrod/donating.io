@@ -1,5 +1,15 @@
 en:
   controllers:
+    passwords:
+      create:
+        instructions_sent: "Password reset instructions sent (if user with that email address exists)."
+      update:
+        success: "Password has been reset."
+        failure: "Passwords did not match."
+        invalid_token: "Password reset link is invalid or has expired."
+    places:
+      create:
+        success: "Place submitted successfully! It will be reviewed before being published."
     sessions:
       create:
         too_many_requests: "Too many login attempts. Please try again later."
@@ -31,6 +41,83 @@ en:
         password_placeholder: "New password"
         password_confirmation_placeholder: "Confirm new password"
         save_button: "Save"
+    places:
+      new:
+        title: "Contribute"
+        subheader: "If you know of a donation bin or organization that accepts donations and would like to share it with us, please fill out the form below with the details."
+        unauthenticated_alert_title: "You're not authenticated."
+        unauthenticated_alert_content: "You can start filling out the form below. The data you enter will be temporarily saved in your current Browser session until you authenticate."
+        submit_button: "Submit Place"
+        cancel_button: "Cancel"
+      form_sections:
+        optional: "Optional"
+        identification:
+          title: "Identification"
+          location_name: "Location name *"
+          location_name_placeholder: "Enter the name of the location"
+          description: "Description *"
+          description_placeholder: "Describe what this place is and what they accept"
+          categories: "What can be donated at this location? *"
+          categories_placeholder: "Select categories"
+          accepts_used_items: "Accepts used items"
+          is_donation_bin: "This is a donation bin"
+          is_donation_bin_tooltip: "Check this if this is a physical bin or drop-off point"
+          pickup_available: "Pickup is available"
+        location:
+          title: "Location"
+          address: "Address *"
+          address_placeholder: "Street address"
+          postal_code: "Zip/Postal Code"
+          postal_code_placeholder: "Postal code"
+          city: "City *"
+          city_placeholder: "City name"
+          region: "Province / State"
+          region_placeholder: "Province or state"
+          country: "Country *"
+          country_placeholder: "Select a country"
+          latitude: "Latitude *"
+          latitude_placeholder: "e.g. 45.123456"
+          longitude: "Longitude *"
+          longitude_placeholder: "e.g. -75.123456"
+          coordinates_help: "You can find coordinates using Google Maps or other mapping services"
+        contact:
+          title: "Contact Information"
+          phone: "Phone"
+          phone_placeholder: "+1 (555) 123-4567"
+          email: "Email"
+          email_placeholder: "contact@example.com"
+          website: "Website"
+          website_placeholder: "https://example.com"
+        hours:
+          title: "Drop-off hours"
+          week_days: "Week days"
+          from: "From"
+          to: "To"
+          presets: "Presets"
+          include_selected: "INCLUDE SELECTED HOURS"
+          added_hours: "Added Hours"
+          no_hours_added: "No hours added yet"
+          select_days_error: "Please select at least one day"
+          invalid_time_range: "From time must be before to time"
+          preset_24_hours: "24 hours"
+          preset_working_hours: "Working hours"
+          preset_weekend: "Weekend"
+          days:
+            monday: "Monday"
+            tuesday: "Tuesday"
+            wednesday: "Wednesday"
+            thursday: "Thursday"
+            friday: "Friday"
+            saturday: "Saturday"
+            sunday: "Sunday"
+        additional_information:
+          title: "Additional Information"
+          charity_support: "Charity Support"
+          charity_support_placeholder: "Describe what charities or causes this location supports"
+          location_instructions: "Location Instructions"
+          location_instructions_placeholder: "Any special instructions for finding or accessing this location"
+          tax_receipt: "Provides tax receipts for donations"
+          tax_receipt_help: "Check this if donors can receive tax receipts for their donations"
     sessions:
       new:
         email_address_placeholder: "Email address"
@@ -50,8 +137,19 @@ en:
         subheader: "With an account you will be able to contribute with locations and suggest modifications."
         terms_of_service: "By creating an account, you agree to our %{terms_link} and %{privacy_link}."
         email_address_explanation: "Please enter a valid email address. You will need to confirm your account through this email address."
+        terms_of_service_link: "Terms of Service"
+        privacy_policy_link: "Privacy Policy"
       create:
         success: "Account created successfully! Please check your email for a confirmation link."
+    pages:
+      about:
+        title: "About"
+        content:
+          - "Donating.io is a free, community-driven online database to help you find and share locations accepting various types of donations."
+          - "Would you like to contribute and help improve Donating.io? Visit our %{github_link} page."
+      privacy:
+        title: "Privacy Policy"
+        subheader: "Donating.io is a platform for donating to charities."
 
   models:
     user:

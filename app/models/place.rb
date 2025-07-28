@@ -18,7 +18,7 @@ class Place < ApplicationRecord
   has_many :place_feedbacks, dependent: :destroy
 
   accepts_nested_attributes_for :categories_places, allow_destroy: true
-  accepts_nested_attributes_for :place_hours, allow_destroy: true
+  accepts_nested_attributes_for :place_hours, allow_destroy: true, reject_if: :all_blank
 
   scope :published, -> { where(status: STATUSES[:published]) }
 

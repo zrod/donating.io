@@ -1,0 +1,114 @@
+<div class="card card-md card-border mb-6" data-controller="hours">
+  <div class="card-body">
+    <h2 class="card-title text-2xl font-semibold mb-2">
+      <%= I18n.t("views.places.form_sections.hours.title") %>
+    </h2>
+    <p class="text-sm text-base-content/60 mb-6">
+      <%= I18n.t("views.places.form_sections.optional") %>
+    </p>
+
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <!-- Week days selection -->
+      <div>
+        <h3 class="font-semibold text-lg mb-3">
+          <%= I18n.t("views.places.form_sections.hours.week_days") %>
+        </h3>
+          <div class="border border-base-300 rounded-lg p-2" style="min-height: 200px;">
+            <% [
+                ['Sunday', 7, 'sunday'],
+                ['Monday', 1, 'monday'],
+                ['Tuesday', 2, 'tuesday'],
+                ['Wednesday', 3, 'wednesday'],
+                ['Thursday', 4, 'thursday'],
+                ['Friday', 5, 'friday'],
+                ['Saturday', 6, 'saturday']
+              ].each do |day_short, day_num, day_key| %>
+              <div class="day-selector p-2 rounded cursor-pointer transition-all duration-200 select-none"
+                  data-day="<%= day_num %>"
+                  data-hours-target="daySelector"
+                  data-action="click->hours#toggleDay">
+                <%= day_short %>
+             </div>
+            <% end %>
+         </div>
+         <div data-hours-target="selectionInfo" class="text-sm text-base-content/60 mt-2">
+           Select days to add hours
+         </div>
+       </div>
+
+       <!-- Time selection -->
+      <div class="lg:col-span-2">
+        <div class="grid grid-cols-2 gap-4 mb-4">
+          <div>
+            <h3 class="font-semibold text-lg mb-3">
+              <%= I18n.t("views.places.form_sections.hours.from") %>
+            </h3>
+            <select data-hours-target="fromTime" class="select select-bordered w-full">
+              <% (0..23).each do |hour| %>
+                <% [0, 30].each do |minute| %>
+                  <% time_24 = sprintf("%02d%02d", hour, minute) %>
+                  <% time_12 = Time.parse("#{hour}:#{minute}").strftime("%l:%M %P").strip %>
+                  <option value="<%= time_24 %>"><%= time_12 %></option>
+                <% end %>
+              <% end %>
+            </select>
+          </div>
+
+          <div>
+            <h3 class="font-semibold text-lg mb-3">
+              <%= I18n.t("views.places.form_sections.hours.to") %>
+            </h3>
+            <select data-hours-target="toTime" class="select select-bordered w-full">
+              <% (0..23).each do |hour| %>
+                <% [0, 30].each do |minute| %>
+                  <% time_24 = sprintf("%02d%02d", hour, minute) %>
+                  <% time_12 = Time.parse("#{hour}:#{minute}").strftime("%l:%M %P").strip %>
+                  <option value="<%= time_24 %>"><%= time_12 %></option>
+                <% end %>
+              <% end %>
+            </select>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-primary w-full mb-4" data-action="click->hours#includeSelectedHours">
+          <%= I18n.t("views.places.form_sections.hours.include_selected") %>
+        </button>
+      </div>
+
+      <!-- Presets -->
+      <div>
+        <h3 class="font-semibold text-lg mb-3">
+          <%= I18n.t("views.places.form_sections.hours.presets") %>
+        </h3>
+        <div class="space-y-2">
+          <button type="button" class="btn btn-outline w-full text-left justify-start" data-preset="24hours" data-action="click->hours#applyPreset">
+            <%= I18n.t("views.places.form_sections.hours.preset_24_hours") %>
+          </button>
+          <button type="button" class="btn btn-outline w-full text-left justify-start" data-preset="working" data-action="click->hours#applyPreset">
+            <%= I18n.t("views.places.form_sections.hours.preset_working_hours") %>
+          </button>
+          <button type="button" class="btn btn-outline w-full text-left justify-start" data-preset="weekend" data-action="click->hours#applyPreset">
+            <%= I18n.t("views.places.form_sections.hours.preset_weekend") %>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Added hours display -->
+    <div class="mt-6">
+      <h3 class="font-semibold text-lg mb-3">
+        <%= I18n.t("views.places.form_sections.hours.added_hours") %>
+      </h3>
+      <div data-hours-target="hoursList" class="space-y-2 min-h-[2rem]">
+        <p class="text-sm text-base-content/60">
+          <%= I18n.t("views.places.form_sections.hours.no_hours_added") %>
+        </p>
+      </div>
+    </div>
+
+     <!-- Hidden fields for form submission -->
+    <div data-hours-target="hiddenFields"></div>
+  </div>
+</div>
+
+

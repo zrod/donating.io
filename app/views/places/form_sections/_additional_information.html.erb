@@ -1,0 +1,43 @@
+<div class="card card-md card-border bg-base-100 mb-6">
+  <div class="card-body">
+    <h2 class="card-title text-2xl font-semibold">
+      <%= I18n.t("views.places.form_sections.additional_information.title") %>
+    </h2>
+
+    <p class="text-sm text-base-content/60 mb-4">
+      <%= I18n.t("views.places.form_sections.optional") %>
+    </p>
+
+    <div class="form-control">
+      <label class="label cursor-pointer justify-start">
+        <%= form.check_box :tax_receipt, class: "checkbox checkbox-primary" %>
+        <span class="label-text">
+          <%= I18n.t("views.places.form_sections.additional_information.tax_receipt") %>
+        </span>
+      </label>
+
+      <div class="tooltip tooltip-right" data-tip="<%= I18n.t('views.places.form_sections.additional_information.tax_receipt_help') %>">
+        <button type="button" tabindex="-1" class="btn btn-xs btn-circle btn-ghost">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-info w-4 h-4">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+            <path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 8v4m0 4h.01"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="form-control w-full mb-4">
+      <%= form.label :charity_support, I18n.t("views.places.form_sections.additional_information.charity_support"), class: "label" %>
+      <%= form.text_area :charity_support,
+            placeholder: I18n.t("views.places.form_sections.additional_information.charity_support_placeholder"),
+            class: "textarea textarea-bordered w-full h-32" %>
+    </div>
+
+    <div class="form-control w-full mb-4">
+      <%= form.label :location_instructions, I18n.t("views.places.form_sections.additional_information.location_instructions"), class: "label" %>
+      <%= form.text_area :location_instructions,
+            placeholder: I18n.t("views.places.form_sections.additional_information.location_instructions_placeholder"),
+            class: "textarea textarea-bordered w-full h-32" %>
+    </div>
+  </div>
+</div>

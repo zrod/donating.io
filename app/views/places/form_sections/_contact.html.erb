@@ -1,0 +1,32 @@
+<div class="card card-md card-border bg-base-100 mb-6">
+  <div class="card-body">
+    <h2 class="card-title text-2xl font-semibold">
+      <%= I18n.t("views.places.form_sections.contact.title") %>
+    </h2>
+
+    <p class="text-md text-base-content/60 mb-4">
+      <%= I18n.t("views.places.form_sections.optional") %>
+    </p>
+
+    <div class="form-control w-full mb-4">
+      <%= form.label :phone, I18n.t("views.places.form_sections.contact.phone"), class: "label" %>
+      <%= form.telephone_field :phone,
+            placeholder: I18n.t("views.places.form_sections.contact.phone_placeholder"),
+            class: "input input-bordered w-full" %>
+    </div>
+
+    <div class="form-control w-full mb-4">
+      <%= form.label :email, I18n.t("views.places.form_sections.contact.email"), class: "label" %>
+      <%= form.email_field :email,
+            placeholder: I18n.t("views.places.form_sections.contact.email_placeholder"),
+            class: "input input-bordered w-full" %>
+    </div>
+
+    <div class="form-control w-full">
+      <%= form.label :url, I18n.t("views.places.form_sections.contact.website"), class: "label" %>
+      <%= form.url_field :url,
+            placeholder: I18n.t("views.places.form_sections.contact.website_placeholder"),
+            class: "input input-bordered w-full" %>
+    </div>
+  </div>
+</div>

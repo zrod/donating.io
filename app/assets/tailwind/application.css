@@ -68,7 +68,7 @@ body {
   --color-base-content: oklch(20% 0.042 265.755);
   --color-primary: #00B5AD;
   --color-primary-content: oklch(97% 0.014 308.299);
-  --color-secondary: oklch(72% 0.219 149.579);
+  --color-secondary: #2A628F;
   --color-secondary-content: oklch(98% 0.018 155.826);
   --color-accent: #f6d8ae;
   --color-accent-content: oklch(20% 0.042 265.755);
@@ -78,8 +78,8 @@ body {
   --color-info-content: oklch(98% 0.019 200.873);
   --color-success: oklch(70% 0.14 182.503);
   --color-success-content: oklch(98% 0.014 180.72);
-  --color-warning: oklch(79% 0.184 86.047);
-  --color-warning-content: oklch(98% 0.026 102.212);
+  --color-warning: #fffaf3;
+  --color-warning-content: #1e2a45;
   --color-error: oklch(63% 0.237 25.331);
   --color-error-content: oklch(97% 0.013 17.38);
   --radius-selector: 0.25rem;

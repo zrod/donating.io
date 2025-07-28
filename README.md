@@ -1,25 +1,12 @@
 # Donating.io
 
-**Donating.io** is a free, community-driven database where anyone can find and share locations that accept donations of all kinds.
+**Donating.io** is a free, community-driven online database to help you find and share locations accepting various types of donations.
 
 https://donating.io
 
 ---
 
-## Features
-
-wip
-
----
-
-## Getting Started
-
-Clone the repository:
-
-```bash
-git clone https://github.com/zrod/donating.io.git
-cd donating.io
-```
+## Goal
 
 wip
 

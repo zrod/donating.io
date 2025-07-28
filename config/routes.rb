@@ -13,5 +13,21 @@ Rails.application.routes.draw do
 
   root "places#index"
 
-  resource :user, only: %i[ new create edit update ]
+  resource :user, only: %i[
+    new
+    create
+    edit
+    update
+  ]
+
+  resources :places, only: %i[
+    new
+    create
+  ]
+
+  scope "pages" do
+    get "about", to: "pages#about"
+    get "privacy", to: "pages#privacy"
+    get "terms", to: "pages#terms"
+  end
 end

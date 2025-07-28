@@ -1,0 +1,12 @@
+<% content_for :title, I18n.t("views.pages.about.title") %>
+
+<h1 class="text-5xl font-semibold text-primary mb-6">
+  <%= I18n.t("views.pages.about.title") %>
+</h1>
+
+<% github_link = link_to("GitHub", "https://github.com/zrod/donating.io", target: "_blank", class: "link link-primary") %>
+<% I18n.t("views.pages.about.content", github_link: github_link).each do |paragraph| %>
+  <p class="text-lg text-base-content mb-6">
+    <%= paragraph.html_safe %>
+  </p>
+<% end %>

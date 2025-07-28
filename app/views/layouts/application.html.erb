@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html data-theme="donatingio">
   <head>
-    <title><%= content_for(:title) || "Donating Io" %></title>
+    <title>
+      <%= [content_for(:title).presence, "Donating.io"].compact.join(" - ") %>
+    </title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -22,15 +24,17 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
+  <body class="min-h-screen flex flex-col">
     <%= render "layouts/header" %>
 
-    <main class="container mx-auto mt-10 px-5 flex justify-center">
+    <main class="container mx-auto mt-10 px-5 flex justify-center flex-grow">
       <div class="max-w-2xl">
         <%= render "layouts/flashes" %>
 
         <%= yield %>
       </div>
     </main>
+
+    <%= render "layouts/footer" %>
   </body>
 </html>

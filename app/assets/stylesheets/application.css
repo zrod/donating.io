@@ -8,3 +8,27 @@
  *
  * Consider organizing styles into separate files for maintainability.
  */
+
+/* Hours form day selector styles */
+.day-selector {
+  transition: all 0.2s ease;
+  border: 2px solid transparent;
+  background-color: hsl(var(--b1));
+  color: hsl(var(--bc));
+}
+
+.day-selector:hover {
+  background-color: hsl(var(--b2));
+}
+
+.day-selector.selected {
+  background-color: hsl(var(--p));
+  color: hsl(var(--pc));
+  border-color: hsl(var(--pf));
+  font-weight: 600;
+  transform: scale(1.02);
+}
+
+.day-selector:active {
+  transform: scale(0.98);
+}
