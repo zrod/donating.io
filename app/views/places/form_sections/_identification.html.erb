@@ -1,8 +1,8 @@
-<div class="card card-md card-border bg-base-100 mb-6">
+<fieldset class="card card-md card-border bg-base-100 mb-6">
   <div class="card-body">
-    <h2 class="card-title text-2xl font-semibold mb-4">
+    <legend class="card-title text-2xl font-semibold mb-4">
       <%= I18n.t("views.places.form_sections.identification.title") %>
-    </h2>
+    </legend>
 
     <div class="form-control w-full mb-4">
       <%= form.label :name, I18n.t("views.places.form_sections.identification.location_name"), class: "label" %>
@@ -18,22 +18,26 @@
             class: "textarea textarea-bordered w-full h-32" %>
     </div>
 
-        <div class="form-control w-full mb-6">
+    <div class="form-control w-full mb-6">
       <%= form.label :category_ids, I18n.t("views.places.form_sections.identification.categories"), class: "label" %>
-      <%= form.collection_check_boxes :category_ids, @categories, :id, :name do |b| %>
-        <div class="form-control">
-          <label class="label cursor-pointer justify-start gap-3">
-            <%= b.check_box(class: "checkbox") %>
-            <span class="label-text"><%= b.text %></span>
-          </label>
+      <div class="border border-base-300 rounded-lg bg-base-50 p-4">
+        <div class="grid grid-cols-3 grid-flow-col-dense gap-3" style="grid-template-rows: repeat(6, minmax(0, 1fr));">
+          <%= form.collection_check_boxes :category_ids, @categories.sort_by(&:name), :id, :name do |b| %>
+            <div class="form-control">
+              <label class="label cursor-pointer justify-start gap-3 p-2 rounded-lg hover:bg-base-100 transition-colors">
+                <%= b.check_box(class: "checkbox checkbox-primary") %>
+                <span class="label-text font-medium"><%= b.text %></span>
+              </label>
+            </div>
+          <% end %>
         </div>
-      <% end %>
+      </div>
     </div>
 
     <div class="space-y-4">
       <div class="form-control">
-        <label class="label cursor-pointer justify-start gap-4">
-          <%= form.check_box :used_ok, class: "toggle toggle-primary" %>
+        <label class="label cursor-pointer justify-start gap-3">
+          <%= form.check_box :used_ok, class: "toggle toggle-sm" %>
           <span class="label-text font-medium">
             <%= I18n.t("views.places.form_sections.identification.accepts_used_items") %>
           </span>
@@ -41,22 +45,18 @@
       </div>
 
       <div class="form-control">
-        <label class="label cursor-pointer justify-start gap-4">
-          <%= form.check_box :is_bin, class: "toggle" %>
+        <label class="label cursor-pointer justify-start gap-3">
+          <%= form.check_box :is_bin, class: "toggle toggle-sm" %>
           <span class="label-text font-medium">
             <%= I18n.t("views.places.form_sections.identification.is_donation_bin") %>
           </span>
-          <div class="tooltip tooltip-right" data-tip="<%= I18n.t('views.places.form_sections.identification.is_donation_bin_tooltip') %>">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-info shrink-0 w-5 h-5">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-            </svg>
-          </div>
+          <%= render 'shared/info_tooltip', tooltip_text: I18n.t('views.places.form_sections.identification.is_donation_bin_tooltip') %>
         </label>
       </div>
 
       <div class="form-control">
-        <label class="label cursor-pointer justify-start gap-4">
-          <%= form.check_box :pickup, class: "toggle" %>
+        <label class="label cursor-pointer justify-start gap-3">
+          <%= form.check_box :pickup, class: "toggle toggle-sm" %>
           <span class="label-text font-medium">
             <%= I18n.t("views.places.form_sections.identification.pickup_available") %>
           </span>
@@ -64,4 +64,4 @@
       </div>
     </div>
   </div>
-</div>
+</fieldset>

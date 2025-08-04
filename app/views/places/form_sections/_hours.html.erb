@@ -1,8 +1,8 @@
-<div class="card card-md card-border mb-6" data-controller="hours">
+<fieldset class="card card-md card-border mb-6" data-controller="hours">
   <div class="card-body">
-    <h2 class="card-title text-2xl font-semibold mb-2">
+    <legend class="card-title text-2xl font-semibold">
       <%= I18n.t("views.places.form_sections.hours.title") %>
-    </h2>
+    </legend>
     <p class="text-sm text-base-content/60 mb-6">
       <%= I18n.t("views.places.form_sections.optional") %>
     </p>
@@ -13,30 +13,30 @@
         <h3 class="font-semibold text-lg mb-3">
           <%= I18n.t("views.places.form_sections.hours.week_days") %>
         </h3>
-          <div class="border border-base-300 rounded-lg p-2" style="min-height: 200px;">
-            <% [
-                ['Sunday', 7, 'sunday'],
-                ['Monday', 1, 'monday'],
-                ['Tuesday', 2, 'tuesday'],
-                ['Wednesday', 3, 'wednesday'],
-                ['Thursday', 4, 'thursday'],
-                ['Friday', 5, 'friday'],
-                ['Saturday', 6, 'saturday']
-              ].each do |day_short, day_num, day_key| %>
-              <div class="day-selector p-2 rounded cursor-pointer transition-all duration-200 select-none"
-                  data-day="<%= day_num %>"
-                  data-hours-target="daySelector"
-                  data-action="click->hours#toggleDay">
-                <%= day_short %>
-             </div>
-            <% end %>
-         </div>
-         <div data-hours-target="selectionInfo" class="text-sm text-base-content/60 mt-2">
-           Select days to add hours
-         </div>
-       </div>
+        <div class="border border-base-300 rounded-lg p-2" style="min-height: 200px;">
+          <% [
+              ['Sunday', 7, 'sunday'],
+              ['Monday', 1, 'monday'],
+              ['Tuesday', 2, 'tuesday'],
+              ['Wednesday', 3, 'wednesday'],
+              ['Thursday', 4, 'thursday'],
+              ['Friday', 5, 'friday'],
+              ['Saturday', 6, 'saturday']
+            ].each do |day_short, day_num, day_key| %>
+            <div class="day-selector p-2 rounded cursor-pointer transition-all duration-200 select-none"
+                data-day="<%= day_num %>"
+                data-hours-target="daySelector"
+                data-action="click->hours#toggleDay">
+              <%= day_short %>
+           </div>
+          <% end %>
+        </div>
+        <div data-hours-target="selectionInfo" class="text-sm text-base-content/60 mt-2">
+          Select days to add hours
+        </div>
+      </div>
 
-       <!-- Time selection -->
+      <!-- Time selection -->
       <div class="lg:col-span-2">
         <div class="grid grid-cols-2 gap-4 mb-4">
           <div>
@@ -106,9 +106,6 @@
       </div>
     </div>
 
-     <!-- Hidden fields for form submission -->
     <div data-hours-target="hiddenFields"></div>
   </div>
-</div>
-
-
+</fieldset>

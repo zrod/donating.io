@@ -10,6 +10,7 @@ en:
     places:
       create:
         success: "Place submitted successfully! It will be reviewed before being published."
+        too_many_requests: "Too many place submissions. Please try again later."
     sessions:
       create:
         too_many_requests: "Too many login attempts. Please try again later."
@@ -117,7 +118,6 @@ en:
           location_instructions: "Location Instructions"
           location_instructions_placeholder: "Any special instructions for finding or accessing this location"
           tax_receipt: "Provides tax receipts for donations"
-          tax_receipt_help: "Check this if donors can receive tax receipts for their donations"
     sessions:
       new:
         email_address_placeholder: "Email address"

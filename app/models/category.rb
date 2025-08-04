@@ -6,4 +6,6 @@ class Category < ApplicationRecord
   validates :slug, uniqueness: true
 
   before_save { self.slug = name.parameterize }
+
+  scope :by_name, -> { order(:name) }
 end

@@ -1,3 +1,8 @@
+appliances:
+  name: Appliances
+  description: Appliances
+  slug: appliances
+
 books:
   name: Books
   description: Books
@@ -7,3 +12,8 @@ clothing:
   name: Clothing
   description: Clothing
   slug: clothing
+
+toys:
+  name: Toys
+  description: Toys
+  slug: toys

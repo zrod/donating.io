@@ -1,0 +1,10 @@
+<% countries = Country.active.by_weight %>
+<% cache ["countries_dropdown", countries] do %>
+  <div class="form-control w-full">
+    <%= form.label :country_id, I18n.t("views.places.form_sections.location.country"), class: "label" %>
+    <%= form.select :country_id,
+          options_from_collection_for_select(countries, :id, :name, selected_country_id),
+          { prompt: I18n.t("views.places.form_sections.location.country_placeholder") },
+          { class: "select select-bordered w-full" } %>
+  </div>
+<% end %>

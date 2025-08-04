@@ -60,4 +60,15 @@ class CategoryTest < ActiveSupport::TestCase
     @category.save
     assert_equal "test-category-with-special-characters", @category.slug
   end
+
+  # Scopes
+  test "by_name should return categories ordered by name" do
+    Category.delete_all
+    appliances = Category.create!(name: "Appliances")
+    toys = Category.create!(name: "Toys")
+
+    result = Category.by_name
+
+    assert_equal [ appliances.id, toys.id ], result.pluck(:id)
+  end
 end

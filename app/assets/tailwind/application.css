@@ -82,7 +82,7 @@ body {
   --color-warning-content: #1e2a45;
   --color-error: oklch(63% 0.237 25.331);
   --color-error-content: oklch(97% 0.013 17.38);
-  --radius-selector: 0.25rem;
+  --radius-selector: 0.5rem;
   --radius-field: 0.25rem;
   --radius-box: 0.25rem;
   --size-selector: 0.25rem;
