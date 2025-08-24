@@ -21,7 +21,31 @@
   </div>
 <% end %>
 
-<%= form_with(model: @place, local: true, class: "my-6") do |form| %>
+<%= form_with(model: @place, local: true, class: "mt-6",
+    data: {
+      controller: "places",
+      places_is_authenticated_value: authenticated?,
+      places_target: "form",
+      places_validation_messages_value: {
+        name_min_length: I18n.t("views.places.new.js_validation.name_min_length"),
+        description_required: I18n.t("views.places.new.js_validation.description_required"),
+        address_min_length: I18n.t("views.places.new.js_validation.address_min_length"),
+        city_min_length: I18n.t("views.places.new.js_validation.city_min_length"),
+        postal_code_max_length: I18n.t("views.places.new.js_validation.postal_code_max_length"),
+        email_invalid: I18n.t("views.places.new.js_validation.email_invalid"),
+        url_invalid: I18n.t("views.places.new.js_validation.url_invalid"),
+        latitude_invalid: I18n.t("views.places.new.js_validation.latitude_invalid"),
+        longitude_invalid: I18n.t("views.places.new.js_validation.longitude_invalid"),
+        field_required: I18n.t("views.places.new.js_validation.field_required"),
+        categories_required: I18n.t("views.places.new.js_validation.categories_required")
+      }.to_json,
+      places_validation_constants_value: {
+        name_min_length: Place::NAME_MIN_LENGTH,
+        address_min_length: Place::ADDRESS_MIN_LENGTH,
+        city_min_length: Place::CITY_MIN_LENGTH,
+        postal_code_max_length: Place::POSTAL_CODE_MAX_LENGTH
+      }.to_json
+    }) do |form| %>
   <% if @place.errors.any? %>
     <div class="alert alert-error">
       <h3><%= pluralize(@place.errors.count, "error") %> prohibited this place from being saved:</h3>
@@ -39,10 +63,8 @@
   <%= render "places/form_sections/contact", form: %>
   <%= render "places/form_sections/additional_information", form: %>
 
-
   <div class="flex gap-2">
     <%= form.submit I18n.t("views.places.new.submit_button"), class: "btn btn-primary" %>
     <%= link_to I18n.t("views.places.new.cancel_button"), places_path, class: "btn btn-outline" %>
   </div>
 <% end %>
-

@@ -32,3 +32,7 @@
 .day-selector:active {
   transform: scale(0.98);
 }
+
+.input, .textarea, .select {
+  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}

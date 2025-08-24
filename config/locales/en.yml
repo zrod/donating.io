@@ -11,6 +11,7 @@ en:
       create:
         success: "Place submitted successfully! It will be reviewed before being published."
         too_many_requests: "Too many place submissions. Please try again later."
+        please_authenticate: "Please sign in or create an account to submit your place. Your form data has been saved and will be restored after authentication."
     sessions:
       create:
         too_many_requests: "Too many login attempts. Please try again later."
@@ -48,8 +49,21 @@ en:
         subheader: "If you know of a donation bin or organization that accepts donations and would like to share it with us, please fill out the form below with the details."
         unauthenticated_alert_title: "You're not authenticated."
         unauthenticated_alert_content: "You can start filling out the form below. The data you enter will be temporarily saved in your current Browser session until you authenticate."
+        data_restored_message: "Your previously entered form data has been restored!"
         submit_button: "Submit Place"
         cancel_button: "Cancel"
+        js_validation:
+          name_min_length: "Name must be at least 4 characters long"
+          description_required: "Description is required"
+          address_min_length: "Address must be at least 6 characters long"
+          city_min_length: "City must be at least 3 characters long"
+          postal_code_max_length: "Postal code must be 12 characters or less"
+          email_invalid: "Please enter a valid email address"
+          url_invalid: "Please enter a valid URL"
+          latitude_invalid: "Please enter a valid latitude (-90 to 90)"
+          longitude_invalid: "Please enter a valid longitude (-180 to 180)"
+          field_required: "%{field} is required"
+          categories_required: "Please select at least one category"
       form_sections:
         optional: "Optional"
         identification:

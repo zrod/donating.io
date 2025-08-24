@@ -1,4 +1,4 @@
-<fieldset class="card card-md card-border mb-6" data-controller="hours">
+<fieldset class="card card-md card-border bg-white mb-6" data-controller="hours">
   <div class="card-body">
     <legend class="card-title text-2xl font-semibold">
       <%= I18n.t("views.places.form_sections.hours.title") %>
@@ -8,7 +8,6 @@
     </p>
 
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
-      <!-- Week days selection -->
       <div>
         <h3 class="font-semibold text-lg mb-3">
           <%= I18n.t("views.places.form_sections.hours.week_days") %>
@@ -36,7 +35,6 @@
         </div>
       </div>
 
-      <!-- Time selection -->
       <div class="lg:col-span-2">
         <div class="grid grid-cols-2 gap-4 mb-4">
           <div>
@@ -75,7 +73,6 @@
         </button>
       </div>
 
-      <!-- Presets -->
       <div>
         <h3 class="font-semibold text-lg mb-3">
           <%= I18n.t("views.places.form_sections.hours.presets") %>
@@ -94,18 +91,19 @@
       </div>
     </div>
 
-    <!-- Added hours display -->
     <div class="mt-6">
       <h3 class="font-semibold text-lg mb-3">
         <%= I18n.t("views.places.form_sections.hours.added_hours") %>
       </h3>
-      <div data-hours-target="hoursList" class="space-y-2 min-h-[2rem]">
-        <p class="text-sm text-base-content/60">
+      <div id="hours_list" data-hours-target="hoursList" class="space-y-2 min-h-[2rem]">
+        <p id="no_hours_message" class="text-sm text-base-content/60">
           <%= I18n.t("views.places.form_sections.hours.no_hours_added") %>
         </p>
       </div>
     </div>
 
     <div data-hours-target="hiddenFields"></div>
+
+    <%= render 'places/form_sections/hour_block' %>
   </div>
 </fieldset>

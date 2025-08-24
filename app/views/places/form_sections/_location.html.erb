@@ -1,4 +1,4 @@
-<fieldset class="card card-md card-border bg-base-100 mb-6">
+<fieldset class="card card-md card-border bg-white mb-6">
   <div class="card-body">
     <legend class="card-title text-2xl font-semibold mb-4">
       <%= I18n.t("views.places.form_sections.location.title") %>
@@ -9,6 +9,7 @@
         <%= form.label :address, I18n.t("views.places.form_sections.location.address"), class: "label" %>
         <%= form.text_field :address,
               placeholder: I18n.t("views.places.form_sections.location.address_placeholder"),
+              required: true,
               class: "input input-bordered w-full" %>
       </div>
 
@@ -25,6 +26,7 @@
         <%= form.label :city, I18n.t("views.places.form_sections.location.city"), class: "label" %>
         <%= form.text_field :city,
               placeholder: I18n.t("views.places.form_sections.location.city_placeholder"),
+              required: true,
               class: "input input-bordered w-full" %>
       </div>
 
@@ -44,12 +46,8 @@
         <%= form.number_field :lat,
               step: :any,
               placeholder: I18n.t("views.places.form_sections.location.latitude_placeholder"),
+              required: true,
               class: "input input-bordered w-full" %>
-        <div class="label">
-          <span class="label-text-alt text-info">
-            <%= I18n.t("views.places.form_sections.location.coordinates_help") %>
-          </span>
-        </div>
       </div>
 
       <div class="form-control w-full">
@@ -57,7 +55,16 @@
         <%= form.number_field :lng,
               step: :any,
               placeholder: I18n.t("views.places.form_sections.location.longitude_placeholder"),
+              required: true,
               class: "input input-bordered w-full" %>
+      </div>
+
+      <div class="md:col-span-2">
+        <div class="label block">
+          <span class="label-text-alt text-info break-words">
+            <%= I18n.t("views.places.form_sections.location.coordinates_help") %>
+          </span>
+        </div>
       </div>
     </div>
   </div>

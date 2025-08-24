@@ -10,18 +10,16 @@ class PlacesController < ApplicationController
     @place = Place.new
     @place.place_hours.build
     @categories = Category.by_name
-    @countries = Country.active.by_weight
   end
 
   def create
     @place = Place.new(place_params)
-    @place.user = current_user if authenticated?
+    @place.user = current_user
 
     if @place.save
       redirect_to places_path, notice: I18n.t("controllers.places.create.success")
     else
       @categories = Category.by_name
-      @countries = Country.active.by_weight
       render :new, status: :unprocessable_entity
     end
   end
@@ -48,12 +46,12 @@ class PlacesController < ApplicationController
         :description,
         :email,
         :address,
-        :zip_code,
+        :postal_code,
         :city,
         :region,
         :phone,
         :charity_support,
-        :bin_loc_instructions,
+        :location_instructions,
         :lat,
         :lng,
         :osm_id,
@@ -61,13 +59,9 @@ class PlacesController < ApplicationController
         :url,
         :used_ok,
         :is_bin,
-        :issues_tax_receipt,
+        :tax_receipt,
         :country_id,
-        categories_places_attributes: %i[
-          id
-          category_id
-          _destroy
-        ],
+        category_ids: [],
         place_hours_attributes: %i[
           id
           day

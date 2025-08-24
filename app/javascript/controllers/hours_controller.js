@@ -8,9 +8,10 @@ export default class extends Controller {
     this.addedHours = []
     this.updateSelectionDisplay()
 
-    // Set default times
     this.fromTimeTarget.value = '0900'
     this.toTimeTarget.value = '1700'
+
+    this.rebuildHoursFromHiddenFields()
   }
 
   toggleDay(event) {
@@ -19,16 +20,13 @@ export default class extends Controller {
     const index = this.selectedDays.indexOf(day)
 
     if (index > -1) {
-      // Remove from selection
       this.selectedDays.splice(index, 1)
       element.classList.remove('selected')
     } else {
-      // Add to selection
       this.selectedDays.push(day)
       element.classList.add('selected')
     }
 
-    // Update visual feedback
     this.updateSelectionDisplay()
   }
 
@@ -93,6 +91,7 @@ export default class extends Controller {
       return
     }
 
+    const template = document.getElementById('hour-block-template')
     const dayNames = {
       1: 'Monday',
       2: 'Tuesday',
@@ -103,20 +102,19 @@ export default class extends Controller {
       7: 'Sunday'
     }
 
-    this.hoursListTarget.innerHTML = this.addedHours.map((hour, index) => {
+    this.hoursListTarget.innerHTML = ''
+
+    this.addedHours.forEach((hour, index) => {
+      const clone = template.content.cloneNode(true)
       const fromFormatted = this.formatTimeForDisplay(hour.from)
       const toFormatted = this.formatTimeForDisplay(hour.to)
-      return `
-        <div class="flex justify-between items-center p-3 bg-base-200 rounded-lg">
-          <span>${dayNames[hour.day]}: ${fromFormatted} - ${toFormatted}</span>
-          <button type="button" class="btn btn-sm btn-ghost" data-index="${index}" data-action="click->hours#removeHour">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
-        </div>
-      `
-    }).join('')
+
+      clone.querySelector('.hour-display').textContent = `${dayNames[hour.day]}: ${fromFormatted} - ${toFormatted}`
+      clone.querySelector('.hour-remove-btn').dataset.index = index
+      clone.querySelector('.hour-remove-btn').dataset.action = 'click->hours#removeHour'
+
+      this.hoursListTarget.appendChild(clone)
+    })
   }
 
   updateHiddenFields() {
@@ -135,6 +133,7 @@ export default class extends Controller {
     const hour = Math.floor(time24 / 100)
     const minute = time24 % 100
     const date = new Date()
+
     date.setHours(hour, minute)
     return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
   }
@@ -162,5 +161,36 @@ export default class extends Controller {
 
     this.updateHoursList()
     this.updateHiddenFields()
+  }
+
+  rebuildHoursFromHiddenFields() {
+    const hiddenInputs = this.hiddenFieldsTarget.querySelectorAll('input[type="hidden"]')
+    const hoursData = {}
+
+    hiddenInputs.forEach(input => {
+      const match = input.name.match(/^place\[place_hours_attributes\]\[(\d+)\]\[(day_of_week|from_hour|to_hour)\]$/)
+      if (match) {
+        const index = match[1]
+        const attribute = match[2]
+
+        if (!hoursData[index]) {
+          hoursData[index] = {}
+        }
+
+        hoursData[index][attribute] = input.value
+      }
+    })
+
+    this.addedHours = Object.values(hoursData)
+      .filter(hour => hour.day_of_week && hour.from_hour && hour.to_hour)
+      .map(hour => ({
+        day: parseInt(hour.day_of_week),
+        from: hour.from_hour,
+        to: hour.to_hour
+      }))
+
+    if (this.addedHours.length > 0) {
+      this.updateHoursList()
+    }
   }
 }
