@@ -2,6 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["daySelector", "fromTime", "toTime", "selectionInfo", "hoursList", "hiddenFields"]
+  static values = { messages: Object, dayNames: Object, dayNamesShort: Object }
 
   connect() {
     this.selectedDays = []
@@ -32,14 +33,11 @@ export default class extends Controller {
 
   updateSelectionDisplay() {
     if (this.selectedDays.length === 0) {
-      this.selectionInfoTarget.textContent = 'Select days to add hours'
+      this.selectionInfoTarget.textContent = this.messagesValue.select_days_instruction
       this.selectionInfoTarget.className = 'text-sm text-base-content/60 mt-2'
     } else {
-      const dayNames = {
-        1: 'Mon', 2: 'Tue', 3: 'Wed', 4: 'Thu', 5: 'Fri', 6: 'Sat', 7: 'Sun'
-      }
-      const selectedDayNames = this.selectedDays.sort().map(day => dayNames[day]).join(', ')
-      this.selectionInfoTarget.textContent = `Selected: ${selectedDayNames}`
+      const selectedDayNames = this.selectedDays.sort().map(day => this.dayNamesShortValue[day]).join(', ')
+      this.selectionInfoTarget.textContent = `${this.messagesValue.selected_label}: ${selectedDayNames}`
       this.selectionInfoTarget.className = 'text-sm text-primary font-medium mt-2'
     }
   }
@@ -49,12 +47,12 @@ export default class extends Controller {
     const toTime = this.toTimeTarget.value
 
     if (this.selectedDays.length === 0) {
-      alert('Please select at least one day')
+      alert(this.messagesValue.select_days_error)
       return
     }
 
     if (parseInt(fromTime) >= parseInt(toTime)) {
-      alert('From time must be before to time')
+      alert(this.messagesValue.invalid_time_range)
       return
     }
 
@@ -87,20 +85,11 @@ export default class extends Controller {
 
   updateHoursList() {
     if (this.addedHours.length === 0) {
-      this.hoursListTarget.innerHTML = '<p class="text-sm text-base-content/60">No hours added yet</p>'
+      this.hoursListTarget.innerHTML = `<p class="text-sm text-base-content/60">${this.messagesValue.no_hours_added}</p>`
       return
     }
 
     const template = document.getElementById('hour-block-template')
-    const dayNames = {
-      1: 'Monday',
-      2: 'Tuesday',
-      3: 'Wednesday',
-      4: 'Thursday',
-      5: 'Friday',
-      6: 'Saturday',
-      7: 'Sunday'
-    }
 
     this.hoursListTarget.innerHTML = ''
 
@@ -109,7 +98,7 @@ export default class extends Controller {
       const fromFormatted = this.formatTimeForDisplay(hour.from)
       const toFormatted = this.formatTimeForDisplay(hour.to)
 
-      clone.querySelector('.hour-display').textContent = `${dayNames[hour.day]}: ${fromFormatted} - ${toFormatted}`
+      clone.querySelector('.hour-display').textContent = `${this.dayNamesValue[hour.day]}: ${fromFormatted} - ${toFormatted}`
       clone.querySelector('.hour-remove-btn').dataset.index = index
       clone.querySelector('.hour-remove-btn').dataset.action = 'click->hours#removeHour'
 

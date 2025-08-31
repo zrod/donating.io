@@ -49,9 +49,4 @@ class PlacesControllerTest < ActionDispatch::IntegrationTest
     assert_nil session[:cached_place_data]
     assert_equal new_place_path, session[:return_to_after_authenticating]
   end
-
-  private
-    def sign_in_as(user)
-      post session_path, params: { email_address: user.email_address, password: "password" }
-    end
 end

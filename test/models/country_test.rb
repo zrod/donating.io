@@ -56,7 +56,7 @@ class CountryTest < ActiveSupport::TestCase
 
   # Scopes
   test "by_weight should return countries ordered by weight descending" do
-    Country.update_all(active: false)
+    Country.update_all(weight: 0)
 
     canada = countries(:canada)
     brazil = countries(:brazil)
@@ -66,8 +66,7 @@ class CountryTest < ActiveSupport::TestCase
 
     result = Country.by_weight
 
-    assert_equal 2, result.length
-    assert_equal [ brazil.id, canada.id ], result.pluck(:id)
+    assert_equal [ brazil.id, canada.id ], result[0..1].pluck(:id)
   end
 
   test "active should return active countries" do

@@ -1,4 +1,30 @@
-<fieldset class="card card-md card-border bg-white mb-6" data-controller="hours">
+<fieldset class="card card-md card-border bg-white mb-6"
+         data-controller="hours"
+         data-hours-messages-value='<%= {
+           select_days_instruction: I18n.t("views.places.form_sections.hours.js_messages.select_days_instruction"),
+           selected_label: I18n.t("views.places.form_sections.hours.js_messages.selected_label"),
+           select_days_error: I18n.t("views.places.form_sections.hours.js_messages.select_days_error"),
+           invalid_time_range: I18n.t("views.places.form_sections.hours.js_messages.invalid_time_range"),
+           no_hours_added: I18n.t("views.places.form_sections.hours.js_messages.no_hours_added")
+         }.to_json %>'
+         data-hours-day-names-value='<%= {
+           "1" => I18n.t("views.places.form_sections.hours.days.monday"),
+           "2" => I18n.t("views.places.form_sections.hours.days.tuesday"),
+           "3" => I18n.t("views.places.form_sections.hours.days.wednesday"),
+           "4" => I18n.t("views.places.form_sections.hours.days.thursday"),
+           "5" => I18n.t("views.places.form_sections.hours.days.friday"),
+           "6" => I18n.t("views.places.form_sections.hours.days.saturday"),
+           "7" => I18n.t("views.places.form_sections.hours.days.sunday")
+         }.to_json %>'
+         data-hours-day-names-short-value='<%= {
+           "1" => I18n.t("views.places.form_sections.hours.days_short.monday"),
+           "2" => I18n.t("views.places.form_sections.hours.days_short.tuesday"),
+           "3" => I18n.t("views.places.form_sections.hours.days_short.wednesday"),
+           "4" => I18n.t("views.places.form_sections.hours.days_short.thursday"),
+           "5" => I18n.t("views.places.form_sections.hours.days_short.friday"),
+           "6" => I18n.t("views.places.form_sections.hours.days_short.saturday"),
+           "7" => I18n.t("views.places.form_sections.hours.days_short.sunday")
+         }.to_json %>'>
   <div class="card-body">
     <legend class="card-title text-2xl font-semibold">
       <%= I18n.t("views.places.form_sections.hours.title") %>
@@ -14,13 +40,13 @@
         </h3>
         <div class="border border-base-300 rounded-lg p-2" style="min-height: 200px;">
           <% [
-              ['Sunday', 7, 'sunday'],
-              ['Monday', 1, 'monday'],
-              ['Tuesday', 2, 'tuesday'],
-              ['Wednesday', 3, 'wednesday'],
-              ['Thursday', 4, 'thursday'],
-              ['Friday', 5, 'friday'],
-              ['Saturday', 6, 'saturday']
+              [I18n.t("views.places.form_sections.hours.days.sunday"), 7, 'sunday'],
+              [I18n.t("views.places.form_sections.hours.days.monday"), 1, 'monday'],
+              [I18n.t("views.places.form_sections.hours.days.tuesday"), 2, 'tuesday'],
+              [I18n.t("views.places.form_sections.hours.days.wednesday"), 3, 'wednesday'],
+              [I18n.t("views.places.form_sections.hours.days.thursday"), 4, 'thursday'],
+              [I18n.t("views.places.form_sections.hours.days.friday"), 5, 'friday'],
+              [I18n.t("views.places.form_sections.hours.days.saturday"), 6, 'saturday']
             ].each do |day_short, day_num, day_key| %>
             <div class="day-selector p-2 rounded cursor-pointer transition-all duration-200 select-none"
                 data-day="<%= day_num %>"
@@ -31,7 +57,7 @@
           <% end %>
         </div>
         <div data-hours-target="selectionInfo" class="text-sm text-base-content/60 mt-2">
-          Select days to add hours
+          <%= I18n.t("views.places.form_sections.hours.select_days_instruction") %>
         </div>
       </div>
 

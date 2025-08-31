@@ -112,11 +112,18 @@ en:
           include_selected: "INCLUDE SELECTED HOURS"
           added_hours: "Added Hours"
           no_hours_added: "No hours added yet"
+          select_days_instruction: "Select days to add hours"
           select_days_error: "Please select at least one day"
           invalid_time_range: "From time must be before to time"
           preset_24_hours: "24 hours"
           preset_working_hours: "Working hours"
           preset_weekend: "Weekend"
+          js_messages:
+            select_days_instruction: "Select days to add hours"
+            selected_label: "Selected"
+            select_days_error: "Please select at least one day"
+            invalid_time_range: "From time must be before to time"
+            no_hours_added: "No hours added yet"
           days:
             monday: "Monday"
             tuesday: "Tuesday"
@@ -125,6 +132,14 @@ en:
             friday: "Friday"
             saturday: "Saturday"
             sunday: "Sunday"
+          days_short:
+            monday: "Mon"
+            tuesday: "Tue"
+            wednesday: "Wed"
+            thursday: "Thu"
+            friday: "Fri"
+            saturday: "Sat"
+            sunday: "Sun"
         additional_information:
           title: "Additional Information"
           charity_support: "Charity Support"
