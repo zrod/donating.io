@@ -3,7 +3,7 @@
   <div class="form-control w-full">
     <%= form.label :country_id, I18n.t("views.places.form_sections.location.country"), class: "label" %>
     <%= form.select :country_id,
-          options_from_collection_for_select(countries, :id, :name, selected_country_id),
+          options_from_collection_for_select(countries, :id, :name),
           { prompt: I18n.t("views.places.form_sections.location.country_placeholder") },
           { required: true, class: "select select-bordered w-full" } %>
   </div>

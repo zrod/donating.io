@@ -64,7 +64,7 @@ class PlacesController < ApplicationController
         category_ids: [],
         place_hours_attributes: %i[
           id
-          day
+          day_of_week
           from_hour
           to_hour
           _destroy
