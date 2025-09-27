@@ -12,17 +12,17 @@
 
 ActiveRecord::Schema[8.0].define(version: 2025_07_20_192034) do
   create_table "categories", force: :cascade do |t|
-    t.string "name"
+    t.string "name", null: false
     t.text "description"
-    t.string "slug"
+    t.string "slug", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["slug"], name: "index_categories_on_slug", unique: true
   end
 
   create_table "categories_places", force: :cascade do |t|
-    t.integer "category_id"
-    t.integer "place_id"
+    t.integer "category_id", null: false
+    t.integer "place_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["category_id", "place_id"], name: "index_categories_places_on_category_id_and_place_id", unique: true
@@ -31,10 +31,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_20_192034) do
   end
 
   create_table "countries", force: :cascade do |t|
-    t.string "name"
-    t.string "iso_alpha3"
+    t.string "name", null: false
+    t.string "iso_alpha3", null: false
     t.integer "weight", default: 0
-    t.boolean "active", default: false
+    t.boolean "active", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["active"], name: "index_countries_on_active"
@@ -43,29 +43,29 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_20_192034) do
   end
 
   create_table "geo_terms", force: :cascade do |t|
-    t.string "term"
-    t.json "response"
+    t.string "term", null: false
+    t.json "response", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["term"], name: "index_geo_terms_on_term", unique: true
   end
 
   create_table "place_feedbacks", force: :cascade do |t|
-    t.integer "reason"
+    t.integer "reason", null: false
     t.text "details"
-    t.integer "place_id"
+    t.integer "place_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "user_id"
+    t.integer "user_id", null: false
     t.index ["place_id"], name: "index_place_feedbacks_on_place_id"
     t.index ["user_id"], name: "index_place_feedbacks_on_user_id"
   end
 
   create_table "place_hours", force: :cascade do |t|
-    t.integer "place_id"
-    t.integer "day_of_week"
-    t.integer "from_hour"
-    t.integer "to_hour"
+    t.integer "place_id", null: false
+    t.integer "day_of_week", null: false
+    t.integer "from_hour", null: false
+    t.integer "to_hour", null: false
     t.index ["day_of_week"], name: "index_place_hours_on_day_of_week"
     t.index ["from_hour"], name: "index_place_hours_on_from_hour"
     t.index ["place_id", "day_of_week", "from_hour", "to_hour"], name: "idx_on_place_id_day_of_week_from_hour_to_hour_8b41e5a11b", unique: true
@@ -74,13 +74,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_20_192034) do
   end
 
   create_table "places", force: :cascade do |t|
-    t.string "name"
-    t.string "slug"
-    t.text "description"
-    t.string "address"
-    t.decimal "lat", precision: 10, scale: 6
-    t.decimal "lng", precision: 10, scale: 6
-    t.string "city"
+    t.string "name", null: false
+    t.string "slug", null: false
+    t.text "description", null: false
+    t.string "address", null: false
+    t.decimal "lat", precision: 10, scale: 6, null: false
+    t.decimal "lng", precision: 10, scale: 6, null: false
+    t.string "city", null: false
     t.string "region"
     t.string "phone"
     t.string "url"
@@ -89,16 +89,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_20_192034) do
     t.string "email"
     t.text "charity_support"
     t.text "location_instructions"
-    t.boolean "pickup", default: false
-    t.boolean "used_ok", default: true
-    t.boolean "is_bin", default: false
-    t.boolean "tax_receipt", default: false
+    t.boolean "pickup", default: false, null: false
+    t.boolean "used_ok", default: true, null: false
+    t.boolean "is_bin", default: false, null: false
+    t.boolean "tax_receipt", default: false, null: false
     t.integer "osm_id"
-    t.integer "status", default: 0
+    t.integer "status", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "country_id"
-    t.integer "user_id"
+    t.integer "country_id", null: false
+    t.integer "user_id", null: false
     t.index ["country_id"], name: "index_places_on_country_id"
     t.index ["is_bin"], name: "index_places_on_is_bin"
     t.index ["pickup"], name: "index_places_on_pickup"

@@ -1,4 +1,4 @@
-export default class FormCacheService {
+export default class PlaceFormCacheService {
   constructor(formElement, selectors, isAuthenticated) {
     this.formElement = formElement
     this.selectors = selectors
@@ -196,3 +196,5 @@ export default class FormCacheService {
     } catch {}
   }
 }
+
+

@@ -9,7 +9,7 @@ en:
         invalid_token: "Password reset link is invalid or has expired."
     places:
       create:
-        success: "Place submitted successfully! It will be reviewed before being published."
+        success: "Thank you! Your submission has been received and is now pending review."
         too_many_requests: "Too many place submissions. Please try again later."
         please_authenticate: "Please sign in or create an account to submit your place. Your form data has been saved and will be restored after authentication."
     sessions:
@@ -25,6 +25,7 @@ en:
         about: "About"
       authenticated:
         greeting: "%{username}"
+        my_contributions: "My Contributions"
         profile: "Profile"
         settings: "Settings"
         logout: "Logout"
@@ -147,6 +148,30 @@ en:
           location_instructions: "Location Instructions"
           location_instructions_placeholder: "Any special instructions for finding or accessing this location"
           tax_receipt: "Provides tax receipts for donations"
+      my_contributions:
+        title: "My Contributions"
+        subheader: "List of places you have shared with us."
+        clear_button: "Clear"
+        places_selected: "%{count} places selected"
+        delete_selected_button: "Delete Selected"
+        clear_selection_button: "Clear Selection"
+        places_found: "%{count} places found."
+        table:
+          name: "Name"
+          status: "Status"
+          date_submitted: "Date Submitted"
+          last_updated: "Last Updated"
+          actions: "Actions"
+        actions:
+          edit: "Edit"
+          delete: "Delete"
+        confirmations:
+          bulk_delete: "Are you sure you want to delete the selected places?."
+          single_delete: "Are you sure you want to delete '%{name}'?"
+        empty_states:
+          no_search_results: "No places found matching \"%{search}\""
+          no_places: "You haven't submitted any places yet"
+          submit_first_place: "Submit Your First Place"
     sessions:
       new:
         email_address_placeholder: "Email address"

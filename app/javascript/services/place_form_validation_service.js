@@ -1,4 +1,4 @@
-export default class FormValidationService {
+export default class PlaceFormValidationService {
   constructor(formElement, selectors, validationMessages, validationConstants) {
     this.formElement = formElement
     this.selectors = selectors
@@ -191,3 +191,5 @@ export default class FormValidationService {
     }
   }
 }
+
+

@@ -30,13 +30,13 @@ class PlaceTest < ActiveSupport::TestCase
   end
 
   test "has many categories_places" do
-    place = places(:donation_bin_published_one)
+    place = places(:published_bin_with_full_attributes_one)
     assert_respond_to place, :categories_places
     assert place.categories_places.any?
   end
 
   test "has many categories through categories_places" do
-    place = places(:donation_bin_published_one)
+    place = places(:published_bin_with_full_attributes_one)
     assert_respond_to place, :categories
     assert_includes place.categories, categories(:books)
   end
@@ -163,7 +163,7 @@ class PlaceTest < ActiveSupport::TestCase
 
   test "published scope returns only published places" do
     published_places = Place.published
-    assert_includes published_places, places(:donation_bin_published_one)
+    assert_includes published_places, places(:published_bin_with_full_attributes_one)
 
     published_places.each do |place|
       assert_equal Place::STATUSES[:published], place.status
@@ -193,7 +193,7 @@ class PlaceTest < ActiveSupport::TestCase
 
   # Instance method tests
   test "full_address returns complete formatted address" do
-    place = places(:donation_bin_published_one)
+    place = places(:published_bin_with_full_attributes_one)
     expected = "123 front street, Toronto, Ontario, M1M 1A1, Canada"
     assert_equal expected, place.full_address
   end
@@ -214,7 +214,7 @@ class PlaceTest < ActiveSupport::TestCase
 
   test "has_charity_support checks for charity_support presence" do
     # With charity support
-    place = places(:donation_bin_published_one)
+    place = places(:published_bin_with_full_attributes_one)
     assert place.has_charity_support
 
     # Without charity support

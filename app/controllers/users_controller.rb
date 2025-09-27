@@ -18,7 +18,7 @@ class UsersController < ApplicationController
       start_new_session_for @user
       redirect_to after_authentication_url, notice: I18n.t("views.users.create.success")
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   rescue InvalidUserRequestError
     redirect_to root_path

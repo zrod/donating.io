@@ -1,5 +1,11 @@
-donation_bin_published_one_place_hours_set_one:
-  place: donation_bin_published_one
+published_bin_with_full_attributes_one_place_hours_set_one:
+  place: published_bin_with_full_attributes_one
   day_of_week: 1
   from_hour: 9
+  to_hour: 17
+
+published_bin_toronto_one_place_hours_set_one:
+  place: published_bin_toronto_one
+  day_of_week: 2
+  from_hour: 10
   to_hour: 17

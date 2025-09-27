@@ -2,7 +2,7 @@ require "test_helper"
 
 class PlaceFeedbackTest < ActiveSupport::TestCase
   def setup
-    @place = places(:donation_bin_published_one)
+    @place = places(:published_bin_with_full_attributes_one)
     @user = users(:user_one)
     @place_feedback = PlaceFeedback.new(
       reason: :incorrect_address,

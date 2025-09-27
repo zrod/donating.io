@@ -1,3 +1,30 @@
-hi
+<div class="container mx-auto px-4 py-6">
+  <div class="flex items-center justify-between mb-4">
+    <h1 class="text-2xl font-bold"><%= t("views.places.index.title", default: "Places") %></h1>
+    <div class="text-sm opacity-70"><%= @places_total %> places found</div>
+  </div>
 
-<button class="btn btn-primary">Hello daisyUI!</button>
+  <% if @places.any? %>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      <% @places.each do |place| %>
+        <div class="card bg-base-100 shadow">
+          <div class="card-body">
+            <h2 class="card-title"><%= place.name %></h2>
+            <p class="text-sm opacity-80"><%= place.address %></p>
+            <div class="card-actions justify-end">
+              <%= link_to t("views.places.index.view", default: "View"), place_path(place), class: "btn btn-primary btn-sm" %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="mt-6">
+      <%= pagination_links(@current_page, @pages, places_path, params.to_unsafe_h.except(:controller, :action, :page, :per_page)) %>
+    </div>
+  <% else %>
+    <div class="text-center py-12">
+      <div class="text-lg"><%= t("views.places.index.empty", default: "No places found") %></div>
+    </div>
+  <% end %>
+</div>

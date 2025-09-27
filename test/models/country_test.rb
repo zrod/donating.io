@@ -10,16 +10,31 @@ class CountryTest < ActiveSupport::TestCase
     assert_respond_to @country, :places
   end
 
-  test "should nullify associated places when destroyed" do
+  test "should prevent destruction when associated places exist" do
     @country.save
-    place = places(:donation_bin_published_one)
+    place = places(:published_bin_with_full_attributes_one)
     place.update!(country: @country)
 
     assert_equal @country.id, place.country_id
-    @country.destroy
+
+    result = @country.destroy
+    refute result
+
+    assert @country.errors.any?
+    assert_includes @country.errors.full_messages.join, "places"
+    refute @country.destroyed?
 
     place.reload
-    assert_nil place.country_id
+    assert_equal @country.id, place.country_id
+  end
+
+  test "should allow destruction when no associated places exist" do
+    @country.save
+
+    # Should destroy successfully when no places exist
+    result = @country.destroy
+    assert result
+    assert @country.destroyed?
   end
 
   # Validation tests
@@ -29,7 +44,7 @@ class CountryTest < ActiveSupport::TestCase
 
   test "name should be present" do
     @country.name = ""
-    assert_not @country.valid?
+    refute @country.valid?
     assert_includes @country.errors[:name], "can't be blank"
   end
 
@@ -37,7 +52,7 @@ class CountryTest < ActiveSupport::TestCase
     @country.save
     duplicate_country = @country.dup
     duplicate_country.name = "Another Country"
-    assert_not duplicate_country.valid?
+    refute duplicate_country.valid?
     assert_includes duplicate_country.errors[:iso_alpha3], "has already been taken"
   end
 

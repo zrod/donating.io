@@ -1,0 +1,29 @@
+<% content_for :title, "Edit Place" %>
+
+<h1 class="text-5xl font-semibold text-primary mb-6">Edit Place</h1>
+
+<%= form_with(model: @place, local: true, class: "mt-6") do |form| %>
+  <% if @place.errors.any? %>
+    <div class="py-5">
+      <h3 class="alert alert-soft alert-error font-semibold">
+        <%= pluralize(@place.errors.count, "error") %> found. Please review the fields below:
+      </h3>
+      <ul class="list-disc mt-2 ml-7">
+        <% @place.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <%= render "places/form_sections/identification", form: %>
+  <%= render "places/form_sections/location", form: %>
+  <%= render "places/form_sections/hours", form: %>
+  <%= render "places/form_sections/contact", form: %>
+  <%= render "places/form_sections/additional_information", form: %>
+
+  <div class="flex gap-2">
+    <%= form.submit "Update Place", class: "btn btn-primary" %>
+    <%= link_to "Cancel", user_places_path, class: "btn btn-outline" %>
+  </div>
+<% end %>

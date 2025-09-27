@@ -2,7 +2,7 @@ require "test_helper"
 
 class PlaceHourTest < ActiveSupport::TestCase
   def setup
-    @place = places(:donation_bin_published_one)
+    @place = places(:published_bin_with_full_attributes_one)
     @place_hour = PlaceHour.new(
       place: @place,
       day_of_week: 2,

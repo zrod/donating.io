@@ -39,7 +39,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
       }
     end
 
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
   end
 
   test "should not create user with password confirmation mismatch" do
@@ -54,7 +54,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
       }
     end
 
-    assert_response :unprocessable_entity
+    assert_response :unprocessable_content
   end
 
   # Honeypot validation tests

@@ -1,14 +1,14 @@
 feedback_one:
   reason: 0 # incorrect_address
-  place: donation_bin_published_one
+  place: published_bin_with_full_attributes_one
   user: user_one
 
 feedback_two:
   reason: 1 # closed
-  place: donation_bin_published_one
+  place: published_bin_with_full_attributes_one
   user: user_one
 
 feedback_three:
   reason: 4 # other
-  place: donation_bin_published_one
+  place: published_bin_with_full_attributes_one
   user: user_one

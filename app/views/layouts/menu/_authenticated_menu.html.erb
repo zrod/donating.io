@@ -1,5 +1,5 @@
 <li>
-  <details>
+  <details class="dropdown dropdown-end">
     <summary class="font-medium text-neutral-content">
       <div class="avatar avatar-placeholder">
         <div class="bg-base-300 text-base-content w-8 rounded-full">
@@ -10,10 +10,12 @@
       <%= I18n.t("views.menu.authenticated.greeting", username: current_user.username) %>
     </summary>
 
-    <ul class="menu lg:menu-horizontal bg-base-200 rounded-box lg:mb-64 text-accent-content">
-      <li><%= link_to I18n.t("views.menu.authenticated.profile"), "#", class: "font-medium" %></li>
-      <li><%= link_to I18n.t("views.menu.authenticated.settings"), "#", class: "font-medium" %></li>
-      <li><%= link_to I18n.t("views.menu.authenticated.logout"), session_path, data: { turbo_method: :delete }, class: "font-medium" %></li>
+    <ul class="dropdown-content menu bg-base-200 rounded-box text-accent-content z-[1] py-1 px-2 shadow-lg min-w-52 text-sm">
+      <li><%= link_to I18n.t("views.menu.authenticated.my_contributions"), my_contributions_places_path, class: "font-medium py-1 px-2" %></li>
+      <hr class="border-base-300 my-1 mx-2">
+      <li><%= link_to I18n.t("views.menu.authenticated.profile"), "#", class: "font-medium py-1 px-2" %></li>
+      <li><%= link_to I18n.t("views.menu.authenticated.settings"), "#", class: "font-medium py-1 px-2" %></li>
+      <li><%= link_to I18n.t("views.menu.authenticated.logout"), session_path, data: { turbo_method: :delete }, class: "font-medium py-1 px-2" %></li>
     </ul>
   </details>
 </li>

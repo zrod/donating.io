@@ -2,7 +2,7 @@ require "test_helper"
 
 class CategoriesPlaceTest < ActiveSupport::TestCase
   def setup
-    @place = places(:donation_bin_published_one)
+    @place = places(:published_bin_with_full_attributes_one)
     @category = categories(:books)
     @categories_place = CategoriesPlace.new(
       place: @place,
@@ -39,7 +39,7 @@ class CategoriesPlaceTest < ActiveSupport::TestCase
   test "should allow creation with valid attributes" do
     assert_difference "CategoriesPlace.count", 1 do
       CategoriesPlace.create!(
-        place: places(:donation_bin_published_one),
+        place: places(:published_bin_with_full_attributes_one),
         category: categories(:clothing)
       )
     end

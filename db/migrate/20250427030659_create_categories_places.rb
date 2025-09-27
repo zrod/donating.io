@@ -1,8 +1,8 @@
 class CreateCategoriesPlaces < ActiveRecord::Migration[8.0]
   def change
     create_table :categories_places do |t|
-      t.belongs_to :category, index: true
-      t.belongs_to :place, index: true
+      t.belongs_to :category, null: false, index: true
+      t.belongs_to :place, null: false, index: true
       t.timestamps
     end
 

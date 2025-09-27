@@ -1,0 +1,142 @@
+<% content_for :title, I18n.t("views.places.my_contributions.title") %>
+
+<div data-controller="places">
+  <h1 class="text-5xl font-semibold text-primary mb-6">
+    <%= I18n.t("views.places.my_contributions.title") %>
+  </h1>
+
+  <p class="text-lg text-base-content mb-6">
+    <%= I18n.t("views.places.my_contributions.subheader") %>
+  </p>
+
+  <div class="my-5" data-places-target="bulkActions" style="display: none;">
+    <div class="w-full px-3 py-2 bg-base-200">
+      <div class="flex justify-between items-center w-full">
+        <span data-places-target="selectedCount"><%= t("views.places.my_contributions.places_selected", count: 0) %></span>
+        <div class="flex gap-2">
+          <%= form_with url: bulk_delete_places_path, method: :delete, data: { turbo_confirm: t("views.places.my_contributions.confirmations.bulk_delete") }, id: "bulk-delete-form" do |form| %>
+            <button type="submit" class="btn btn-sm btn-error" data-action="click->places#bulkDelete"><%= t("views.places.my_contributions.delete_selected_button") %></button>
+          <% end %>
+          <button class="btn btn-sm" data-action="click->places#clearSelection"><%= t("views.places.my_contributions.clear_selection_button") %></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="my-5 text-sm">
+    <%= t("views.places.my_contributions.places_found", count: @places_total) %>
+  </p>
+
+  <table class="table w-full">
+    <thead>
+      <tr>
+        <th>
+          <label class="cursor-pointer">
+            <%= check_box_tag "select_all", "1", false,
+                class: "checkbox checkbox-primary",
+                data: { action: "change->places#toggleAll" } %>
+          </label>
+        </th>
+        <th class="cursor-pointer" data-action="click->places#sort" data-column="name">
+          <%= t("views.places.my_contributions.table.name") %>
+          <% if params[:sort]&.start_with?('name') %>
+            <span class="text-xs"><%= params[:sort] == 'name_asc' ? '↑' : '↓' %></span>
+          <% end %>
+        </th>
+        <th class="cursor-pointer" data-action="click->places#sort" data-column="status">
+          <%= t("views.places.my_contributions.table.status") %>
+          <% if params[:sort]&.start_with?('status') %>
+            <span class="text-xs"><%= params[:sort] == 'status_asc' ? '↑' : '↓' %></span>
+          <% end %>
+        </th>
+        <th class="cursor-pointer" data-action="click->places#sort" data-column="created">
+          <%= t("views.places.my_contributions.table.date_submitted") %>
+          <% if params[:sort]&.start_with?('created') %>
+            <span class="text-xs"><%= params[:sort] == 'created_asc' ? '↑' : '↓' %></span>
+          <% end %>
+        </th>
+        <th class="cursor-pointer" data-action="click->places#sort" data-column="updated">
+          <%= t("views.places.my_contributions.table.last_updated") %>
+          <% if params[:sort]&.start_with?('updated') %>
+            <span class="text-xs"><%= params[:sort] == 'updated_asc' ? '↑' : '↓' %></span>
+          <% end %>
+        </th>
+        <th><%= t("views.places.my_contributions.table.actions") %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if @places.any? %>
+        <% @places.each do |place| %>
+          <tr data-places-target="row">
+            <td>
+              <label class="cursor-pointer">
+                <%= check_box_tag "place_ids[]", place.id, @selected_ids.include?(place.id.to_s),
+                    class: "checkbox checkbox-primary place-checkbox",
+                    data: { action: "change->places#toggleRow" } %>
+              </label>
+            </td>
+            <td>
+              <div class="flex flex-col">
+                <div class="font-semibold link">
+                  <%= link_to place.name, place_path(place) %>
+                </div>
+                <div class="text-sm opacity-70"><%= truncate(place.address, length: 50) %></div>
+              </div>
+            </td>
+            <td>
+              <%= Place::STATUSES.key(place.status)&.to_s&.humanize %>
+            </td>
+            <td>
+              <div class="text-sm">
+                <%= place.created_at.strftime("%b %d, %Y") %>
+                <div class="text-xs opacity-70">
+                  <%= time_ago_in_words(place.created_at) %> ago
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="text-sm">
+                <%= place.updated_at.strftime("%b %d, %Y") %>
+                <div class="text-xs opacity-70">
+                  <%= time_ago_in_words(place.updated_at) %> ago
+                </div>
+              </div>
+            </td>
+            <td>
+              <%= link_to place_path(place),
+                  method: :delete,
+                  data: {
+                    confirm: t("views.places.my_contributions.confirmations.single_delete", name: place.name),
+                    turbo_method: :delete
+                  },
+                  class: "flex items-center gap-2 text-error link" do %>
+                <%= t("views.places.my_contributions.actions.delete") %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      <% else %>
+        <tr>
+          <td colspan="6" class="text-center py-8">
+            <div class="flex flex-col items-center gap-3">
+              <div class="text-lg">
+                <% if params[:search].present? %>
+                  <%= t("views.places.my_contributions.empty_states.no_search_results", search: params[:search]) %>
+                <% else %>
+                  <%= t("views.places.my_contributions.empty_states.no_places") %>
+                <% end %>
+              </div>
+              <% unless params[:search].present? %>
+                <%= link_to t("views.places.my_contributions.empty_states.submit_first_place"), new_place_path, class: "btn btn-primary" %>
+              <% end %>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <div class="mt-6">
+    <%= pagination_links(@current_page, @pages, my_contributions_places_path, params.to_unsafe_h.except(:controller, :action, :page, :per_page)) %>
+  </div>
+</div>

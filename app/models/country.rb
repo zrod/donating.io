@@ -1,5 +1,5 @@
 class Country < ApplicationRecord
-  has_many :places, dependent: :nullify
+  has_many :places, dependent: :restrict_with_error
 
   validates :name, presence: true
   validates :iso_alpha3, uniqueness: true

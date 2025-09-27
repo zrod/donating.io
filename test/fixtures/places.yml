@@ -1,4 +1,4 @@
-donation_bin_published_one:
+published_bin_with_full_attributes_one:
   name: Donation Bin One
   slug: donation_bin_one
   description: Donation Bin One
@@ -22,5 +22,32 @@ donation_bin_published_one:
   status: 1
   created_at: <%= 1.day.ago %>
   updated_at: <%= 1.day.ago %>
+  country: canada
+  user: user_one
+
+published_bin_toronto_one:
+  name: Published Bin Toronto One
+  slug: published_bin_toronto_one
+  description: Published Bin Toronto One Description
+  address: 10 king st east
+  lat: 46.65107
+  lng: -73.347015
+  city: Toronto
+  region: Ontario
+  phone: 647-555-1234
+  url: https://donationbins.local/toronto
+  logo: Donation Bin One
+  postal_code: M1M 1A1
+  email: toronto_one@donationbins.local
+  charity_support:
+  location_instructions:
+  pickup: false
+  used_ok: true
+  is_bin: true
+  tax_receipt: false
+  osm_id: 123
+  status: 1
+  created_at: <%= 3.days.ago %>
+  updated_at: <%= 2.days.ago %>
   country: canada
   user: user_one

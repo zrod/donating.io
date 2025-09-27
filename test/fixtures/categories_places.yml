@@ -1,3 +1,7 @@
-donation_bin_published_one_category_one:
-  place: donation_bin_published_one
+published_bin_with_full_attributes_one_category_one:
+  place: published_bin_with_full_attributes_one
   category: books
+
+published_bin_toronto_one_category_one:
+  place: published_bin_toronto_one
+  category: toys
