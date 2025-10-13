@@ -1,72 +1,74 @@
 <% content_for :title, I18n.t("views.places.new.title") %>
 
-<h1 class="text-5xl font-semibold text-primary mb-6">
-  <%= I18n.t("views.places.new.title") %>
-</h1>
+<div class="w-full max-w-2xl">
+  <h1 class="text-5xl font-semibold text-primary mb-6">
+    <%= I18n.t("views.places.new.title") %>
+  </h1>
 
-<p class="text-lg text-base-content mb-6">
-  <%= I18n.t("views.places.new.subheader") %>
-</p>
+  <p class="text-lg text-base-content mb-6">
+    <%= I18n.t("views.places.new.subheader") %>
+  </p>
 
-<% unless authenticated? %>
-  <div class="card card-md card-border bg-warning text-warning-content w-full">
-    <div class="card-body">
-      <h2 class="card-title font-semibold">
-        <%= I18n.t("views.places.new.unauthenticated_alert_title") %>
-      </h2>
-      <p>
-        <%= I18n.t("views.places.new.unauthenticated_alert_content") %>
-      </p>
-    </div>
-  </div>
-<% end %>
-
-<%= form_with(model: @place, local: true, class: "mt-6",
-    data: {
-      controller: "places",
-      places_is_authenticated_value: authenticated?,
-      places_target: "form",
-      places_validation_messages_value: {
-        name_min_length: I18n.t("views.places.new.js_validation.name_min_length"),
-        description_required: I18n.t("views.places.new.js_validation.description_required"),
-        address_min_length: I18n.t("views.places.new.js_validation.address_min_length"),
-        city_min_length: I18n.t("views.places.new.js_validation.city_min_length"),
-        postal_code_max_length: I18n.t("views.places.new.js_validation.postal_code_max_length"),
-        email_invalid: I18n.t("views.places.new.js_validation.email_invalid"),
-        url_invalid: I18n.t("views.places.new.js_validation.url_invalid"),
-        latitude_invalid: I18n.t("views.places.new.js_validation.latitude_invalid"),
-        longitude_invalid: I18n.t("views.places.new.js_validation.longitude_invalid"),
-        field_required: I18n.t("views.places.new.js_validation.field_required"),
-        categories_required: I18n.t("views.places.new.js_validation.categories_required")
-      }.to_json,
-      places_validation_constants_value: {
-        name_min_length: Place::NAME_MIN_LENGTH,
-        address_min_length: Place::ADDRESS_MIN_LENGTH,
-        city_min_length: Place::CITY_MIN_LENGTH,
-        postal_code_max_length: Place::POSTAL_CODE_MAX_LENGTH
-      }.to_json
-    }) do |form| %>
-  <% if @place.errors.any? %>
-    <div class="py-5">
-      <h3 class="alert alert-soft alert-error font-semibold">
-        <%= pluralize(@place.errors.count, "error") %> found. Please review the fields below:
-      </h3>
-      <ul class="list-disc mt-2 ml-7">
-        <% @place.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
+  <% unless authenticated? %>
+    <div class="card card-md card-border bg-warning text-warning-content w-full">
+      <div class="card-body">
+        <h2 class="card-title font-semibold">
+          <%= I18n.t("views.places.new.unauthenticated_alert_title") %>
+        </h2>
+        <p>
+          <%= I18n.t("views.places.new.unauthenticated_alert_content") %>
+        </p>
+      </div>
     </div>
   <% end %>
 
-  <%= render "places/form_sections/identification", form: %>
-  <%= render "places/form_sections/location", form: %>
-  <%= render "places/form_sections/hours", form: %>
-  <%= render "places/form_sections/contact", form: %>
-  <%= render "places/form_sections/additional_information", form: %>
+  <%= form_with(model: @place, local: true, class: "mt-6",
+      data: {
+        controller: "places",
+        places_is_authenticated_value: authenticated?,
+        places_target: "form",
+        places_validation_messages_value: {
+          name_min_length: I18n.t("views.places.new.js_validation.name_min_length"),
+          description_required: I18n.t("views.places.new.js_validation.description_required"),
+          address_min_length: I18n.t("views.places.new.js_validation.address_min_length"),
+          city_min_length: I18n.t("views.places.new.js_validation.city_min_length"),
+          postal_code_max_length: I18n.t("views.places.new.js_validation.postal_code_max_length"),
+          email_invalid: I18n.t("views.places.new.js_validation.email_invalid"),
+          url_invalid: I18n.t("views.places.new.js_validation.url_invalid"),
+          latitude_invalid: I18n.t("views.places.new.js_validation.latitude_invalid"),
+          longitude_invalid: I18n.t("views.places.new.js_validation.longitude_invalid"),
+          field_required: I18n.t("views.places.new.js_validation.field_required"),
+          categories_required: I18n.t("views.places.new.js_validation.categories_required")
+        }.to_json,
+        places_validation_constants_value: {
+          name_min_length: Place::NAME_MIN_LENGTH,
+          address_min_length: Place::ADDRESS_MIN_LENGTH,
+          city_min_length: Place::CITY_MIN_LENGTH,
+          postal_code_max_length: Place::POSTAL_CODE_MAX_LENGTH
+        }.to_json
+      }) do |form| %>
+    <% if @place.errors.any? %>
+      <div class="py-5">
+        <h3 class="alert alert-soft alert-error font-semibold">
+          <%= pluralize(@place.errors.count, "error") %> found. Please review the fields below:
+        </h3>
+        <ul class="list-disc mt-2 ml-7">
+          <% @place.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
 
-  <div class="flex gap-2">
-    <%= form.submit I18n.t("views.places.new.submit_button"), class: "btn btn-primary" %>
-    <%= link_to I18n.t("views.places.new.cancel_button"), places_path, class: "btn btn-outline" %>
-  </div>
-<% end %>
+    <%= render "places/form_sections/identification", form: %>
+    <%= render "places/form_sections/location", form: %>
+    <%= render "places/form_sections/hours", form: %>
+    <%= render "places/form_sections/contact", form: %>
+    <%= render "places/form_sections/additional_information", form: %>
+
+    <div class="flex gap-2">
+      <%= form.submit I18n.t("views.places.new.submit_button"), class: "btn btn-primary" %>
+      <%= link_to I18n.t("views.places.new.cancel_button"), places_path, class: "btn btn-outline" %>
+    </div>
+  <% end %>
+</div>

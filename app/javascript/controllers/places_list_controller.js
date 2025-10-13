@@ -1,21 +1,25 @@
-export default class PlaceListService {
-  constructor(element, bulkActionsTarget, selectedCountTarget) {
-    this.element = element
-    this.bulkActionsTarget = bulkActionsTarget
-    this.selectedCountTarget = selectedCountTarget
+import { Controller } from "@hotwired/stimulus"
+
+export default class extends Controller {
+  static targets = ["bulkActions", "selectedCount", "row"]
+
+  connect() {
+    this.updateDisplay()
   }
 
   sort(event) {
     const column = event.currentTarget.dataset.column
-    const currentSort = new URLSearchParams(window.location.search).get('sort')
+    const currentSortBy = new URLSearchParams(window.location.search).get('sort_by')
+    const currentOrder = new URLSearchParams(window.location.search).get('order')
 
-    let newSort = `${column}_asc`
-    if (currentSort === `${column}_asc`) {
-      newSort = `${column}_desc`
+    let newOrder = 'asc'
+    if (currentSortBy === column && currentOrder === 'asc') {
+      newOrder = 'desc'
     }
 
     const url = new URL(window.location)
-    url.searchParams.set('sort', newSort)
+    url.searchParams.set('sort_by', column)
+    url.searchParams.set('order', newOrder)
     url.searchParams.set('page', '1')
 
     window.location.href = url.toString()
@@ -59,7 +63,7 @@ export default class PlaceListService {
   }
 
   updateDisplay() {
-    if (!this.bulkActionsTarget || !this.selectedCountTarget) {
+    if (!this.hasBulkActionsTarget || !this.hasSelectedCountTarget) {
       return
     }
 
@@ -110,5 +114,3 @@ export default class PlaceListService {
     form.requestSubmit()
   }
 }
-
-

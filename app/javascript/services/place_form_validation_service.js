@@ -1,20 +1,34 @@
 export default class PlaceFormValidationService {
-  constructor(formElement, selectors, validationMessages, validationConstants) {
+  constructor(formElement, validationMessages, validationConstants) {
     this.formElement = formElement
-    this.selectors = selectors
     this.validationMessages = validationMessages
     this.validationConstants = validationConstants
+    this.setupTurboEvents()
+  }
+
+  setupTurboEvents() {
+    this.formElement.addEventListener("submit", (event) => {
+      if (!this.validateForm()) {
+        event.preventDefault()
+        this.showValidationErrors()
+      }
+    })
   }
 
   validateForm() {
     let isValid = true
-    const fields = this.formElement.querySelectorAll(this.selectors.FORM_FIELDS)
+    const formData = new FormData(this.formElement)
 
-    fields.forEach(field => {
-      if (!this.validateField(field)) {
+    for (const [name, value] of formData.entries()) {
+      if (name === "authenticity_token") {
+        continue
+      }
+
+      const field = this.formElement.querySelector(`[name="${name}"]`)
+      if (field && !this.validateField(field, value)) {
         isValid = false
       }
-    })
+    }
 
     if (!this.validateCategories()) {
       isValid = false
@@ -23,7 +37,7 @@ export default class PlaceFormValidationService {
     return isValid
   }
 
-  validateField(field) {
+  validateField(field, value) {
     const fieldName = field.name
     if (!fieldName) {
       return true
@@ -36,7 +50,7 @@ export default class PlaceFormValidationService {
       return true
     }
 
-    const { isValid, message } = validation(field.value)
+    const { isValid, message } = validation(value)
 
     if (!isValid) {
       this.showFieldError(field, message)
@@ -101,7 +115,7 @@ export default class PlaceFormValidationService {
   }
 
   getFieldLabel(field) {
-    const label = field.closest(this.selectors.FORM_CONTROL).querySelector(this.selectors.LABEL)
+    const label = field.closest('.form-control')?.querySelector('label')
     return label ? label.textContent.replace(/\s*\*\s*$/, '').trim() : "This field"
   }
 
@@ -124,7 +138,7 @@ export default class PlaceFormValidationService {
   }
 
   validateCategories() {
-    const categoryCheckboxes = this.formElement.querySelectorAll(this.selectors.CATEGORY_CHECKBOXES)
+    const categoryCheckboxes = this.formElement.querySelectorAll('input[name="place[category_ids][]"]:checked')
     if (categoryCheckboxes.length === 0) {
       this.showCategoryError()
       return false
@@ -139,7 +153,7 @@ export default class PlaceFormValidationService {
       field.classList.add("input-error")
     }
 
-    let errorElement = container.querySelector(this.selectors.FIELD_ERROR)
+    let errorElement = container.querySelector('.field-error')
     if (!errorElement) {
       errorElement = document.createElement("div")
       errorElement.className = "field-error text-error text-sm mt-1"
@@ -154,7 +168,7 @@ export default class PlaceFormValidationService {
       field.classList.remove("input-error")
     }
 
-    const errorElement = container.querySelector(this.selectors.FIELD_ERROR)
+    const errorElement = container.querySelector('.field-error')
     if (errorElement) {
       errorElement.remove()
     }
@@ -169,21 +183,21 @@ export default class PlaceFormValidationService {
   }
 
   showCategoryError() {
-    const categorySection = this.formElement.querySelector(this.selectors.CATEGORY_INPUT)?.closest(this.selectors.FORM_CONTROL)
+    const categorySection = this.formElement.querySelector('input[name="place[category_ids][]"]')?.closest('.form-control')
     if (categorySection) {
       this.showError(categorySection, this.validationMessages.categories_required)
     }
   }
 
   clearCategoryError() {
-    const categorySection = this.formElement.querySelector(this.selectors.CATEGORY_INPUT)?.closest(this.selectors.FORM_CONTROL)
+    const categorySection = this.formElement.querySelector('input[name="place[category_ids][]"]')?.closest('.form-control')
     if (categorySection) {
       this.clearError(categorySection)
     }
   }
 
   showValidationErrors() {
-    const firstError = this.formElement.querySelector(this.selectors.INPUT_ERROR)
+    const firstError = this.formElement.querySelector('.input-error')
 
     if (firstError) {
       firstError.scrollIntoView({ behavior: "smooth", block: "center" })

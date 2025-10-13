@@ -1,27 +1,39 @@
 export default class PlaceFormCacheService {
-  constructor(formElement, selectors, isAuthenticated) {
+  constructor(formElement, isAuthenticated) {
     this.formElement = formElement
-    this.selectors = selectors
     this.isAuthenticated = isAuthenticated
     this.cacheKey = "place_form_data"
+    this.setupTurboEvents()
+  }
+
+  setupTurboEvents() {
+    this.formElement.addEventListener("turbo:submit-start", () => {
+      console.log("turbo:submit-start")
+      this.saveFormData()
+    })
+
+    this.formElement.addEventListener("turbo:submit-end", (event) => {
+      if (this.isAuthenticated && event.detail.success) {
+        this.clearCachedData()
+      }
+    })
   }
 
   saveFormData() {
     const data = {}
-    const fields = this.formElement.querySelectorAll(this.selectors.FORM_FIELDS)
+    const formData = new FormData(this.formElement)
 
-    fields.forEach(field => {
-      const name = field.name
-      if (!name || name === "authenticity_token") {
-        return
+    for (const [name, value] of formData.entries()) {
+      if (name === "authenticity_token") {
+        continue
       }
 
       try {
-        this.collectFieldValue(field, name, data)
+        this.collectFieldValue(name, value, data)
       } catch (e) {
-        console.error("Validation: Error collecting field value", field, e)
+        console.error("Validation: Error collecting field value", name, e)
       }
-    })
+    }
 
     if (Object.keys(data).length) {
       sessionStorage.setItem(this.cacheKey, JSON.stringify(data))
@@ -32,42 +44,31 @@ export default class PlaceFormCacheService {
     sessionStorage.removeItem(this.cacheKey)
   }
 
-  collectFieldValue(field, name, data) {
-    if (field.type === "checkbox") {
-      if (name === "place[category_ids][]") {
-        data[name] = data[name] || []
-
-        if (field.checked) {
-          data[name].push(field.value)
-        }
-      } else {
-        data[name] = field.checked
-      }
-
+  collectFieldValue(name, value, data) {
+    if (name.endsWith("[]")) {
+      data[name] = data[name] || []
+      data[name].push(value)
       return
     }
 
-    if (field.type === "radio" && field.checked) {
-      data[name] = field.value
+    if (this.isHourFieldName(name)) {
+      data[name] = value
       return
     }
 
-    if (field.tagName === "SELECT") {
-      data[name] = field.multiple
-        ? Array.from(field.selectedOptions).map(o => o.value).filter(Boolean)
-        : field.value
-
+    if (this.isBooleanField(name)) {
+      data[name] = value === "1" || value === "true"
       return
     }
 
-    if (field.type === "hidden" && this.isHourFieldName(name)) {
-      data[name] = field.value
-      return
+    if (value) {
+      data[name] = value
     }
+  }
 
-    if (field.value) {
-      data[name] = field.value
-    }
+  isBooleanField(name) {
+    const booleanFields = ["place[used_ok]", "place[is_bin]", "place[pickup]", "place[tax_receipt]"]
+    return booleanFields.includes(name)
   }
 
   isHourFieldName(name) {
@@ -101,7 +102,7 @@ export default class PlaceFormCacheService {
         return
       }
 
-      const boxes = this.formElement.querySelectorAll(this.selectors.CATEGORY_INPUT)
+      const boxes = this.formElement.querySelectorAll('input[name="place[category_ids][]"]')
       boxes.forEach(box => {
         if (values.includes(box.value)) {
           box.checked = true
@@ -111,8 +112,8 @@ export default class PlaceFormCacheService {
   }
 
   restoreBooleanFields(data) {
-    const names = ["place[used_ok]", "place[is_bin]", "place[pickup]", "place[tax_receipt]"]
-    names.forEach(name => {
+    const booleanFields = ["place[used_ok]", "place[is_bin]", "place[pickup]", "place[tax_receipt]"]
+    booleanFields.forEach(name => {
       try {
         if (!(name in data)) {
           return
@@ -128,15 +129,9 @@ export default class PlaceFormCacheService {
 
   restoreStandardFields(data) {
     Object.keys(data).forEach(name => {
-      if (name === "place[category_ids][]") {
-        return
-      }
-
-      if (["place[used_ok]", "place[is_bin]", "place[pickup]", "place[tax_receipt]"].includes(name)) {
-        return
-      }
-
-      if (this.isHourFieldName(name)) {
+      if (name === "place[category_ids][]" ||
+          this.isBooleanField(name) ||
+          this.isHourFieldName(name)) {
         return
       }
 
@@ -176,7 +171,9 @@ export default class PlaceFormCacheService {
           return acc
         }, {})
 
-      const container = this.formElement.querySelector('[data-hours-target="hiddenFields"]')
+      const container = this.formElement.querySelector('[data-turbo-permanent] [data-hours-target="hiddenFields"]') ||
+                       this.formElement.querySelector('[data-hours-target="hiddenFields"]')
+
       if (!container) {
         return
       }
@@ -187,11 +184,28 @@ export default class PlaceFormCacheService {
           return
         }
 
-        container.insertAdjacentHTML("beforeend", `
-          <input type="hidden" name="place[place_hours_attributes][${idx}][day_of_week]" value="${h.day_of_week}">
-          <input type="hidden" name="place[place_hours_attributes][${idx}][from_hour]" value="${h.from_hour}">
-          <input type="hidden" name="place[place_hours_attributes][${idx}][to_hour]" value="${h.to_hour}">
-        `)
+        const fragment = document.createDocumentFragment()
+
+        const dayInput = document.createElement('input')
+        dayInput.type = 'hidden'
+        dayInput.name = `place[place_hours_attributes][${idx}][day_of_week]`
+        dayInput.value = h.day_of_week
+
+        const fromInput = document.createElement('input')
+        fromInput.type = 'hidden'
+        fromInput.name = `place[place_hours_attributes][${idx}][from_hour]`
+        fromInput.value = h.from_hour
+
+        const toInput = document.createElement('input')
+        toInput.type = 'hidden'
+        toInput.name = `place[place_hours_attributes][${idx}][to_hour]`
+        toInput.value = h.to_hour
+
+        fragment.appendChild(dayInput)
+        fragment.appendChild(fromInput)
+        fragment.appendChild(toInput)
+
+        container.appendChild(fragment)
       })
     } catch {}
   }

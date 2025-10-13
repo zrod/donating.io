@@ -26,11 +26,10 @@
 
   <body class="min-h-screen flex flex-col">
     <%= render "layouts/header" %>
+    <%= render "layouts/flashes" %>
 
     <main class="container mx-auto my-10 px-5 flex justify-center flex-grow">
-      <div class="w-full max-w-4xl">
-        <%= render "layouts/flashes" %>
-
+      <div class="w-full max-w-6xl justify-center flex">
         <%= yield %>
       </div>
     </main>

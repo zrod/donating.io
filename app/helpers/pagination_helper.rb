@@ -1,12 +1,14 @@
 module PaginationHelper
-  def pagination_links(current_page, total_pages, path, params = {})
+  def pagination_links(current_page, total_pages, path, params = {}, turbo_frame: nil)
     return "" if total_pages <= 1
+
+    turbo_data = turbo_frame ? { turbo_frame: turbo_frame, turbo_action: "advance" } : {}
 
     content_tag :div, class: "join" do
       links = []
 
       if current_page > 1
-        links << link_to("«", path + "?" + build_query_string(params.merge(page: current_page - 1)), class: "join-item btn")
+        links << link_to("«", path + "?" + build_query_string(params.merge(page: current_page - 1)), class: "join-item btn", data: turbo_data)
       else
         links << content_tag(:span, "«", class: "join-item btn btn-disabled")
       end
@@ -17,12 +19,12 @@ module PaginationHelper
         elsif page == current_page
           links << content_tag(:span, page, class: "join-item btn btn-active")
         else
-          links << link_to(page, path + "?" + build_query_string(params.merge(page:)), class: "join-item btn")
+          links << link_to(page, path + "?" + build_query_string(params.merge(page:)), class: "join-item btn", data: turbo_data)
         end
       end
 
       if current_page < total_pages
-        links << link_to("»", path + "?" + build_query_string(params.merge(page: current_page + 1)), class: "join-item btn")
+        links << link_to("»", path + "?" + build_query_string(params.merge(page: current_page + 1)), class: "join-item btn", data: turbo_data)
       else
         links << content_tag(:span, "»", class: "join-item btn btn-disabled")
       end

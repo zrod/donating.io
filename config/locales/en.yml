@@ -12,6 +12,18 @@ en:
         success: "Thank you! Your submission has been received and is now pending review."
         too_many_requests: "Too many place submissions. Please try again later."
         please_authenticate: "Please sign in or create an account to submit your place. Your form data has been saved and will be restored after authentication."
+        record_not_unique: "A place with this name and location already exists."
+      update:
+        success: "Place updated successfully."
+      destroy:
+        success: "Place deleted successfully."
+      bulk_delete:
+        success:
+          one: "1 place deleted successfully."
+          other: "%{count} places deleted successfully."
+        nothing_selected: "No places selected for deletion."
+      authorize_place_owner:
+        denied: "You can only edit your own places."
     sessions:
       create:
         too_many_requests: "Too many login attempts. Please try again later."
@@ -45,6 +57,46 @@ en:
         password_confirmation_placeholder: "Confirm new password"
         save_button: "Save"
     places:
+      index:
+        title: "Directory"
+        subheader: "Find local places that need your items. Use the filters to narrow your search."
+        places_found:
+          one: "1 place found"
+          other: "%{count} places found"
+        view: "View"
+        empty: "No places found"
+        badges:
+          donation_bin: "Donation Bin"
+          organization: "Organization"
+          tax_receipt: "Tax Receipt"
+          accepts_used: "Accepts Used"
+          pickup_available: "Pickup Available"
+          charity_support: "Charity Support"
+      show:
+        back: "← Back to Directory"
+        edit: "Edit"
+        delete: "Delete"
+        delete_confirm: "Are you sure you want to delete this place?"
+        description: "Description"
+        location: "Location"
+        address: "Address"
+        location_instructions: "Location Instructions"
+        contact: "Contact Information"
+        phone: "Phone"
+        email: "Email"
+        website: "Website"
+        details: "Details"
+        categories: "Categories"
+        pickup: "Pickup Available"
+        used_ok: "Accepts Used Items"
+        is_bin: "Donation Bin"
+        tax_receipt: "Tax Receipt Available"
+        charity_support: "Charity Support"
+        yes: "Yes"
+        no: "No"
+        hours: "Drop-off Hours"
+        day: "Day"
+        time: "Time"
       new:
         title: "Contribute"
         subheader: "If you know of a donation bin or organization that accepts donations and would like to share it with us, please fill out the form below with the details."
@@ -166,12 +218,66 @@ en:
           edit: "Edit"
           delete: "Delete"
         confirmations:
-          bulk_delete: "Are you sure you want to delete the selected places?."
+          bulk_delete: "Are you sure you want to delete the selected places?"
           single_delete: "Are you sure you want to delete '%{name}'?"
         empty_states:
           no_search_results: "No places found matching \"%{search}\""
-          no_places: "You haven't submitted any places yet"
+          no_places: "You haven't submitted any places yet."
           submit_first_place: "Submit Your First Place"
+      filter_sidebar:
+        location:
+          title: "Location"
+          keyword_placeholder: "Enter an address, city or term"
+          use_current_location: "Use my current location"
+          within: "Within"
+          help_text_html: "To start, search for a location or check the <strong>Use my current location</strong> checkbox."
+          geolocation_error: "Unable to retrieve your location. Please enable location services."
+          geolocation_unsupported: "Geolocation is not supported by your browser."
+        other:
+          title: "Other"
+          is_bin:
+            label: "Location Type"
+            all: "All"
+            option1: "Donation bins"
+            option2: "Organizations / Entities"
+          used_ok:
+            label: "Used Items"
+            all: "Accepts new and used items"
+            option1: "Accepts used items"
+            option2: "Only new items"
+          pickup:
+            label: "Pickup availability"
+            all: "Either pickup or in-person"
+            option1: "Pickup available"
+            option2: "In-person only"
+          charity_support:
+            label: "Charity support"
+            all: "Both charity support options"
+            option1: "Supports a charity"
+            option2: "No charity supported (or not specified)"
+        tax_receipt: "Issues tax receipt"
+        categories:
+          title: "Type of items"
+          all_categories: "All Categories"
+        hours:
+          title: "Drop-off hours"
+          any_day_and_time: "Any day and time"
+          day: "Day"
+          any_day: "Any day"
+          from: "From"
+          to: "To"
+          select_time: "Select time"
+          days:
+            sunday: "Sunday"
+            monday: "Monday"
+            tuesday: "Tuesday"
+            wednesday: "Wednesday"
+            thursday: "Thursday"
+            friday: "Friday"
+            saturday: "Saturday"
+        buttons:
+          apply_filters: "Apply Filters"
+          clear: "Clear"
     sessions:
       new:
         email_address_placeholder: "Email address"

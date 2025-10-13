@@ -18,11 +18,11 @@ module Places
       keyword
     ].freeze
 
-    FILTERS = %i[
-      *NAMED_FILTERS
-      *BOOLEAN_FILTERS
-      order
-      sort_by
+    FILTERS = [
+      *NAMED_FILTERS,
+      *BOOLEAN_FILTERS,
+      :order,
+      :sort_by
     ].freeze
 
     SORTABLE_COLUMNS = %i[

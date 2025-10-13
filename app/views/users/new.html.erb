@@ -1,72 +1,74 @@
 <% content_for :title, I18n.t("views.users.new.create_account_title") %>
 
-<h1 class="text-5xl font-semibold text-primary mb-6">
-  <%= I18n.t("views.users.new.create_account_title") %>
-</h1>
+<div class="w-full max-w-2xl">
+  <h1 class="text-5xl font-semibold text-primary mb-6">
+    <%= I18n.t("views.users.new.create_account_title") %>
+  </h1>
 
-<p class="text-lg text-base-content mb-6">
-  <%= I18n.t("views.users.new.subheader") %>
-</p>
+  <p class="text-lg text-base-content mb-6">
+    <%= I18n.t("views.users.new.subheader") %>
+  </p>
 
-<%= form_with model: @user, url: user_path, method: :post do |form| %>
-  <div class="mb-4">
-    <%= form.text_field :username,
-      class: "input input-bordered w-full text-lg #{'input-error' if @user.errors[:username].any?}",
-      placeholder: I18n.t("views.users.new.username_placeholder") %>
-      <% if @user.errors[:username].any? %>
-        <div class="text-error text-md mt-1">
-          <%= @user.errors.full_messages_for(:username).first %>
-        </div>
-      <% end %>
-  </div>
-
-  <div class="mb-4">
-    <%= form.email_field :email_address,
-      class: "input input-bordered w-full text-lg #{'input-error' if @user.errors[:email_address].any?}",
-            placeholder: I18n.t("views.users.new.email_address_placeholder") %>
-      <% if @user.errors[:email_address].any? %>
-        <div class="text-error text-md mt-1">
-          <%= @user.errors.full_messages_for(:email_address).first %>
-        </div>
-      <% end %>
-
-    <p class="text-md text-base-content mb-6">
-      <%= I18n.t("views.users.new.email_address_explanation") %>
-    </p>
-  </div>
-
-  <div class="mb-4">
-    <%= form.password_field :password,
-        class: "input input-bordered w-full text-lg #{'input-error' if @user.errors[:password].any?}",
-        placeholder: I18n.t("views.users.new.password_placeholder") %>
-      <% if @user.errors[:password].any? %>
-        <div class="text-error text-md mt-1">
-          <%= @user.errors.full_messages_for(:password).first %>
-        </div>
-      <% end %>
-  </div>
-
-  <div class="mb-4">
-    <%= form.password_field :password_confirmation,
-        class: "input input-bordered w-full text-lg #{'input-error' if @user.errors[:password_confirmation].any?}",
-        placeholder: I18n.t("views.users.new.password_confirmation_placeholder") %>
-      <% if @user.errors[:password_confirmation].any? %>
-        <div class="text-error text-md mt-1">
-          <%= @user.errors.full_messages_for(:password_confirmation).first %>
-        </div>
-      <% end %>
+  <%= form_with model: @user, url: user_path, method: :post do |form| %>
+    <div class="mb-4">
+      <%= form.text_field :username,
+        class: "input input-bordered w-full text-lg #{'input-error' if @user.errors[:username].any?}",
+        placeholder: I18n.t("views.users.new.username_placeholder") %>
+        <% if @user.errors[:username].any? %>
+          <div class="text-error text-md mt-1">
+            <%= @user.errors.full_messages_for(:username).first %>
+          </div>
+        <% end %>
     </div>
 
-    <p class="text-md text-base-content mb-4">
-      <%= I18n.t("views.users.new.terms_of_service",
-          terms_link: link_to(I18n.t("views.users.new.terms_of_service_link"), terms_path, class: "link link-primary"),
-          privacy_link: link_to(I18n.t("views.users.new.privacy_policy_link"), privacy_path, class: "link link-primary")
-      ).html_safe %>
-    </p>
+    <div class="mb-4">
+      <%= form.email_field :email_address,
+        class: "input input-bordered w-full text-lg #{'input-error' if @user.errors[:email_address].any?}",
+              placeholder: I18n.t("views.users.new.email_address_placeholder") %>
+        <% if @user.errors[:email_address].any? %>
+          <div class="text-error text-md mt-1">
+            <%= @user.errors.full_messages_for(:email_address).first %>
+          </div>
+        <% end %>
 
-    <div class="overflow-hidden h-1">
-      <%= form.text_field :url, autocomplete: "off", tabindex: "-1", style: "left: 100vh; position: relative;" %>
+      <p class="text-md text-base-content mb-6">
+        <%= I18n.t("views.users.new.email_address_explanation") %>
+      </p>
     </div>
 
-    <%= form.submit I18n.t("views.users.new.create_account_button"), tabindex: "0", class: "btn btn-neutral text-lg mt-2" %>
-<% end %>
+    <div class="mb-4">
+      <%= form.password_field :password,
+          class: "input input-bordered w-full text-lg #{'input-error' if @user.errors[:password].any?}",
+          placeholder: I18n.t("views.users.new.password_placeholder") %>
+        <% if @user.errors[:password].any? %>
+          <div class="text-error text-md mt-1">
+            <%= @user.errors.full_messages_for(:password).first %>
+          </div>
+        <% end %>
+    </div>
+
+    <div class="mb-4">
+      <%= form.password_field :password_confirmation,
+          class: "input input-bordered w-full text-lg #{'input-error' if @user.errors[:password_confirmation].any?}",
+          placeholder: I18n.t("views.users.new.password_confirmation_placeholder") %>
+        <% if @user.errors[:password_confirmation].any? %>
+          <div class="text-error text-md mt-1">
+            <%= @user.errors.full_messages_for(:password_confirmation).first %>
+          </div>
+        <% end %>
+      </div>
+
+      <p class="text-md text-base-content mb-4">
+        <%= I18n.t("views.users.new.terms_of_service",
+            terms_link: link_to(I18n.t("views.users.new.terms_of_service_link"), terms_path, class: "link link-primary"),
+            privacy_link: link_to(I18n.t("views.users.new.privacy_policy_link"), privacy_path, class: "link link-primary")
+        ).html_safe %>
+      </p>
+
+      <div class="overflow-hidden h-1">
+        <%= form.text_field :url, autocomplete: "off", tabindex: "-1", style: "left: 100vh; position: relative;" %>
+      </div>
+
+      <%= form.submit I18n.t("views.users.new.create_account_button"), tabindex: "0", class: "btn btn-neutral text-lg mt-2" %>
+  <% end %>
+</div>

@@ -20,12 +20,14 @@ Rails.application.routes.draw do
   ]
 
   resources :places, only: %i[
+    index
     new
     create
+    show
     edit
     update
     destroy
-  ] do
+  ], param: :slug do
     collection do
       get :my_contributions
       delete :bulk_delete

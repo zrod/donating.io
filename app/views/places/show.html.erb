@@ -1,0 +1,104 @@
+<% content_for :title, @place.name %>
+
+<div class="container mx-auto px-4 py-6">
+  <div class="mb-6">
+    <%= link_to t('views.places.show.back'), root_path, class: "btn btn-ghost btn-sm mb-4" %>
+    <div class="flex items-center justify-between">
+      <h1 class="text-5xl font-semibold text-primary mb-6">
+        <%= @place.name %>
+      </h1>
+      <% if authenticated? && current_user.id == @place.user_id %>
+        <div class="flex gap-2">
+          <%= link_to t('views.places.show.edit'), edit_place_path(@place), class: "btn btn-primary btn-sm" %>
+          <%= button_to t('views.places.show.delete'), place_path(@place), method: :delete,
+              form: { data: { turbo_confirm: t('views.places.show.delete_confirm') } },
+              class: "btn btn-error btn-sm" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="card bg-base-100 shadow">
+      <div class="card-body">
+        <h2 class="card-title"><%= t('views.places.show.description') %></h2>
+        <p class="whitespace-pre-wrap"><%= @place.description %></p>
+      </div>
+    </div>
+
+    <div class="card bg-base-100 shadow">
+      <div class="card-body">
+        <h2 class="card-title"><%= t('views.places.show.location') %></h2>
+        <div class="space-y-2">
+          <p><strong><%= t('views.places.show.address') %>:</strong> <%= @place.full_address %></p>
+          <% if @place.location_instructions.present? %>
+            <p><strong><%= t('views.places.show.location_instructions') %>:</strong> <%= @place.location_instructions %></p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="card bg-base-100 shadow">
+      <div class="card-body">
+        <h2 class="card-title"><%= t('views.places.show.contact') %></h2>
+        <div class="space-y-2">
+          <% if @place.phone.present? %>
+            <p><strong><%= t('views.places.show.phone') %>:</strong> <%= @place.phone %></p>
+          <% end %>
+          <% if @place.email.present? %>
+            <p><strong><%= t('views.places.show.email') %>:</strong> <%= @place.email %></p>
+          <% end %>
+          <% if @place.url.present? %>
+            <p><strong><%= t('views.places.show.website') %>:</strong> <%= link_to @place.url, @place.url, target: "_blank", rel: "noopener", class: "link link-primary" %></p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div class="card bg-base-100 shadow">
+      <div class="card-body">
+        <h2 class="card-title"><%= t('views.places.show.details') %></h2>
+        <div class="space-y-2">
+          <p><strong><%= t('views.places.show.categories') %>:</strong> <%= @place.categories.map(&:name).join(', ') %></p>
+          <p><strong><%= t('views.places.show.pickup') %>:</strong> <%= @place.pickup ? t('views.places.show.yes') : t('views.places.show.no') %></p>
+          <p><strong><%= t('views.places.show.used_ok') %>:</strong> <%= @place.used_ok ? t('views.places.show.yes') : t('views.places.show.no') %></p>
+          <% if @place.is_bin %>
+            <p><strong><%= t('views.places.show.is_bin') %>:</strong> <%= t('views.places.show.yes') %></p>
+          <% end %>
+          <% if @place.tax_receipt %>
+            <p><strong><%= t('views.places.show.tax_receipt') %>:</strong> <%= t('views.places.show.yes') %></p>
+          <% end %>
+          <% if @place.has_charity_support %>
+            <p><strong><%= t('views.places.show.charity_support') %>:</strong> <%= @place.charity_support %></p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <% if @place.place_hours.any? %>
+      <div class="card bg-base-100 shadow lg:col-span-2">
+        <div class="card-body">
+          <h2 class="card-title"><%= t('views.places.show.hours') %></h2>
+          <div class="overflow-x-auto">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th><%= t('views.places.show.day') %></th>
+                  <th><%= t('views.places.show.time') %></th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @place.place_hours.order(:day_of_week).each do |hour| %>
+                  <tr>
+                    <td><%= t("date.day_names")[hour.day_of_week] %></td>
+                    <td><%= hour.from_hour %> - <%= hour.to_hour %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

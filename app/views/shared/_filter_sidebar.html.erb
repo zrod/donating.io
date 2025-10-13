@@ -1,0 +1,160 @@
+<%
+  filter_params = %w[keyword lat is_bin used_ok pickup charity_support tax_receipt category_ids]
+  has_location = params[:lat].present? && params[:lng].present?
+%>
+
+<aside class="w-full lg:w-80 flex-shrink-0" data-controller="filter-sidebar">
+  <%= form_with url: places_path, method: :get, data: { turbo_frame: "places_list", turbo_action: "advance" }, class: "space-y-6", data: { filter_sidebar_target: "form", action: "input->filter-sidebar#formChanged change->filter-sidebar#formChanged" } do |f| %>
+
+    <div>
+      <h3 class="font-semibold"><%= t('views.places.filter_sidebar.location.title') %></h3>
+      <div class="divider mt-0"></div>
+
+      <%= f.text_field :keyword, value: params[:keyword],
+            placeholder: t('views.places.filter_sidebar.location.keyword_placeholder'),
+            class: "input input-bordered w-full mb-3" %>
+
+      <%= f.hidden_field :lat, value: params[:lat], id: "location_lat", data: { filter_sidebar_target: "latField" } %>
+      <%= f.hidden_field :lng, value: params[:lng], id: "location_lng", data: { filter_sidebar_target: "lngField" } %>
+      <%= f.hidden_field :radius, value: params[:radius] || 40, id: "location_radius", data: { filter_sidebar_target: "radiusField" } %>
+
+      <div class="form-control">
+        <label class="label cursor-pointer justify-start gap-2">
+          <%= f.check_box :near_me, { checked: has_location, class: "checkbox", id: "use_current_location", data: { filter_sidebar_target: "locationCheckbox", action: "change->filter-sidebar#toggleLocation" } }, "1", "0" %>
+          <span class="label-text"><%= t('views.places.filter_sidebar.location.use_current_location') %></span>
+        </label>
+      </div>
+
+      <div id="radius_selector" class="mt-4" style="<%= 'display: none;' unless has_location %>" data-filter-sidebar-target="radiusSelector">
+        <h4 class="font-semibold text-sm mb-3"><%= t('views.places.filter_sidebar.location.within') %></h4>
+        <input type="range" min="20" max="100" value="<%= params[:radius] || 40 %>" step="20" class="range range-secondary" id="radius_range" data-filter-sidebar-target="radiusRange" data-action="input->filter-sidebar#updateRadius" />
+        <div class="w-full flex justify-between text-xs px-2 mt-2">
+          <% %w[20km 40km 60km 80km 100km].each do |label| %>
+            <span><%= label %></span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h3 class="font-semibold"><%= t('views.places.filter_sidebar.other.title') %></h3>
+      <div class="divider mt-0"></div>
+
+      <%
+        select_fields = [
+          [:is_bin, 'views.places.filter_sidebar.other.is_bin'],
+          [:used_ok, 'views.places.filter_sidebar.other.used_ok'],
+          [:pickup, 'views.places.filter_sidebar.other.pickup'],
+          [:charity_support, 'views.places.filter_sidebar.other.charity_support']
+        ]
+      %>
+
+      <% select_fields.each do |field, translation_key| %>
+        <div class="form-control mb-3">
+          <label class="label">
+            <span class="label-text"><%= t("#{translation_key}.label") %></span>
+          </label>
+          <%= f.select field,
+                options_for_select([
+                  [t("#{translation_key}.all"), ""],
+                  [t("#{translation_key}.option1"), field == :charity_support ? "1" : "true"],
+                  [t("#{translation_key}.option2"), "false"]
+                ], params[field]),
+                {}, class: "select select-bordered w-full" %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="form-control">
+      <label class="label cursor-pointer justify-start gap-2">
+        <%= f.check_box :tax_receipt, { checked: params[:tax_receipt].present?, class: "checkbox" }, "true", "false" %>
+        <span class="label-text"><%= t('views.places.filter_sidebar.tax_receipt') %></span>
+      </label>
+    </div>
+
+    <div>
+      <h3 class="font-semibold"><%= t('views.places.filter_sidebar.categories.title') %></h3>
+      <div class="divider mt-0"></div>
+      <div class="form-control">
+        <%= f.select :category_ids,
+              options_for_select(Category.by_name.pluck(:name, :id), params[:category_ids]),
+              { include_blank: t('views.places.filter_sidebar.categories.all_categories') },
+              class: "select select-bordered w-full" %>
+      </div>
+    </div>
+
+    <div>
+      <h3 class="font-semibold"><%= t('views.places.filter_sidebar.hours.title') %></h3>
+      <div class="divider mt-0"></div>
+      <div class="form-control">
+        <label class="label cursor-pointer justify-start gap-2">
+          <%= f.check_box :opening_hours_filter, class: "checkbox", checked: params[:opening_hours].blank?, id: "opening_hours_toggle", data: { filter_sidebar_target: "openingHoursToggle", action: "change->filter-sidebar#toggleOpeningHours" } %>
+          <span class="label-text"><%= t('views.places.filter_sidebar.hours.any_day_and_time') %></span>
+        </label>
+      </div>
+
+      <div id="opening_hours_form" class="mt-4 space-y-3" style="<%= 'display: none;' if params[:opening_hours].blank? %>" data-filter-sidebar-target="openingHoursForm">
+        <div class="form-control">
+          <label class="label">
+            <span class="label-text"><%= t('views.places.filter_sidebar.hours.day') %></span>
+          </label>
+          <%= select_tag 'opening_hours[day_of_week]',
+                options_for_select([
+                  [t('views.places.filter_sidebar.hours.days.sunday'), 0],
+                  [t('views.places.filter_sidebar.hours.days.monday'), 1],
+                  [t('views.places.filter_sidebar.hours.days.tuesday'), 2],
+                  [t('views.places.filter_sidebar.hours.days.wednesday'), 3],
+                  [t('views.places.filter_sidebar.hours.days.thursday'), 4],
+                  [t('views.places.filter_sidebar.hours.days.friday'), 5],
+                  [t('views.places.filter_sidebar.hours.days.saturday'), 6]
+                ], params.dig(:opening_hours, :day_of_week)),
+                include_blank: t('views.places.filter_sidebar.hours.any_day'),
+                class: "select select-bordered w-full" %>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text"><%= t('views.places.filter_sidebar.hours.from') %></span>
+            </label>
+            <%= select_tag 'opening_hours[start_time]',
+                  options_for_select((0..23).map { |h|
+                    period = h < 12 ? 'am' : 'pm'
+                    display_hour = h == 0 ? 12 : (h > 12 ? h - 12 : h)
+                    ["#{display_hour}:00 #{period}", h]
+                  }, params.dig(:opening_hours, :start_time)),
+                  include_blank: t('views.places.filter_sidebar.hours.select_time'),
+                  class: "select select-bordered w-full" %>
+          </div>
+
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text"><%= t('views.places.filter_sidebar.hours.to') %></span>
+            </label>
+            <%= select_tag 'opening_hours[end_time]',
+                  options_for_select((0..24).map { |h|
+                    if h == 24
+                      ["12:00 am (+1)", h]
+                    else
+                      period = h < 12 ? 'am' : 'pm'
+                      display_hour = h == 0 ? 12 : (h > 12 ? h - 12 : h)
+                      ["#{display_hour}:00 #{period}", h]
+                    end
+                  }, params.dig(:opening_hours, :end_time)),
+                  include_blank: t('views.places.filter_sidebar.hours.select_time'),
+                  class: "select select-bordered w-full" %>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex flex-col space-y-2">
+      <% has_active_filters = filter_params.any? { |param| params[param].present? } %>
+      <%= f.submit t('views.places.filter_sidebar.buttons.apply_filters'),
+            class: "btn btn-primary btn-sm w-full", id: "apply_filters_btn", disabled: !has_active_filters, data: { filter_sidebar_target: "applyButton" } %>
+      <button type="button" data-action="click->filter-sidebar#clearFilters" class="btn btn-ghost btn-sm w-full">
+        <%= t('views.places.filter_sidebar.buttons.clear') %>
+      </button>
+    </div>
+  <% end %>
+</aside>

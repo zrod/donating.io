@@ -52,4 +52,8 @@ class Place < ApplicationRecord
   def has_charity_support
     charity_support.present?
   end
+
+  def to_param
+    slug
+  end
 end

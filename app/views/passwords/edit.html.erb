@@ -1,31 +1,33 @@
 <% content_for :title, I18n.t("views.passwords.edit.title") %>
 
-<h1 class="text-5xl font-semibold text-primary mb-6">
-  <%= I18n.t("views.passwords.edit.title") %>
-</h1>
+<div class="w-full max-w-2xl">
+  <h1 class="text-5xl font-semibold text-primary mb-6">
+    <%= I18n.t("views.passwords.edit.title") %>
+  </h1>
 
-<p class="text-lg text-base-content mb-6">
-  <%= I18n.t("views.passwords.edit.subheader") %>
-</p>
+  <p class="text-lg text-base-content mb-6">
+    <%= I18n.t("views.passwords.edit.subheader") %>
+  </p>
 
-<%= form_with url: password_path(params[:token]), method: :put do |form| %>
-  <div class="mb-4">
-    <%= form.password_field :password,
-      class: "input input-bordered w-full text-lg",
-      required: true,
-      autocomplete: "new-password",
-      placeholder: I18n.t("views.passwords.edit.password_placeholder"),
-      maxlength: 72 %>
-  </div>
+  <%= form_with url: password_path(params[:token]), method: :put do |form| %>
+    <div class="mb-4">
+      <%= form.password_field :password,
+        class: "input input-bordered w-full text-lg",
+        required: true,
+        autocomplete: "new-password",
+        placeholder: I18n.t("views.passwords.edit.password_placeholder"),
+        maxlength: 72 %>
+    </div>
 
-  <div class="mb-4">
-    <%= form.password_field :password_confirmation,
-      class: "input input-bordered w-full text-lg",
-      required: true,
-      autocomplete: "new-password",
-      placeholder: I18n.t("views.passwords.edit.password_confirmation_placeholder"),
-      maxlength: 72 %>
-  </div>
+    <div class="mb-4">
+      <%= form.password_field :password_confirmation,
+        class: "input input-bordered w-full text-lg",
+        required: true,
+        autocomplete: "new-password",
+        placeholder: I18n.t("views.passwords.edit.password_confirmation_placeholder"),
+        maxlength: 72 %>
+    </div>
 
-  <%= form.submit I18n.t("views.passwords.edit.save_button"), class: "btn btn-neutral text-lg mt-2" %>
-<% end %>
+    <%= form.submit I18n.t("views.passwords.edit.save_button"), class: "btn btn-neutral text-lg mt-2" %>
+  <% end %>
+</div>

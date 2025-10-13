@@ -1,30 +1,90 @@
-<div class="container mx-auto px-4 py-6">
-  <div class="flex items-center justify-between mb-4">
-    <h1 class="text-2xl font-bold"><%= t("views.places.index.title", default: "Places") %></h1>
-    <div class="text-sm opacity-70"><%= @places_total %> places found</div>
+<% content_for :title, I18n.t("views.places.index.title") %>
+
+<div class="container mx-auto px-4 py-6" data-controller="places">
+  <div class="flex items-center justify-between mb-2">
+    <h1 class="text-5xl font-semibold text-primary mb-6">
+      <%= I18n.t("views.places.index.title") %>
+    </h1>
   </div>
+  <p class="text-base opacity-70"><%= t('views.places.index.subheader') %></p>
 
-  <% if @places.any? %>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      <% @places.each do |place| %>
-        <div class="card bg-base-100 shadow">
-          <div class="card-body">
-            <h2 class="card-title"><%= place.name %></h2>
-            <p class="text-sm opacity-80"><%= place.address %></p>
-            <div class="card-actions justify-end">
-              <%= link_to t("views.places.index.view", default: "View"), place_path(place), class: "btn btn-primary btn-sm" %>
-            </div>
-          </div>
+  <div class="divider mb-8"></div>
+
+  <div class="flex flex-col lg:flex-row gap-6">
+    <%= render "shared/filter_sidebar" %>
+
+    <%= turbo_frame_tag "places_list", class: "flex-1" do %>
+      <main>
+        <div class="mb-4">
+          <div class="text-sm opacity-70"><%= t('views.places.index.places_found', count: @places_total) %></div>
         </div>
-      <% end %>
-    </div>
 
-    <div class="mt-6">
-      <%= pagination_links(@current_page, @pages, places_path, params.to_unsafe_h.except(:controller, :action, :page, :per_page)) %>
-    </div>
-  <% else %>
-    <div class="text-center py-12">
-      <div class="text-lg"><%= t("views.places.index.empty", default: "No places found") %></div>
-    </div>
-  <% end %>
+        <% if @places.any? %>
+          <div class="space-y-4">
+            <% @places.each do |place| %>
+              <div class="card bg-base-100 shadow hover:shadow-lg transition-shadow relative">
+                <div class="card-body">
+                  <h2 class="card-title mb-2">
+                    <%= link_to place.name, place_path(place), class: "link link-hover", data: { turbo_frame: "_top" } %>
+                  </h2>
+                  <p class="text-sm opacity-80 mb-3"><%= place.address %></p>
+
+                  <div class="flex flex-wrap gap-2">
+                    <% if place.is_bin %>
+                      <div class="badge badge-ghost gap-1">
+                        <span>📦</span>
+                        <%= t('views.places.index.badges.donation_bin') %>
+                      </div>
+                    <% else %>
+                      <div class="badge badge-ghost gap-1">
+                        <span>🏢</span>
+                        <%= t('views.places.index.badges.organization') %>
+                      </div>
+                    <% end %>
+
+                    <% if place.tax_receipt %>
+                      <div class="badge badge-ghost gap-1">
+                        <span>📄</span>
+                        <%= t('views.places.index.badges.tax_receipt') %>
+                      </div>
+                    <% end %>
+
+                    <% if place.used_ok %>
+                      <div class="badge badge-ghost gap-1">
+                        <span>♻️</span>
+                        <%= t('views.places.index.badges.accepts_used') %>
+                      </div>
+                    <% end %>
+
+                    <% if place.pickup %>
+                      <div class="badge badge-ghost gap-1">
+                        <span>🚚</span>
+                        <%= t('views.places.index.badges.pickup_available') %>
+                      </div>
+                    <% end %>
+
+                    <% if place.has_charity_support %>
+                      <div class="badge badge-ghost gap-1">
+                        <span>❤️</span>
+                        <%= t('views.places.index.badges.charity_support') %>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+
+          <div class="mt-6">
+            <%= pagination_links(@current_page, @pages, places_path, params.to_unsafe_h.except(:controller, :action, :page, :per_page), turbo_frame: "places_list") %>
+          </div>
+        <% else %>
+          <div class="text-center py-12">
+            <div class="text-lg mb-4"><%= t('views.places.index.empty') %></div>
+            <div class="text-sm opacity-70"><%= t('views.places.filter_sidebar.location.help_text_html') %></div>
+          </div>
+        <% end %>
+      </main>
+    <% end %>
+  </div>
 </div>
