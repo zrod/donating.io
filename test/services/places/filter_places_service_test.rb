@@ -106,7 +106,7 @@ module Places
       assert_includes results, place_with_cat2
     end
 
-    test "should filter by charity_support" do
+    test "should filter by charity_support when true" do
       charity_place = places(:published_bin_with_full_attributes_one)
       no_charity_place = Place.create!(
         name: "No Charity Place",
@@ -128,6 +128,82 @@ module Places
 
       assert_includes results, charity_place
       assert_not_includes results, no_charity_place
+    end
+
+    test "should filter by charity_support when false" do
+      charity_place = places(:published_bin_with_full_attributes_one)
+      empty_charity_place = Place.create!(
+        name: "Empty Charity Place",
+        charity_support: "",
+        address: "222 Charity Rd",
+        city: "Toronto",
+        lat: 43.67,
+        lng: -79.36,
+        description: "A place with empty charity support",
+        pickup: false,
+        used_ok: true,
+        country: countries(:canada),
+        user: users(:user_one),
+        categories: [categories(:books)]
+      )
+      empty_charity_place.update!(status: 1)
+
+      nil_charity_place = Place.create!(
+        name: "Nil Charity Place",
+        charity_support: nil,
+        address: "223 Charity Rd",
+        city: "Toronto",
+        lat: 43.68,
+        lng: -79.37,
+        description: "A place with nil charity support",
+        pickup: false,
+        used_ok: true,
+        country: countries(:canada),
+        user: users(:user_one),
+        categories: [categories(:books)]
+      )
+      nil_charity_place.update!(status: 1)
+
+      results = FilterPlacesService.new(params: { charity_support: "false" }).call
+
+      assert_not_includes results, charity_place
+      assert_includes results, empty_charity_place
+      assert_includes results, nil_charity_place
+    end
+
+    test "should handle various boolean-like values for charity_support" do
+      charity_place = places(:published_bin_with_full_attributes_one)
+      no_charity_place = Place.create!(
+        name: "No Charity Place",
+        charity_support: nil,
+        address: "222 Charity Rd",
+        city: "Toronto",
+        lat: 43.67,
+        lng: -79.36,
+        description: "A place without charity support",
+        pickup: false,
+        used_ok: true,
+        country: countries(:canada),
+        user: users(:user_one),
+        categories: [categories(:books)]
+      )
+      no_charity_place.update!(status: 1)
+
+      results = FilterPlacesService.new(params: { charity_support: "1" }).call
+      assert_includes results, charity_place
+      assert_not_includes results, no_charity_place
+
+      results = FilterPlacesService.new(params: { charity_support: "0" }).call
+      assert_not_includes results, charity_place
+      assert_includes results, no_charity_place
+
+      results = FilterPlacesService.new(params: { charity_support: true }).call
+      assert_includes results, charity_place
+      assert_not_includes results, no_charity_place
+
+      results = FilterPlacesService.new(params: { charity_support: false }).call
+      assert_not_includes results, charity_place
+      assert_includes results, no_charity_place
     end
 
     test "should filter by opening_hours" do

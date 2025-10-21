@@ -37,12 +37,12 @@ export default class extends Controller {
         },
         () => {
           this.locationCheckboxTarget.checked = false
-          alert('Unable to retrieve your location. Please try again.')
+          console.log('Unable to retrieve your location. Please try again.')
         }
       )
     } else {
       this.locationCheckboxTarget.checked = false
-      alert('Geolocation is not supported by your browser.')
+      console.log('Geolocation is not supported by your browser.')
     }
   }
 
@@ -64,6 +64,7 @@ export default class extends Controller {
     } else {
       this.openingHoursFormTarget.style.display = 'block'
     }
+
     this.updateButtonState()
   }
 
@@ -79,7 +80,11 @@ export default class extends Controller {
     this.radiusSelectorTarget.style.display = 'none'
     this.openingHoursToggleTarget.checked = true
     this.openingHoursFormTarget.style.display = 'none'
-    this.formTarget.submit()
+
+    this.updateButtonState()
+
+    const placesUrl = this.formTarget.action.split('?')[0]
+    Turbo.visit(placesUrl, { action: 'replace' })
   }
 
   updateButtonState() {
@@ -105,5 +110,26 @@ export default class extends Controller {
 
   formChanged() {
     this.updateButtonState()
+  }
+
+  submitForm(event) {
+    event.preventDefault()
+
+    const formData = new FormData(this.formTarget)
+    formData.delete('commit')
+
+    const checkboxFields = ['tax_receipt', 'opening_hours_filter', 'near_me']
+    const params = new URLSearchParams()
+
+    for (const [key, value] of formData.entries()) {
+      if (value === '' || (checkboxFields.includes(key) && (value === 'false' || value === '0'))) {
+        continue
+      }
+
+      params.append(key, value)
+    }
+
+    const url = `${this.formTarget.action}?${params.toString()}`
+    Turbo.visit(url, { frame: 'places_list', action: 'advance' })
   }
 }

@@ -60,9 +60,17 @@ module Places
         end
       end
 
+      def cast_to_boolean(value)
+        ActiveRecord::Type::Boolean.new.cast(value)
+      end
+
+      def charity_support_enabled?
+        cast_to_boolean(params[:charity_support])
+      end
+
       def apply_boolean_filters(scope)
         apply_filters(scope, BOOLEAN_FILTERS) do |current_scope, filter|
-          current_scope.where(filter => ActiveRecord::Type::Boolean.new.cast(params[filter]))
+          current_scope.where(filter => cast_to_boolean(params[filter]))
         end
       end
 
@@ -73,7 +81,11 @@ module Places
       end
 
       def apply_filters(scope, filters, &block)
-        filters.select { |filter| params[filter].present? }.reduce(scope, &block)
+        filters.select { |filter| filter_param_present?(filter) }.reduce(scope, &block)
+      end
+
+      def filter_param_present?(filter)
+        params.key?(filter) && !params[filter].nil?
       end
 
       def with_category_ids(scope)
@@ -84,7 +96,11 @@ module Places
       end
 
       def with_charity_support(scope)
-        scope.where.not(charity_support: [nil, ""])
+        if charity_support_enabled?
+          scope.where.not(charity_support: [nil, ""])
+        else
+          scope.where(charity_support: [nil, ""])
+        end
       end
 
       def with_near_me(scope)

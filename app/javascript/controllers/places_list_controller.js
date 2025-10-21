@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["bulkActions", "selectedCount", "row"]
+  static targets = ["bulkActions", "selectedCount"]
 
   connect() {
     this.updateDisplay()
@@ -9,8 +9,9 @@ export default class extends Controller {
 
   sort(event) {
     const column = event.currentTarget.dataset.column
-    const currentSortBy = new URLSearchParams(window.location.search).get('sort_by')
-    const currentOrder = new URLSearchParams(window.location.search).get('order')
+    const searchParams = new URLSearchParams(window.location.search)
+    const currentSortBy = searchParams.get('sort_by')
+    const currentOrder = searchParams.get('order')
 
     let newOrder = 'asc'
     if (currentSortBy === column && currentOrder === 'asc') {

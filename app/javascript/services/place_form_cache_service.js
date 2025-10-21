@@ -8,7 +8,6 @@ export default class PlaceFormCacheService {
 
   setupTurboEvents() {
     this.formElement.addEventListener("turbo:submit-start", () => {
-      console.log("turbo:submit-start")
       this.saveFormData()
     })
 

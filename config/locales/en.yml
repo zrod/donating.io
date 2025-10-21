@@ -108,7 +108,7 @@ en:
         js_validation:
           name_min_length: "Name must be at least 4 characters long"
           description_required: "Description is required"
-          address_min_length: "Address must be at least 6 characters long"
+          address_min_length: "Address must be at least 4 characters long"
           city_min_length: "City must be at least 3 characters long"
           postal_code_max_length: "Postal code must be 12 characters or less"
           email_invalid: "Please enter a valid email address"
@@ -203,7 +203,7 @@ en:
       my_contributions:
         title: "My Contributions"
         subheader: "List of places you have shared with us."
-        clear_button: "Clear"
+        clear_button: "Reset"
         places_selected: "%{count} places selected"
         delete_selected_button: "Delete Selected"
         clear_selection_button: "Clear Selection"
@@ -277,7 +277,7 @@ en:
             saturday: "Saturday"
         buttons:
           apply_filters: "Apply Filters"
-          clear: "Clear"
+          reset: "Reset"
     sessions:
       new:
         email_address_placeholder: "Email address"

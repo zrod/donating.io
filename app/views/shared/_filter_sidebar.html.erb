@@ -1,10 +1,10 @@
 <%
   filter_params = %w[keyword lat is_bin used_ok pickup charity_support tax_receipt category_ids]
-  has_location = params[:lat].present? && params[:lng].present?
+  has_location = params[:near_me] == "1" || (params[:near_me].blank? && params[:lat].present? && params[:lng].present?)
 %>
 
 <aside class="w-full lg:w-80 flex-shrink-0" data-controller="filter-sidebar">
-  <%= form_with url: places_path, method: :get, data: { turbo_frame: "places_list", turbo_action: "advance" }, class: "space-y-6", data: { filter_sidebar_target: "form", action: "input->filter-sidebar#formChanged change->filter-sidebar#formChanged" } do |f| %>
+  <%= form_with url: places_path, method: :get, data: { turbo_frame: "places_list", turbo_action: "advance" }, class: "space-y-6", data: { filter_sidebar_target: "form", action: "submit->filter-sidebar#submitForm input->filter-sidebar#formChanged change->filter-sidebar#formChanged" } do |f| %>
 
     <div>
       <h3 class="font-semibold"><%= t('views.places.filter_sidebar.location.title') %></h3>
@@ -67,7 +67,7 @@
 
     <div class="form-control">
       <label class="label cursor-pointer justify-start gap-2">
-        <%= f.check_box :tax_receipt, { checked: params[:tax_receipt].present?, class: "checkbox" }, "true", "false" %>
+        <%= f.check_box :tax_receipt, { checked: params[:tax_receipt] == "true", class: "checkbox" }, "true", "false" %>
         <span class="label-text"><%= t('views.places.filter_sidebar.tax_receipt') %></span>
       </label>
     </div>
@@ -88,12 +88,12 @@
       <div class="divider mt-0"></div>
       <div class="form-control">
         <label class="label cursor-pointer justify-start gap-2">
-          <%= f.check_box :opening_hours_filter, class: "checkbox", checked: params[:opening_hours].blank?, id: "opening_hours_toggle", data: { filter_sidebar_target: "openingHoursToggle", action: "change->filter-sidebar#toggleOpeningHours" } %>
+          <%= f.check_box :opening_hours_filter, { class: "checkbox", checked: params[:opening_hours_filter] == "true" || (params[:opening_hours_filter].blank? && params[:opening_hours].blank?), id: "opening_hours_toggle", data: { filter_sidebar_target: "openingHoursToggle", action: "change->filter-sidebar#toggleOpeningHours" } }, "true", "false" %>
           <span class="label-text"><%= t('views.places.filter_sidebar.hours.any_day_and_time') %></span>
         </label>
       </div>
 
-      <div id="opening_hours_form" class="mt-4 space-y-3" style="<%= 'display: none;' if params[:opening_hours].blank? %>" data-filter-sidebar-target="openingHoursForm">
+      <div id="opening_hours_form" class="mt-4 space-y-3" style="<%= 'display: none;' if params[:opening_hours_filter] == 'true' || (params[:opening_hours_filter].blank? && params[:opening_hours].blank?) %>" data-filter-sidebar-target="openingHoursForm">
         <div class="form-control">
           <label class="label">
             <span class="label-text"><%= t('views.places.filter_sidebar.hours.day') %></span>
@@ -153,7 +153,7 @@
       <%= f.submit t('views.places.filter_sidebar.buttons.apply_filters'),
             class: "btn btn-primary btn-sm w-full", id: "apply_filters_btn", disabled: !has_active_filters, data: { filter_sidebar_target: "applyButton" } %>
       <button type="button" data-action="click->filter-sidebar#clearFilters" class="btn btn-ghost btn-sm w-full">
-        <%= t('views.places.filter_sidebar.buttons.clear') %>
+        <%= t('views.places.filter_sidebar.buttons.reset') %>
       </button>
     </div>
   <% end %>
