@@ -1,104 +1,200 @@
 <% content_for :title, @place.name %>
 
-<div class="container mx-auto px-4 py-6">
-  <div class="mb-6">
-    <%= link_to t('views.places.show.back'), root_path, class: "btn btn-ghost btn-sm mb-4" %>
-    <div class="flex items-center justify-between">
-      <h1 class="text-5xl font-semibold text-primary mb-6">
+<div class="container mx-auto px-4 sm:px-6 max-w-7xl">
+  <div class="breadcrumbs text-sm mb-4">
+    <ul>
+      <li>
+        <%= link_to t('views.menu.common.directory'), root_path %>
+      </li>
+      <li>
         <%= @place.name %>
-      </h1>
-      <% if authenticated? && current_user.id == @place.user_id %>
-        <div class="flex gap-2">
-          <%= link_to t('views.places.show.edit'), edit_place_path(@place), class: "btn btn-primary btn-sm" %>
-          <%= button_to t('views.places.show.delete'), place_path(@place), method: :delete,
-              form: { data: { turbo_confirm: t('views.places.show.delete_confirm') } },
-              class: "btn btn-error btn-sm" %>
-        </div>
-      <% end %>
-    </div>
+      </li>
+    </ul>
   </div>
 
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <div class="card bg-base-100 shadow">
-      <div class="card-body">
-        <h2 class="card-title"><%= t('views.places.show.description') %></h2>
-        <p class="whitespace-pre-wrap"><%= @place.description %></p>
+  <div class="flex items-center justify-between gap-4 mb-2">
+    <h1 class="text-3xl sm:text-4xl lg:text-5xl font-semibold text-primary">
+      <%= @place.name %>
+    </h1>
+    <% if authenticated? && current_user.id == @place.user_id %>
+      <div class="flex flex-wrap gap-2">
+        <%= link_to t('views.places.show.edit'), edit_place_path(@place), class: "btn btn-primary btn-sm" %>
+        <%= button_to t('views.places.show.delete'), place_path(@place), method: :delete,
+            form: { data: { turbo_confirm: t('views.places.show.delete_confirm') } },
+            class: "btn btn-error btn-sm" %>
       </div>
-    </div>
+    <% end %>
+  </div>
 
-    <div class="card bg-base-100 shadow">
-      <div class="card-body">
-        <h2 class="card-title"><%= t('views.places.show.location') %></h2>
-        <div class="space-y-2">
-          <p><strong><%= t('views.places.show.address') %>:</strong> <%= @place.full_address %></p>
-          <% if @place.location_instructions.present? %>
-            <p><strong><%= t('views.places.show.location_instructions') %>:</strong> <%= @place.location_instructions %></p>
+  <p class="text-base-content/60 text-md">
+    <%= t("views.places.show.added_by_last_updated", username: @place.user.username, date: @place.updated_at.strftime("%B %d, %Y")) %>
+  </p>
+
+  <div class="divider mt-2 mb-4"></div>
+
+  <div class="mb-4">
+    <p class="whitespace-pre-wrap text-sm sm:text-base"><%= @place.description %></p>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+    <div class="lg:col-span-2 space-y-4 sm:space-y-6">
+      <div>
+        <p class="font-semibold mb-2 text-sm sm:text-base"><%= t("views.places.show.accepts") %></p>
+        <div class="flex flex-wrap gap-2">
+          <% @place.categories.each do |category| %>
+            <span class="badge badge-soft badge-secondary badge-sm sm:badge-lg"><%= category.name %></span>
           <% end %>
         </div>
       </div>
-    </div>
 
-    <div class="card bg-base-100 shadow">
-      <div class="card-body">
-        <h2 class="card-title"><%= t('views.places.show.contact') %></h2>
-        <div class="space-y-2">
-          <% if @place.phone.present? %>
-            <p><strong><%= t('views.places.show.phone') %>:</strong> <%= @place.phone %></p>
-          <% end %>
-          <% if @place.email.present? %>
-            <p><strong><%= t('views.places.show.email') %>:</strong> <%= @place.email %></p>
-          <% end %>
-          <% if @place.url.present? %>
-            <p><strong><%= t('views.places.show.website') %>:</strong> <%= link_to @place.url, @place.url, target: "_blank", rel: "noopener", class: "link link-primary" %></p>
-          <% end %>
-        </div>
+      <div class="w-full" style="aspect-ratio: 16/9; background-color: #e5e7eb; border: 1px solid #d1d5db; border-radius: 0.5rem;">
+        <!-- map placeholder -->
       </div>
-    </div>
 
-    <div class="card bg-base-100 shadow">
-      <div class="card-body">
-        <h2 class="card-title"><%= t('views.places.show.details') %></h2>
-        <div class="space-y-2">
-          <p><strong><%= t('views.places.show.categories') %>:</strong> <%= @place.categories.map(&:name).join(', ') %></p>
-          <p><strong><%= t('views.places.show.pickup') %>:</strong> <%= @place.pickup ? t('views.places.show.yes') : t('views.places.show.no') %></p>
-          <p><strong><%= t('views.places.show.used_ok') %>:</strong> <%= @place.used_ok ? t('views.places.show.yes') : t('views.places.show.no') %></p>
-          <% if @place.is_bin %>
-            <p><strong><%= t('views.places.show.is_bin') %>:</strong> <%= t('views.places.show.yes') %></p>
-          <% end %>
-          <% if @place.tax_receipt %>
-            <p><strong><%= t('views.places.show.tax_receipt') %>:</strong> <%= t('views.places.show.yes') %></p>
-          <% end %>
-          <% if @place.has_charity_support %>
-            <p><strong><%= t('views.places.show.charity_support') %>:</strong> <%= @place.charity_support %></p>
-          <% end %>
-        </div>
+      <div class="flex items-start gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mt-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+        </svg>
+        <input type="text" readonly class="input w-full" value="<%= place_url(@place) %>" />
       </div>
-    </div>
 
-    <% if @place.place_hours.any? %>
-      <div class="card bg-base-100 shadow lg:col-span-2">
-        <div class="card-body">
-          <h2 class="card-title"><%= t('views.places.show.hours') %></h2>
-          <div class="overflow-x-auto">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th><%= t('views.places.show.day') %></th>
-                  <th><%= t('views.places.show.time') %></th>
-                </tr>
-              </thead>
-              <tbody>
-                <% @place.place_hours.order(:day_of_week).each do |hour| %>
-                  <tr>
-                    <td><%= t("date.day_names")[hour.day_of_week] %></td>
-                    <td><%= hour.from_hour %> - <%= hour.to_hour %></td>
-                  </tr>
-                <% end %>
-              </tbody>
-            </table>
+      <div class="flex items-start gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+        </svg>
+        <div class="flex-1 min-w-0">
+          <div class="text-sm sm:text-base mt-1">
+            <span class="text-sm sm:text-base"><%= t("views.places.show.get_directions") %></span>
+            <% map_directions_list(@place).each_with_index do |map_provider, index| %>
+              <%= link_to map_provider[:name], map_provider[:url], class: "link", target: "_blank", rel: "noopener noreferrer" %>
+              <% if index < map_directions_list(@place).length - 1 %>
+                <span class="mx-1">/</span>
+              <% end %>
+            <% end %>
           </div>
         </div>
       </div>
-    <% end %>
+
+      <div class="flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9" />
+        </svg>
+        <a href="#" class="link text-sm sm:text-base"><%= t("views.places.show.report_suggest_corrections") %></a>
+      </div>
+    </div>
+
+    <div class="space-y-4 sm:space-y-6 pt-4 sm:pt-0 lg:pt-0 border-t lg:border-t-0">
+      <div>
+        <h2 class="font-semibold text-base sm:text-lg mb-3"><%= t("views.places.show.address") %></h2>
+        <div class="flex items-start gap-2 mb-3">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
+          <div class="min-w-0">
+            <p class="text-sm sm:text-base"><%= @place.address %></p>
+            <p class="text-sm sm:text-base text-base-content/60"><%= @place.full_address %></p>
+          </div>
+        </div>
+        <div class="space-y-1">
+          <% if @place.used_ok %>
+            <div class="flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-success flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span class="text-sm sm:text-base"><%= t("views.places.show.used_ok") %></span>
+            </div>
+          <% end %>
+          <% if @place.pickup %>
+            <div class="flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-success flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span class="text-sm sm:text-base"><%= t("views.places.show.pickup") %></span>
+            </div>
+          <% end %>
+          <% if @place.tax_receipt %>
+            <div class="flex items-center gap-2">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-success flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+              </svg>
+              <span class="text-sm sm:text-base"><%= t("views.places.show.tax_receipt") %></span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <% if @place.place_hours.any? %>
+        <div>
+          <h2 class="font-semibold text-base sm:text-lg mb-3"><%= t("views.places.show.hours") %></h2>
+          <div class="space-y-1">
+            <% @place.place_hours.order(:day_of_week).each do |hour| %>
+              <div class="text-sm sm:text-base">
+                <% day_name = case hour.day_of_week
+                   when 1 then t("views.places.form_sections.hours.days.monday")
+                   when 2 then t("views.places.form_sections.hours.days.tuesday")
+                   when 3 then t("views.places.form_sections.hours.days.wednesday")
+                   when 4 then t("views.places.form_sections.hours.days.thursday")
+                   when 5 then t("views.places.form_sections.hours.days.friday")
+                   when 6 then t("views.places.form_sections.hours.days.saturday")
+                   when 7 then t("views.places.form_sections.hours.days.sunday")
+                   end %>
+                <%= day_name %>: <%= format_hour(hour.from_hour) %> - <%= format_hour(hour.to_hour) %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+      <% if @place.location_instructions.present? %>
+        <div>
+          <h2 class="font-semibold text-base sm:text-lg mb-3"><%= t("views.places.show.location_instructions") %></h2>
+          <p class="whitespace-pre-wrap text-sm sm:text-base"><%= @place.location_instructions %></p>
+        </div>
+      <% end %>
+
+      <% if @place.has_charity_support %>
+        <div>
+          <h2 class="font-semibold text-base sm:text-lg mb-3"><%= t("views.places.show.charity_support") %></h2>
+          <p class="whitespace-pre-wrap text-sm sm:text-base"><%= @place.charity_support %></p>
+        </div>
+      <% end %>
+
+      <% if @place.phone.present? || @place.email.present? || @place.url.present? %>
+        <div>
+          <h2 class="font-semibold text-base sm:text-lg mb-3"><%= t("views.places.show.contact") %></h2>
+          <div class="space-y-2">
+            <% if @place.email.present? %>
+              <div class="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <a href="mailto:<%= @place.email %>" class="link link-primary text-sm sm:text-base break-all">
+                  <%= t("views.places.show.click_to_reveal", property_name: "email address") %>
+                </a>
+              </div>
+            <% end %>
+            <% if @place.phone.present? %>
+              <div class="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+                <a href="tel:<%= @place.phone %>" class="link link-primary text-sm sm:text-base">
+                  <%= t("views.places.show.click_to_reveal", property_name: "phone number") %>
+                </a>
+              </div>
+            <% end %>
+            <% if @place.url.present? %>
+              <div class="flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                </svg>
+                <a href="<%= @place.url %>" target="_blank" rel="noopener noreferrer" class="link link-primary text-sm sm:text-base break-all"><%= @place.url %></a>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
   </div>
 </div>
