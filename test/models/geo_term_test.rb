@@ -2,96 +2,211 @@ require "test_helper"
 
 class GeoTermTest < ActiveSupport::TestCase
   def setup
-    @geo_term = GeoTerm.new(
-      term: "New York City",
-      response: { "lat" => 40.7128, "lng" => -74.0060 }.to_json
-    )
+    @test_url = "https://nominatim.openstreetmap.org/search?q=New+York+City&format=json"
+    @test_data = [
+      {
+        "lat" => "40.7128",
+        "lon" => "-74.0060",
+        "display_name" => "New York, NY, USA"
+      }
+    ].as_json
   end
 
   # Validation tests
   test "should be valid with valid attributes" do
-    assert @geo_term.valid?, @geo_term.errors.full_messages.to_sentence
+    geo_term = GeoTerm.new(url: @test_url, response: @test_data)
+    assert geo_term.valid?, geo_term.errors.full_messages.to_sentence
   end
 
-  test "should require term" do
-    @geo_term.term = nil
-    assert_not @geo_term.valid?
-    assert_includes @geo_term.errors[:term], "can't be blank"
+  test "should require url" do
+    geo_term = GeoTerm.new(response: @test_data)
+    assert_not geo_term.valid?
+    assert_includes geo_term.errors[:url], "can't be blank"
   end
 
-  test "should require response" do
-    @geo_term.response = nil
-    assert_not @geo_term.valid?
-    assert_includes @geo_term.errors[:response], "can't be blank"
+  test "should validate uniqueness of url" do
+    GeoTerm[@test_url] = @test_data
+    duplicate = GeoTerm.new(url: @test_url, response: { "different" => "data" })
+    assert duplicate.valid?
+    assert_raises(ActiveRecord::RecordNotUnique) do
+      duplicate.save!
+    end
   end
 
-  test "should validate uniqueness of term" do
-    @geo_term.save
-    duplicate_term = GeoTerm.new(
-      term: @geo_term.term,
-      response: { "lat" => 40.7128, "lng" => -74.0060 }.to_json
-    )
-    assert_not duplicate_term.valid?
-    assert_includes duplicate_term.errors[:term], "has already been taken"
+  test "[] should return nil for non-existent url" do
+    assert_nil GeoTerm["non-existent-url"]
   end
 
-  # Callback tests
-  test "should parameterize term before save" do
-    @geo_term.term = "New York City"
-    @geo_term.save
-    assert_equal "new-york-city", @geo_term.term
+  test "[] should return cached data for existing url" do
+    GeoTerm[@test_url] = @test_data
+    retrieved = GeoTerm[@test_url]
+    assert_equal @test_data, retrieved
+    assert_kind_of ActiveSupport::HashWithIndifferentAccess, retrieved.first if retrieved.is_a?(Array)
   end
 
-  test "should parameterize term with spaces and special characters" do
-    @geo_term.term = "São Paulo, Brazil"
-    @geo_term.save
-    assert_equal "sao-paulo-brazil", @geo_term.term
+  test "[] should return data with indifferent access" do
+    data = { "key" => "value", "nested" => { "inner" => "data" } }
+    GeoTerm[@test_url] = data
+    retrieved = GeoTerm[@test_url]
+    assert_equal "value", retrieved["key"]
+    assert_equal "value", retrieved[:key]
   end
 
-  # Class method tests
-  test "save! should create new record if term doesn't exist" do
-    term = "Los Angeles"
-    response = { "lat" => 34.0522, "lng" => -118.2437 }.to_json
-
+  test "[]= should create new record if url doesn't exist" do
     assert_difference "GeoTerm.count", 1 do
-      GeoTerm.save!(term: term, response: response)
+      GeoTerm[@test_url] = @test_data
     end
 
-    geo_term = GeoTerm.find_by(term: "los-angeles")
-    assert_equal response, geo_term.response
+    assert_equal @test_data, GeoTerm[@test_url]
   end
 
-  test "save! should update existing record if term exists" do
-    @geo_term.save
-    new_response = { "lat" => 40.7128, "lng" => -74.0060, "updated" => true }.to_json
+  test "[]= should update existing record if url exists" do
+    GeoTerm[@test_url] = @test_data
+    new_data = { "updated" => true, "lat" => "40.7128" }
 
     assert_no_difference "GeoTerm.count" do
-      GeoTerm.save!(term: "New York City", response: new_response)
+      GeoTerm[@test_url] = new_data
     end
 
-    @geo_term.reload
-    assert_equal new_response, @geo_term.response
+    assert_equal new_data, GeoTerm[@test_url]
   end
 
-  test "save! should parameterize term when finding or initializing" do
-    term = "San Francisco"
-    parameterized_term = "san-francisco"
-    response = { "lat" => 37.7749, "lng" => -122.4194 }.to_json
-
-    GeoTerm.save!(term: term, response: response)
-    geo_term = GeoTerm.find_by(term: parameterized_term)
-
-    assert_equal parameterized_term, geo_term.term
-    assert_equal response, geo_term.response
+  test "[]= should return the stored value" do
+    result = GeoTerm[@test_url] = @test_data
+    assert_equal @test_data, result
   end
 
-  test "save! should return the record" do
-    term = "Chicago"
-    response = { "lat" => 41.8781, "lng" => -87.6298 }.to_json
+  test "[]= should handle array data" do
+    array_data = [{ "lat" => "40.7128" }, { "lat" => "40.7129" }]
+    GeoTerm[@test_url] = array_data
+    retrieved = GeoTerm[@test_url]
+    assert_equal array_data.length, retrieved.length
+    assert_equal "40.7128", retrieved.first["lat"]
+  end
 
-    result = GeoTerm.save!(term: term, response: response)
-    assert_instance_of GeoTerm, result
-    assert_equal "chicago", result.term
-    assert_equal response, result.response
+  test "[]= should handle nested hash data" do
+    nested_data = {
+      "results" => [
+        { "geometry" => { "lat" => 40.7128, "lng" => -74.0060 } }
+      ]
+    }
+
+    GeoTerm[@test_url] = nested_data
+    retrieved = GeoTerm[@test_url]
+    assert_equal 40.7128, retrieved["results"].first["geometry"]["lat"]
+    assert_equal 40.7128, retrieved[:results].first[:geometry][:lat]
+  end
+
+  test "keys should return empty array when no records exist" do
+    assert_equal [], GeoTerm.keys
+  end
+
+  test "keys should return all urls" do
+    url1 = "https://example.com/search?q=test1"
+    url2 = "https://example.com/search?q=test2"
+    url3 = "https://example.com/search?q=test3"
+
+    GeoTerm[url1] = { "data" => "1" }
+    GeoTerm[url2] = { "data" => "2" }
+    GeoTerm[url3] = { "data" => "3" }
+
+    keys = GeoTerm.keys
+    assert_includes keys, url1
+    assert_includes keys, url2
+    assert_includes keys, url3
+    assert_equal 3, keys.length
+  end
+
+  test "delete should return nil for non-existent url" do
+    assert_nil GeoTerm.delete("non-existent-url")
+  end
+
+  test "delete should remove record and return data" do
+    GeoTerm[@test_url] = @test_data
+
+    assert_difference "GeoTerm.count", -1 do
+      deleted_data = GeoTerm.delete(@test_url)
+      assert_equal @test_data, deleted_data
+    end
+
+    assert_nil GeoTerm[@test_url]
+  end
+
+  test "delete should return nil after deletion" do
+    GeoTerm[@test_url] = @test_data
+    GeoTerm.delete(@test_url)
+    assert_nil GeoTerm.delete(@test_url)
+  end
+
+  test "should serialize and deserialize data correctly" do
+    complex_data = {
+      "string" => "value",
+      "number" => 123,
+      "boolean" => true,
+      "array" => [1, 2, 3],
+      "nested" => { "key" => "value" }
+    }
+
+    GeoTerm[@test_url] = complex_data
+    record = GeoTerm.find_by(url: @test_url)
+
+    assert_equal complex_data, record.response
+    assert_equal "value", record.response["string"]
+    assert_equal "value", record.response[:string]
+    assert_equal 123, record.response["number"]
+    assert_equal true, record.response["boolean"]
+  end
+
+  test "should handle nil data gracefully" do
+    empty_data = {}
+    GeoTerm[@test_url] = empty_data
+    retrieved = GeoTerm[@test_url]
+    assert_equal empty_data, retrieved
+  end
+
+  test "should work with Geocoder cache interface" do
+    url1 = "geocoder:https://nominatim.openstreetmap.org/search?q=Paris"
+    url2 = "geocoder:https://nominatim.openstreetmap.org/search?q=London"
+
+    data1 = [{ "lat" => "48.8566", "lon" => "2.3522" }]
+    data2 = [{ "lat" => "51.5074", "lon" => "-0.1278" }]
+
+    GeoTerm[url1] = data1
+    GeoTerm[url2] = data2
+
+    assert_equal data1, GeoTerm[url1]
+    assert_equal data2, GeoTerm[url2]
+
+    assert_includes GeoTerm.keys, url1
+    assert_includes GeoTerm.keys, url2
+
+    GeoTerm.delete(url1)
+    assert_nil GeoTerm[url1]
+    assert_equal data2, GeoTerm[url2]
+  end
+
+  test "should handle very long urls" do
+    long_url = "https://example.com/search?" + ("q=test&" * 100) + "format=json"
+    GeoTerm[long_url] = @test_data
+    assert_equal @test_data, GeoTerm[long_url]
+  end
+
+  test "should handle special characters in url" do
+    special_url = "https://example.com/search?q=test+with+spaces&amp=encoded"
+    GeoTerm[special_url] = @test_data
+    assert_equal @test_data, GeoTerm[special_url]
+  end
+
+  test "should handle unicode characters in data" do
+    unicode_data = {
+      "city" => "São Paulo",
+      "country" => "Brasil",
+      "description" => "São Paulo é uma cidade"
+    }
+
+    GeoTerm[@test_url] = unicode_data
+    retrieved = GeoTerm[@test_url]
+    assert_equal "São Paulo", retrieved["city"]
+    assert_equal "Brasil", retrieved[:country]
   end
 end
