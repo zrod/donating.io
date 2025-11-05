@@ -36,3 +36,16 @@
 .input, .textarea, .select {
   transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
+
+.places-loading-indicator {
+  display: none;
+  transition: opacity 0.2s ease;
+}
+
+turbo-frame.loading .places-loading-indicator {
+  display: inline-block;
+}
+
+turbo-frame.loading .places-count-block {
+  display: none;
+}

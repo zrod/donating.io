@@ -32,6 +32,7 @@ en:
   views:
     menu:
       common:
+        map: "Map"
         directory: "Directory"
         contribute: "Contribute"
         about: "About"
@@ -64,7 +65,7 @@ en:
           one: "1 place found"
           other: "%{count} places found"
         view: "View"
-        empty: "No places found"
+        empty: "No places found."
         badges:
           donation_bin: "Donation Bin"
           organization: "Organization"

@@ -1,7 +1,7 @@
 module Pagination
   extend ActiveSupport::Concern
 
-  DEFAULT_PER_PAGE = 24
+  DEFAULT_PER_PAGE = 16
   MAX_PAGE_SIZE = 100
 
   included do
@@ -10,7 +10,7 @@ module Pagination
 
   private
     def paginate(collection:, filter_params:)
-      total = collection.count
+      total = collection.except(:select).count
       metadata = pagination_metadata(total)
       offset = metadata[:offset]
 

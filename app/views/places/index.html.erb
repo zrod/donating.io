@@ -13,13 +13,14 @@
   <div class="flex flex-col lg:flex-row gap-6">
     <%= render "shared/filter_sidebar" %>
 
-    <%= turbo_frame_tag "places_list", class: "flex-1" do %>
+    <%= turbo_frame_tag "places_list", class: "flex-1 relative" do %>
+      <div class="places-loading-indicator loading loading-spinner loading-sm my-2 opacity-40"></div>
       <main>
-        <div class="mb-4">
-          <div class="text-sm opacity-70"><%= t('views.places.index.places_found', count: @places_total) %></div>
-        </div>
-
         <% if @places.any? %>
+          <div class="mb-4 places-count-block">
+            <div class="text-sm opacity-70"><%= t('views.places.index.places_found', count: @places_total) %></div>
+          </div>
+
           <div class="space-y-4">
             <% @places.each do |place| %>
               <div class="card bg-base-100 shadow hover:shadow-lg transition-shadow relative">
