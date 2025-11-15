@@ -1,4 +1,4 @@
-class GeoTerm < ApplicationRecord
+class GeocoderCache < ApplicationRecord
   validates :url, presence: true
 
   def response

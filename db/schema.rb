@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_05_174859) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_15_231730) do
   create_table "categories", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
@@ -42,7 +42,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_05_174859) do
     t.index ["weight"], name: "index_countries_on_weight"
   end
 
-  create_table "geo_terms", primary_key: "url", id: :string, force: :cascade do |t|
+  create_table "geocoder_caches", primary_key: "url", id: :string, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.json "response", null: false
     t.datetime "updated_at", null: false

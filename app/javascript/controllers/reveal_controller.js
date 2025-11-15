@@ -14,4 +14,3 @@ export default class extends Controller {
     this.linkTarget.replaceWith(span)
   }
 }
-

@@ -1,15 +1,17 @@
 Rails.application.config.after_initialize do
   Geocoder.configure(
-    # Geocoding options
-    timeout: 3,                 # geocoding service timeout (secs)
-    lookup: :nominatim,         # name of geocoding service (symbol)
-    # ip_lookup: :ipinfo_io,      # name of IP address geocoding service (symbol)
-    # language: :en,              # ISO-639 language code
-    use_https: false,           # use HTTPS for lookup requests? (if supported)
-    # http_proxy: nil,            # HTTP proxy server (user:pass@host:port)
-    # https_proxy: nil,           # HTTPS proxy server (user:pass@host:port)
-    # api_key: nil,               # API key for geocoding service
-    cache: GeoTerm,             # cache object (must respond to #[], #[]=, and #del)
+    timeout: 3,
+    lookup: :nominatim,
+    http_headers: {
+      "User-Agent" => "Donating.io"
+    },
+    # ip_lookup: :ipinfo_io,
+    language: :en,
+    use_https: true,
+    # http_proxy: nil,
+    # https_proxy: nil,
+    # api_key: nil,
+    cache: GeocoderCache,
 
     # Exceptions that should not be rescued by default
     # (if you want to implement custom error handling);
@@ -17,8 +19,8 @@ Rails.application.config.after_initialize do
     # always_raise: [],
 
     # Calculation options
-    units: :km,                 # :km for kilometers or :mi for miles
-    # distances: :linear          # :spherical or :linear
+    units: :km,
+    # distances: :linear # :spherical or :linear
 
     # Cache configuration
     cache_options: {
