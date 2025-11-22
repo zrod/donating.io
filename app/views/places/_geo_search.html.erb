@@ -1,0 +1,25 @@
+<div class="mb-6" data-controller="geo-search" data-geo-search-poll-interval-value="<%= GeoTermsSearchController::POLL_INTERVAL_MS %>" data-geo-search-max-retries-value="<%= GeoTermsSearchController::MAX_RETRIES %>" data-geo-search-search-took-too-long-value="<%= t('views.places.geo_search.search_took_too_long') %>" data-geo-search-search-failed-value="<%= t('views.places.geo_search.search_failed') %>" data-geo-search-no-results-found-value="<%= t('views.places.geo_search.no_results_found') %>" data-geo-search-unknown-location-value="<%= t('views.places.geo_search.unknown_location') %>">
+  <form data-action="submit->geo-search#search" data-geo-search-target="form">
+    <div class="form-control">
+      <label class="label">
+        <span class="label-text font-semibold"><%= t('views.places.geo_search.title') %></span>
+      </label>
+      <div class="join w-full">
+        <input
+          type="text"
+          class="input input-bordered join-item flex-1"
+          placeholder="<%= t('views.places.geo_search.placeholder') %>"
+          data-geo-search-target="input"
+        />
+        <button type="submit" class="btn btn-primary join-item">
+          <span class="loading loading-spinner loading-sm hidden" data-geo-search-target="loading"></span>
+          <%= t('views.places.geo_search.button') %>
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <div class="mt-4 hidden alert alert-error" data-geo-search-target="error"></div>
+
+  <div class="mt-4" data-geo-search-target="results"></div>
+</div>

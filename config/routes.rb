@@ -39,4 +39,6 @@ Rails.application.routes.draw do
     get "privacy", to: "pages#privacy"
     get "terms", to: "pages#terms"
   end
+
+  post "geo_terms/search", to: "geo_terms_search#create"
 end

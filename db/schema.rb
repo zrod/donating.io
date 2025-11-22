@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_05_174859) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_15_232929) do
   create_table "categories", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
@@ -44,7 +44,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_05_174859) do
 
   create_table "geo_terms", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.json "response", null: false
+    t.json "parsed_response", null: false
     t.string "term", null: false
     t.datetime "updated_at", null: false
     t.index ["term"], name: "index_geo_terms_on_term", unique: true

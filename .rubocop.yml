@@ -1,8 +1,14 @@
 # Omakase Ruby styling for Rails
 inherit_gem: { rubocop-rails-omakase: rubocop.yml }
 
+Layout/IndentationConsistency:
+  EnforcedStyle: indented_internal_methods
+
 # Overwrite or add rules to create your own house style
 #
 # # Use `[a, [b, c]]` not `[ a, [ b, c ] ]`
 Layout/SpaceInsideArrayLiteralBrackets:
   Enabled: false
+
+Style/HashSyntax:
+  EnforcedShorthandSyntax: always

@@ -3,7 +3,7 @@ Rails.application.config.after_initialize do
     timeout: 3,
     lookup: :nominatim,
     http_headers: {
-      "User-Agent" => "Donating.io"
+      "User-Agent" => ENV.fetch("USER_AGENT", "")
     },
     # ip_lookup: :ipinfo_io,
     language: :en,
