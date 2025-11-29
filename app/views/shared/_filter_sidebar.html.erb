@@ -3,16 +3,42 @@
   has_location = params[:near_me] == "1" || (params[:near_me].blank? && params[:lat].present? && params[:lng].present?)
 %>
 
-<aside class="w-full lg:w-80 flex-shrink-0" data-controller="filter-sidebar">
+<aside
+  class="w-full lg:w-80 flex-shrink-0"
+  data-controller="filter-sidebar geo-search"
+  data-geo-search-poll-interval-value="<%= GeoTermsSearchController::POLL_INTERVAL_MS %>"
+  data-geo-search-max-retries-value="<%= GeoTermsSearchController::MAX_RETRIES %>"
+  data-geo-search-search-took-too-long-value="<%= t('views.places.geo_search.search_took_too_long') %>"
+  data-geo-search-search-failed-value="<%= t('views.places.geo_search.search_failed') %>"
+  data-geo-search-no-results-found-value="<%= t('views.places.geo_search.no_results_found') %>"
+  data-geo-search-unknown-location-value="<%= t('views.places.geo_search.unknown_location') %>">
   <%= form_with url: places_path, method: :get, data: { turbo_frame: "places_list", turbo_action: "advance" }, class: "space-y-6", data: { filter_sidebar_target: "form", action: "submit->filter-sidebar#submitForm input->filter-sidebar#formChanged change->filter-sidebar#formChanged" } do |f| %>
 
     <div>
       <h3 class="font-semibold"><%= t('views.places.filter_sidebar.location.title') %></h3>
       <div class="divider mt-0"></div>
 
-      <%= f.text_field :keyword, value: params[:keyword],
-            placeholder: t('views.places.filter_sidebar.location.keyword_placeholder'),
-            class: "input input-bordered w-full mb-3" %>
+      <div class="form-control mb-3 relative" data-geo-search-target="searchContainer">
+        <div class="join w-full">
+          <input
+            type="text"
+            class="input input-bordered join-item flex-1"
+            placeholder="<%= t('views.places.geo_search.placeholder') %>"
+            data-geo-search-target="input"
+            value="<%= params[:keyword] %>"
+          />
+          <button type="button" class="btn btn-primary join-item" data-action="click->geo-search#search" data-geo-search-target="searchButton">
+            <span class="loading loading-spinner loading-sm hidden" data-geo-search-target="loading"></span>
+            <%= t('views.places.geo_search.button') %>
+          </button>
+        </div>
+
+        <div class="hidden absolute top-full left-0 right-0 mt-2 z-50 bg-base-100 shadow-lg rounded-lg border border-base-300 max-h-96 overflow-y-auto" data-geo-search-target="resultsOverlay">
+          <div class="p-2" data-geo-search-target="results"></div>
+        </div>
+      </div>
+
+      <div class="hidden alert alert-error mb-3" data-geo-search-target="error"></div>
 
       <%= f.hidden_field :lat, value: params[:lat], id: "location_lat", data: { filter_sidebar_target: "latField" } %>
       <%= f.hidden_field :lng, value: params[:lng], id: "location_lng", data: { filter_sidebar_target: "lngField" } %>

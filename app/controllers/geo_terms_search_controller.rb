@@ -10,26 +10,29 @@ class GeoTermsSearchController < ApplicationController
              with: -> { render json: { error: I18n.t("controllers.geo_terms_search.create.too_many_requests") }, status: :too_many_requests }
 
   def create
-    term = create_params[:term]&.strip
+    term = create_params[:term]
     return render json: { error: I18n.t("controllers.geo_terms_search.create.term_required") }, status: :bad_request unless term.present?
     return render json: { error: I18n.t("controllers.geo_terms_search.create.term_too_long") }, status: :bad_request if term.length > GeoTerm::TERM_MAX_LENGTH
 
-    normalized_term = GeoTerm.normalize_term(term)
-    geo_term = GeoTerm.find_by(term: normalized_term)
-
-    if geo_term
-      render json: {
-        status: "complete",
-        results: geo_term.parsed_response,
-        term: geo_term.term
-      }
-    else
-      GeoTerms::TermLookupService.new(term:).call
-      render json: { status: "pending" }
-    end
+    result = GeoTerms::TermLookupService.new(term:).call
+    status, json_response = format_search_response(result, term)
+    render json: json_response, status:
+  rescue GeoTerms::TermLookupService::BlankSearchTermError
+    render json: { error: I18n.t("controllers.geo_terms_search.create.term_required") }, status: :bad_request
   end
 
   private
+    def format_search_response(result, term)
+      case result
+      when GeoTerm
+        [ :ok, { status: "complete", results: result.parsed_response, term: result.term } ]
+      when :failed
+        [ :service_unavailable, { status: "failed", results: [], term: } ]
+      else
+        [ :ok, { status: "pending", results: [], term: } ]
+      end
+    end
+
     def create_params
       params.permit(:term)
     end

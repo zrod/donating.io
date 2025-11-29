@@ -40,10 +40,10 @@ class GeoTermTest < ActiveSupport::TestCase
     assert @geo_term.valid?
   end
 
-  test "parsed_response should be present" do
+  test "parsed_response should not be nil" do
     @geo_term.parsed_response = nil
     assert_not @geo_term.valid?
-    assert_includes @geo_term.errors[:parsed_response], "can't be blank"
+    assert_includes @geo_term.errors[:parsed_response], "is reserved"
   end
 
   # Normalization tests

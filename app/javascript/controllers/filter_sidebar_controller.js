@@ -16,6 +16,10 @@ export default class extends Controller {
 
   connect() {
     this.updateButtonState()
+
+    this.element.addEventListener('location-selected', () => {
+      this.updateButtonState()
+    })
   }
 
   toggleLocation(event) {

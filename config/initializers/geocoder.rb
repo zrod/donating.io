@@ -3,7 +3,7 @@ Rails.application.config.after_initialize do
     timeout: 3,
     lookup: :nominatim,
     http_headers: {
-      "User-Agent" => ENV.fetch("USER_AGENT", "")
+      "User-Agent" => ENV.fetch("USER_AGENT", "dev-mode-update-me")
     },
     # ip_lookup: :ipinfo_io,
     language: :en,
@@ -16,7 +16,12 @@ Rails.application.config.after_initialize do
     # Exceptions that should not be rescued by default
     # (if you want to implement custom error handling);
     # supports SocketError and Timeout::Error
-    # always_raise: [],
+    always_raise: [
+      SocketError,
+      Timeout::Error,
+      Geocoder::NetworkError,
+      Geocoder::ServiceUnavailable
+    ],
 
     # Calculation options
     units: :km,

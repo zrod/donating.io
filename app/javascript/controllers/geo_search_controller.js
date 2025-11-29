@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["form", "input", "results", "loading", "error"]
+  static targets = ["input", "results", "loading", "error", "searchButton", "resultsOverlay", "searchContainer"]
   static values = {
     pollInterval: Number,
     maxRetries: Number,
@@ -14,10 +14,35 @@ export default class extends Controller {
   connect() {
     this.pollTimer = null
     this.retryCount = 0
+    this.clickOutsideHandler = null
   }
 
   disconnect() {
     this.stopPolling()
+    this.removeClickOutsideListener()
+  }
+
+  handleClickOutside(event) {
+    if (!this.hasResultsOverlayTarget || !this.hasSearchContainerTarget) {
+      return
+    }
+
+    if (!this.searchContainerTarget.contains(event.target)) {
+      this.hideResultsOverlay()
+    }
+  }
+
+  addClickOutsideListener() {
+    this.removeClickOutsideListener()
+    this.clickOutsideHandler = this.handleClickOutside.bind(this)
+    document.addEventListener('click', this.clickOutsideHandler, true)
+  }
+
+  removeClickOutsideListener() {
+    if (this.clickOutsideHandler) {
+      document.removeEventListener('click', this.clickOutsideHandler, true)
+      this.clickOutsideHandler = null
+    }
   }
 
   async search(event) {
@@ -98,25 +123,84 @@ export default class extends Controller {
 
     if (!results || results.length === 0) {
       this.showError(this.noResultsFoundValue.replace("%{term}", this.escapeHtml(term)))
+      this.hideResultsOverlay()
       return
     }
 
-    this.resultsTarget.innerHTML = results.map(result => {
-      const displayName = this.escapeHtml(String(result.display_name || result.name || this.unknownLocationValue))
-      const address = this.escapeHtml(String(result.address || result.formatted_address || ""))
-      const lat = String(result.lat || "")
-      const lng = String(result.lng || "")
+    this.resultsTarget.innerHTML = results.map((result, index) => {
+      const parts = [result.city, result.state, result.country].filter(Boolean)
+      const displayName = parts.length > 0 ? parts.join(", ") : this.unknownLocationValue
+
+      const address = result.address || result.formatted_address || ""
+      const lat = result.latitude ?? result.lat ?? ""
+      const lng = result.longitude ?? result.lng ?? ""
+      const isLast = index === results.length - 1
 
       return `
-        <div class="card bg-base-100 shadow-sm mb-2">
-          <div class="card-body p-4">
-            <h3 class="font-semibold">${displayName}</h3>
-            ${address ? `<p class="text-sm opacity-70">${address}</p>` : ""}
-            ${lat && lng ? `<div class="text-xs opacity-60 mt-1">${this.escapeHtml(lat)}, ${this.escapeHtml(lng)}</div>` : ""}
-          </div>
+        <div class="cursor-pointer hover:bg-base-200 transition-colors p-3 ${!isLast ? 'border-b border-base-300' : ''}"
+             data-action="click->geo-search#selectResult"
+             data-geo-search-lat="${this.escapeHtml(String(lat))}"
+             data-geo-search-lng="${this.escapeHtml(String(lng))}"
+             data-geo-search-display-name="${this.escapeHtml(displayName)}">
+          <h3 class="font-semibold">${this.escapeHtml(displayName)}</h3>
+          ${address ? `<p class="text-sm opacity-70">${this.escapeHtml(String(address))}</p>` : ""}
         </div>
       `
     }).join("")
+
+    this.showResultsOverlay()
+  }
+
+  showResultsOverlay() {
+    if (this.hasResultsOverlayTarget) {
+      this.resultsOverlayTarget.classList.remove("hidden")
+      this.addClickOutsideListener()
+    }
+  }
+
+  hideResultsOverlay() {
+    if (this.hasResultsOverlayTarget) {
+      this.resultsOverlayTarget.classList.add("hidden")
+      this.removeClickOutsideListener()
+    }
+  }
+
+  selectResult(event) {
+    const element = event.currentTarget
+    const lat = element.dataset.geoSearchLat
+    const lng = element.dataset.geoSearchLng
+    const displayName = element.dataset.geoSearchDisplayName
+
+    if (!lat || !lng) {
+      return
+    }
+
+    const latField = document.getElementById("location_lat")
+    const lngField = document.getElementById("location_lng")
+
+    if (latField) {
+      latField.value = lat
+    }
+    if (lngField) {
+      lngField.value = lng
+    }
+
+    const radiusSelector = document.querySelector('[data-filter-sidebar-target="radiusSelector"]')
+    const locationCheckbox = document.getElementById("use_current_location")
+
+    if (radiusSelector) {
+      radiusSelector.style.display = 'block'
+    }
+    if (locationCheckbox) {
+      locationCheckbox.checked = false
+    }
+
+    this.inputTarget.value = displayName || ""
+    this.clearResults()
+    this.element.dispatchEvent(new CustomEvent('location-selected', {
+      detail: { lat, lng },
+      bubbles: true
+    }))
   }
 
   escapeHtml(text) {
@@ -140,6 +224,7 @@ export default class extends Controller {
     this.hideLoading()
     this.errorTarget.textContent = message
     this.errorTarget.classList.remove("hidden")
+    this.hideResultsOverlay()
   }
 
   hideError() {
@@ -147,7 +232,10 @@ export default class extends Controller {
   }
 
   clearResults() {
-    this.resultsTarget.innerHTML = ""
+    if (this.hasResultsTarget) {
+      this.resultsTarget.innerHTML = ""
+    }
+    this.hideResultsOverlay()
   }
 
   getCSRFToken() {
