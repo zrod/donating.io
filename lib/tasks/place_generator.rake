@@ -35,15 +35,12 @@ namespace :places do
 
     cities = [
       "Toronto", "Vancouver", "Montreal", "Calgary", "Edmonton", "Ottawa", "Winnipeg",
-      "Quebec City", "Hamilton", "Kitchener", "London", "Victoria", "Halifax",
-      "New York", "Los Angeles", "Chicago", "Houston", "Phoenix", "Philadelphia",
-      "San Antonio", "San Diego", "Dallas", "San Jose", "Austin", "Jacksonville"
+      "Quebec City", "Hamilton", "Kitchener", "London", "Victoria", "Halifax"
     ]
 
     regions = {
       "Toronto" => "Ontario", "Vancouver" => "British Columbia", "Montreal" => "Quebec",
-      "Calgary" => "Alberta", "Edmonton" => "Alberta", "Ottawa" => "Ontario",
-      "New York" => "New York", "Los Angeles" => "California", "Chicago" => "Illinois"
+      "Calgary" => "Alberta", "Edmonton" => "Alberta", "Ottawa" => "Ontario"
     }
 
     created_count = 0
@@ -74,7 +71,7 @@ namespace :places do
           osm_id: rand(1000..999999),
           status: Place::STATUSES[:published],
           user: User.all.sample,
-          country: Country.where(active: true).sample || Country.all.sample
+          country: Country.find_by(name: "Canada")
         )
 
         categories = Category.all.sample(rand(1..3))

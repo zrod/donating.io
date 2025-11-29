@@ -49,6 +49,7 @@ module Places
       scope = relation.includes(:categories, :place_hours)
       scope = apply_boolean_filters(scope)
       scope = apply_named_filters(scope)
+      scope = filter_by_coordinates(scope) if filter_by_queried_latlng?
 
       scope.order(sort_by => order)
     end
@@ -62,6 +63,10 @@ module Places
 
       def cast_to_boolean(value)
         ActiveRecord::Type::Boolean.new.cast(value)
+      end
+
+      def filter_by_queried_latlng?
+        params[:lat].present? && params[:lng].present? && params[:near_me].blank?
       end
 
       def charity_support_enabled?
@@ -104,16 +109,13 @@ module Places
       end
 
       def with_near_me(scope)
-        lat = params[:lat]
-        lng = params[:lng]
-        return scope unless lat.present? && lng.present?
-
-        radius_km = params.fetch(:radius, DEFAULT_RADIUS).to_f
-        scope.near([lat.to_f, lng.to_f], radius_km, units: :km)
+        filter_by_coordinates(scope)
       end
 
       def with_opening_hours(scope)
         hours_params = params[:opening_hours]
+        return scope unless hours_params.present?
+
         start_hour = hours_params[:start_time]
         end_hour = hours_params[:end_time]
         return scope unless start_hour.present? && end_hour.present?
@@ -139,13 +141,23 @@ module Places
         scope.where("places.name LIKE :q OR places.address LIKE :q OR places.city LIKE :q", q: keyword)
       end
 
+      def filter_by_coordinates(scope)
+        lat = params[:lat]
+        lng = params[:lng]
+        return scope unless lat.present? && lng.present?
+
+        radius_km = params.fetch(:radius, DEFAULT_RADIUS).to_f
+        Rails.logger.info("filter_by_coordinates: #{lat}, #{lng}, #{radius_km}")
+        scope.near([lat.to_f, lng.to_f], radius_km, units: :km)
+      end
+
       def calc_sort_by_order
         sort_by = DEFAULT_SORT_BY
         order   = DEFAULT_ORDER_BY
 
         if params[:order].present?
           req_order = params[:order].downcase
-          order     = req_order.downcase if %w[asc desc].include?(req_order)
+          order     = req_order if %w[asc desc].include?(req_order)
         end
 
         if params[:sort_by].present? && SORTABLE_COLUMNS.include?(params[:sort_by])

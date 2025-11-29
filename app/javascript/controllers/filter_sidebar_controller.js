@@ -24,9 +24,17 @@ export default class extends Controller {
 
   toggleLocation(event) {
     if (event.target.checked) {
+      this.clearGeoSearchInput()
       this.getCurrentLocation()
     } else {
       this.clearLocation()
+    }
+  }
+
+  clearGeoSearchInput() {
+    const geoSearchInput = this.element.querySelector('[data-geo-search-target="input"]')
+    if (geoSearchInput) {
+      geoSearchInput.value = ''
     }
   }
 

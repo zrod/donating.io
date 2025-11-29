@@ -246,6 +246,26 @@ module Places
       assert_not_includes results, closed_place
     end
 
+    test "should handle nil opening_hours gracefully" do
+      place = places(:published_bin_with_full_attributes_one)
+
+      params = { opening_hours: nil }
+      results = FilterPlacesService.new(params:).call
+
+      assert_respond_to results, :each
+      assert_includes results, place
+    end
+
+    test "should handle missing opening_hours key gracefully" do
+      place = places(:published_bin_with_full_attributes_one)
+
+      params = {}
+      results = FilterPlacesService.new(params:).call
+
+      assert_respond_to results, :each
+      assert_includes results, place
+    end
+
     test "should handle near_me filter with valid coordinates" do
       params = { near_me: "true", lat: "40.7128", lng: "-74.0060", radius: "10" }
       service = FilterPlacesService.new(params:)
@@ -275,6 +295,33 @@ module Places
 
       assert_respond_to result1, :each
       assert_respond_to result2, :each
+    end
+
+    test "should filter by coordinates when lat and lng are present but near_me is blank" do
+      params = { lat: "40.7128", lng: "-74.0060", radius: "10" }
+      service = FilterPlacesService.new(params:)
+
+      assert_nothing_raised do
+        service.call
+      end
+    end
+
+    test "should filter by coordinates with default radius when lat and lng are present but near_me is blank" do
+      params = { lat: "40.7128", lng: "-74.0060" }
+      service = FilterPlacesService.new(params:)
+
+      assert_nothing_raised do
+        service.call
+      end
+    end
+
+    test "should not filter by coordinates when near_me is present" do
+      params = { near_me: "true", lat: "40.7128", lng: "-74.0060" }
+      service = FilterPlacesService.new(params:)
+
+      assert_nothing_raised do
+        service.call
+      end
     end
 
     test "should apply multiple filters together" do
