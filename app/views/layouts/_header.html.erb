@@ -6,22 +6,27 @@
                 Donating.io
             </a>
         </div>
-        <div class="flex-none">
+
+        <!-- Desktop Menu -->
+        <div class="flex-none hidden md:block">
             <ul class="menu menu-lg menu-horizontal font-medium text-lg text-neutral-content">
-                <li>
-                  <%= link_to I18n.t("views.menu.common.map"), root_path %>
-                </li>
-                <li>
-                    <%= link_to I18n.t("views.menu.common.directory"), root_path %>
-                </li>
-                <li>
-                    <%= link_to I18n.t("views.menu.common.contribute"), new_place_path %>
-                </li>
-                <li>
-                    <%= link_to I18n.t("views.menu.common.about"), about_path %>
-                </li>
+                <%= render "layouts/menu/common_menu_items" %>
                 <%= render authenticated? ? "layouts/menu/authenticated_menu" : "layouts/menu/public_menu" %>
             </ul>
+        </div>
+
+        <!-- Mobile Menu -->
+        <div class="flex-none md:hidden">
+            <details class="dropdown dropdown-end">
+                <summary class="btn btn-ghost btn-circle">
+                    <%= image_tag "icons/hamburger.svg" %>
+                </summary>
+                <ul class="menu dropdown-content bg-base-100 rounded-box z-[1] w-52 p-2 shadow-lg text-base-content mt-2">
+                    <%= render "layouts/menu/common_menu_items" %>
+                    <li class="divider h-0.5 my-1"></li>
+                    <%= render authenticated? ? "layouts/menu/authenticated_menu_items" : "layouts/menu/public_menu_items" %>
+                </ul>
+            </details>
         </div>
     </div>
 </header>

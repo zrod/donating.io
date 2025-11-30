@@ -12,51 +12,62 @@
   data-geo-search-search-failed-value="<%= t('views.places.geo_search.search_failed') %>"
   data-geo-search-no-results-found-value="<%= t('views.places.geo_search.no_results_found') %>"
   data-geo-search-unknown-location-value="<%= t('views.places.geo_search.unknown_location') %>">
-  <%= form_with url: places_path, method: :get, data: { turbo_frame: "places_list", turbo_action: "advance" }, class: "space-y-6", data: { filter_sidebar_target: "form", action: "submit->filter-sidebar#submitForm input->filter-sidebar#formChanged change->filter-sidebar#formChanged" } do |f| %>
 
-    <div>
-      <h3 class="font-semibold"><%= t('views.places.filter_sidebar.location.title') %></h3>
-      <div class="divider mt-0"></div>
+  <h3 class="font-semibold"><%= t('views.places.filter_sidebar.location.title') %></h3>
+  <div class="divider mt-0"></div>
 
-      <div class="form-control mb-3 relative" data-geo-search-target="searchContainer">
-        <div class="join w-full">
+  <form>
+    <div class="form-control mb-3 relative" data-geo-search-target="searchContainer">
+      <div class="join w-full">
           <input
             type="text"
             class="input input-bordered join-item flex-1"
             placeholder="<%= t('views.places.geo_search.placeholder') %>"
             data-geo-search-target="input"
             value="<%= params[:keyword] %>"
-          />
-          <button type="button" class="btn btn-primary join-item" data-action="click->geo-search#search" data-geo-search-target="searchButton">
+            />
+          <button type="submit" class="btn btn-primary join-item" data-action="click->geo-search#search" data-geo-search-target="searchButton">
             <span class="loading loading-spinner loading-sm hidden" data-geo-search-target="loading"></span>
             <%= t('views.places.geo_search.button') %>
           </button>
-        </div>
-
-        <div class="hidden absolute top-full left-0 right-0 mt-2 z-50 bg-base-100 shadow-lg rounded-lg border border-base-300 max-h-96 overflow-y-auto" data-geo-search-target="resultsOverlay">
-          <div class="p-2" data-geo-search-target="results"></div>
-        </div>
       </div>
 
-      <div class="hidden alert alert-error mb-3" data-geo-search-target="error"></div>
-
-      <%= f.hidden_field :lat, value: params[:lat], id: "location_lat", data: { filter_sidebar_target: "latField" } %>
-      <%= f.hidden_field :lng, value: params[:lng], id: "location_lng", data: { filter_sidebar_target: "lngField" } %>
-      <%= f.hidden_field :radius, value: params[:radius] || 40, id: "location_radius", data: { filter_sidebar_target: "radiusField" } %>
-
-      <div class="form-control">
-        <label class="label cursor-pointer justify-start gap-2">
-          <%= f.check_box :near_me, { checked: has_location, class: "checkbox", id: "use_current_location", data: { filter_sidebar_target: "locationCheckbox", action: "change->filter-sidebar#toggleLocation" } }, "1", "0" %>
-          <span class="label-text"><%= t('views.places.filter_sidebar.location.use_current_location') %></span>
-        </label>
+      <div class="hidden absolute top-full left-0 right-0 mt-2 z-50 bg-base-100 shadow-lg rounded-lg border border-base-300 max-h-96 overflow-y-auto" data-geo-search-target="resultsOverlay">
+        <div class="p-2" data-geo-search-target="results"></div>
       </div>
+    </div>
+  </form>
 
-      <div id="radius_selector" class="mt-4" style="<%= 'display: none;' unless has_location %>" data-filter-sidebar-target="radiusSelector">
-        <h4 class="font-semibold text-sm mb-3"><%= t('views.places.filter_sidebar.location.within') %></h4>
-        <input type="range" min="20" max="100" value="<%= params[:radius] || 40 %>" step="20" class="range range-secondary" id="radius_range" data-filter-sidebar-target="radiusRange" data-action="input->filter-sidebar#updateRadius" />
-        <div class="w-full flex justify-between text-xs px-2 mt-2">
+  <div class="hidden alert alert-error mb-3" data-geo-search-target="error"></div>
+
+  <%= form_with url: places_path,
+                method: :get,
+                class: "space-y-6",
+                data: {
+                  turbo_frame: "places_list",
+                  turbo_action: "advance",
+                  filter_sidebar_target: "form",
+                  action: "submit->filter-sidebar#submitForm input->filter-sidebar#formChanged change->filter-sidebar#formChanged"
+                } do |f| %>
+
+    <%= f.hidden_field :lat, value: params[:lat], id: "location_lat", data: { filter_sidebar_target: "latField" } %>
+    <%= f.hidden_field :lng, value: params[:lng], id: "location_lng", data: { filter_sidebar_target: "lngField" } %>
+    <%= f.hidden_field :radius, value: params[:radius] || 40, id: "location_radius", data: { filter_sidebar_target: "radiusField" } %>
+
+    <div class="form-control">
+      <label class="label cursor-pointer justify-start gap-2">
+        <%= f.check_box :near_me, { checked: has_location, class: "checkbox", id: "use_current_location", data: { filter_sidebar_target: "locationCheckbox", action: "change->filter-sidebar#toggleLocation" } }, "1", "0" %>
+        <span class="label-text"><%= t('views.places.filter_sidebar.location.use_current_location') %></span>
+      </label>
+    </div>
+
+    <div id="radius_selector" class="mt-4" style="<%= 'display: none;' unless has_location %>" data-filter-sidebar-target="radiusSelector">
+      <h4 class="font-semibold text-sm mb-3"><%= t('views.places.filter_sidebar.location.within') %></h4>
+      <div class="w-full">
+        <input type="range" min="20" max="100" value="<%= params[:radius] || 40 %>" step="20" class="range range-secondary w-full" id="radius_range" data-filter-sidebar-target="radiusRange" data-action="input->filter-sidebar#updateRadius" />
+        <div class="w-full flex justify-between text-xs mt-2">
           <% %w[20km 40km 60km 80km 100km].each do |label| %>
-            <span><%= label %></span>
+            <span class="text-center first:text-left last:text-right"><%= label %></span>
           <% end %>
         </div>
       </div>

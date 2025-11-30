@@ -1,0 +1,13 @@
+<li>
+  <%= link_to I18n.t("views.menu.authenticated.my_contributions"), my_contributions_places_path, class: "font-medium" %>
+</li>
+<li>
+  <%= link_to I18n.t("views.menu.authenticated.profile"), "#", class: "font-medium" %>
+</li>
+<li>
+  <%= link_to I18n.t("views.menu.authenticated.settings"), "#", class: "font-medium" %>
+</li>
+<li>
+  <%= link_to I18n.t("views.menu.authenticated.logout"), session_path, data: { turbo_method: :delete }, class: "font-medium" %>
+</li>
+
