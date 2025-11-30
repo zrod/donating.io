@@ -1,10 +1,20 @@
 module GeoTerms
   class BaseSearchJob < ApplicationJob
-    class BlankSearchTermError < StandardError; end
-
     queue_as :geocoder_search
 
+    def perform(search_term)
+      return if search_term.blank? || GeoTerm.exists?(term: search_term)
+
+      results = Geocoder.search(search_term, lookup: lookup_provider)
+      parsed_response = format_results(results)
+      save_geo_term(search_term, parsed_response)
+    end
+
     protected
+      def lookup_provider
+        raise NoMethodError, "Not implemented by base class."
+      end
+
       def format_results(results)
         return [] if results.blank?
 
