@@ -3,7 +3,12 @@
   <div class="form-control w-full">
     <%= form.label :country_id, I18n.t("views.places.form_sections.location.country"), class: "label" %>
     <%= form.collection_select :country_id, countries, :id, :name,
-          { prompt: I18n.t("views.places.form_sections.location.country_placeholder") },
-          { required: true, class: "select select-bordered w-full" } %>
+          { prompt: I18n.t("views.places.form_sections.location.country_placeholder"), selected: form.object.country_id },
+          { required: true,
+            class: "select select-bordered w-full",
+            data: {
+              "country-subdivisions-target": "countrySelect",
+              action: "change->country-subdivisions#countryChanged"
+            } } %>
   </div>
 <% end %>

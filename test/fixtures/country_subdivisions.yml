@@ -1,0 +1,18 @@
+ontario:
+  country: canada
+  name: Ontario
+  code: 'ON'
+  subdivision_type: Province
+
+british_columbia:
+  country: canada
+  name: British Columbia
+  code: BC
+  subdivision_type: Province
+
+sao_paulo:
+  country: brazil
+  name: São Paulo
+  code: SP
+  subdivision_type: State
+

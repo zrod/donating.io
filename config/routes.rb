@@ -43,4 +43,6 @@ Rails.application.routes.draw do
   end
 
   post "geo_terms/search", to: "geo_terms_search#create"
+
+  get "country_subdivisions", to: "country_subdivisions#index"
 end

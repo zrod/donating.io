@@ -1,0 +1,24 @@
+<%= turbo_stream.replace "region_field_container" do %>
+  <div id="region_field_container" class="form-control w-full">
+    <label for="place_region" class="label"><%= I18n.t("views.places.form_sections.location.region") %></label>
+    <% if @subdivisions.any? %>
+      <select name="place[region]" id="place_region" class="select select-bordered w-full" required data-country-subdivisions-target="regionSelect">
+        <option value=""><%= I18n.t("views.places.form_sections.location.region_placeholder") %></option>
+        <% @subdivisions.each do |subdivision| %>
+          <option value="<%= subdivision.name %>" <%= 'selected' if @region_value == subdivision.name %>>
+            <%= subdivision.name %>
+          </option>
+        <% end %>
+      </select>
+    <% else %>
+      <input type="text"
+             name="place[region]"
+             id="place_region"
+             value="<%= @region_value %>"
+             placeholder="<%= I18n.t("views.places.form_sections.location.region_placeholder") %>"
+             required
+             class="input input-bordered w-full"
+             data-country-subdivisions-target="regionInput" />
+    <% end %>
+  </div>
+<% end %>

@@ -10,6 +10,19 @@ class CountryTest < ActiveSupport::TestCase
     assert_respond_to @country, :places
   end
 
+  test "should have many country_subdivisions" do
+    assert_respond_to @country, :country_subdivisions
+  end
+
+  test "should destroy associated country_subdivisions when destroyed" do
+    @country.save!
+    @country.country_subdivisions.create!(name: "Test Province", code: "TP")
+
+    assert_difference "CountrySubdivision.count", -1 do
+      @country.destroy
+    end
+  end
+
   test "should prevent destruction when associated places exist" do
     @country.save
     place = places(:published_bin_with_full_attributes_one)

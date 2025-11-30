@@ -21,24 +21,28 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-      <div class="form-control w-full">
-        <%= form.label :city, I18n.t("views.places.form_sections.location.city"), class: "label" %>
-        <%= form.text_field :city,
-              placeholder: I18n.t("views.places.form_sections.location.city_placeholder"),
-              required: true,
-              class: "input input-bordered w-full" %>
+    <div data-controller="country-subdivisions">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div class="form-control w-full">
+          <%= form.label :city, I18n.t("views.places.form_sections.location.city"), class: "label" %>
+          <%= form.text_field :city,
+                placeholder: I18n.t("views.places.form_sections.location.city_placeholder"),
+                required: true,
+                class: "input input-bordered w-full" %>
+        </div>
+
+        <div id="region_field_container" class="form-control w-full">
+          <%= form.label :region, I18n.t("views.places.form_sections.location.region"), class: "label" %>
+          <%= form.text_field :region,
+                placeholder: I18n.t("views.places.form_sections.location.region_placeholder"),
+                required: true,
+                class: "input input-bordered w-full",
+                data: { "country-subdivisions-target": "regionInput" } %>
+        </div>
       </div>
 
-      <div class="form-control w-full">
-        <%= form.label :region, I18n.t("views.places.form_sections.location.region"), class: "label" %>
-        <%= form.text_field :region,
-              placeholder: I18n.t("views.places.form_sections.location.region_placeholder"),
-              class: "input input-bordered w-full" %>
-      </div>
+      <%= render "shared/forms/countries_dropdown", form: form %>
     </div>
-
-    <%= render "shared/forms/countries_dropdown", form: %>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
       <div class="form-control w-full">

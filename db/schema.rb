@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_11_15_232929) do
+ActiveRecord::Schema[8.1].define(version: 2025_11_30_191341) do
   create_table "categories", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.text "description"
@@ -40,6 +40,18 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_15_232929) do
     t.index ["active"], name: "index_countries_on_active"
     t.index ["iso_alpha3"], name: "index_countries_on_iso_alpha3", unique: true
     t.index ["weight"], name: "index_countries_on_weight"
+  end
+
+  create_table "country_subdivisions", force: :cascade do |t|
+    t.string "code", limit: 10, null: false
+    t.integer "country_id", null: false
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.string "subdivision_type", limit: 50
+    t.datetime "updated_at", null: false
+    t.index ["country_id", "code"], name: "index_country_subdivisions_on_country_id_and_code", unique: true
+    t.index ["country_id"], name: "index_country_subdivisions_on_country_id"
+    t.index ["subdivision_type"], name: "index_country_subdivisions_on_subdivision_type"
   end
 
   create_table "geo_terms", force: :cascade do |t|
@@ -135,6 +147,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_11_15_232929) do
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 
+  add_foreign_key "country_subdivisions", "countries", on_delete: :cascade
   add_foreign_key "place_feedbacks", "places"
   add_foreign_key "place_feedbacks", "users"
   add_foreign_key "place_hours", "places"
