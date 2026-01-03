@@ -25,10 +25,22 @@ class UsersController < ApplicationController
   end
 
   def update
+    password = params.dig(:user, :password)
+
+    unless current_user.authenticate(password)
+      redirect_to account_path, alert: I18n.t("views.account.update.invalid_password")
+      return
+    end
+
+    if current_user.update(user_update_params)
+      redirect_to account_path, notice: I18n.t("views.account.update.success")
+    else
+      render "account/show", status: :unprocessable_content
+    end
   end
 
   def destroy
-    password = params[:password]
+    password = params.dig(:user, :password)
 
     unless current_user.authenticate(password)
       redirect_to account_path, alert: I18n.t("views.users.destroy.invalid_password")
@@ -57,5 +69,9 @@ class UsersController < ApplicationController
 
     def user_params
       params.require(:user).permit(:username, :email_address, :password, :password_confirmation)
+    end
+
+    def user_update_params
+      params.require(:user).permit(:username, :email_address)
     end
 end

@@ -6,16 +6,62 @@
   </h1>
 
   <h2 class="text-xl font-semibold mb-4">
-    Profile
+    <%= t("views.account.profile") %>
   </h2>
+
+  <%= form_with model: current_user, url: account_path, method: :patch, local: true do |form| %>
+    <div class="mb-4">
+      <%= form.label :username, t("views.users.new.username_placeholder"), class: "label" %>
+      <%= form.text_field :username,
+          class: "input input-bordered w-full text-lg #{'input-error' if current_user.errors[:username].any?}",
+          placeholder: t("views.users.new.username_placeholder"),
+          required: true %>
+      <% if current_user.errors[:username].any? %>
+        <div class="text-error text-md mt-1">
+          <%= current_user.errors.full_messages_for(:username).first %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="mb-4">
+      <%= form.label :email_address, t("views.users.new.email_address_placeholder"), class: "label" %>
+      <%= form.email_field :email_address,
+          class: "input input-bordered w-full text-lg #{'input-error' if current_user.errors[:email_address].any?}",
+          placeholder: t("views.users.new.email_address_placeholder"),
+          required: true %>
+      <% if current_user.errors[:email_address].any? %>
+        <div class="text-error text-md mt-1">
+          <%= current_user.errors.full_messages_for(:email_address).first %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="mb-4">
+      <%= form.label :password, t("views.users.new.password_placeholder"), class: "label" %>
+      <%= form.password_field :password,
+          class: "input input-bordered w-full text-lg #{'input-error' if current_user.errors[:password].any?}",
+          placeholder: t("views.account.password_confirm_placeholder"),
+          required: true %>
+      <p class="text-sm text-base-content mt-1">
+        <%= t("views.account.password_confirm_help") %>
+      </p>
+      <% if current_user.errors[:password].any? %>
+        <div class="text-error text-md mt-1">
+          <%= current_user.errors.full_messages_for(:password).first %>
+        </div>
+      <% end %>
+    </div>
+
+    <%= form.submit t("views.account.update_button"), class: "btn btn-primary" %>
+  <% end %>
 
   <div class="divider"></div>
 
-  <h2 class="text-xl mb-4">
-    Delete my account
+  <h2 class="text-xl font-semibold mb-4">
+    <%= t("views.account.delete_account") %>
   </h2>
 
-  <%= form_with url: user_path, method: :delete do |form| %>
+  <%= form_with model: current_user, url: user_path, method: :delete do |form| %>
     <% if current_user.places.any? %>
       <div class="mb-4">
         <label class="cursor-pointer flex items-center gap-2">

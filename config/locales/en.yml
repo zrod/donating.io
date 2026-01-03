@@ -327,9 +327,17 @@ en:
         invalid_password: "Invalid password. Please try again."
     account:
       title: "My Account"
+      profile: "Profile"
+      password_confirm_placeholder: "Enter your password to confirm changes"
+      password_confirm_help: "Enter your current password to confirm changes to your profile."
+      update_button: "Update Profile"
       keep_contributions: "Keep my contributions"
       password_placeholder: "Enter your password to confirm"
+      delete_account: "Delete my account"
       delete_button: "Delete my account"
+      update:
+        success: "Profile updated successfully."
+        invalid_password: "Invalid password. Please try again."
     pages:
       about:
         title: "About"

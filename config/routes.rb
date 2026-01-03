@@ -45,6 +45,7 @@ Rails.application.routes.draw do
 
   scope :account, as: :account do
     get "/", to: "account#show"
+    patch "/", to: "users#update"
   end
 
   post "geo_terms/search", to: "geo_terms_search#create"

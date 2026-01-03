@@ -16,6 +16,15 @@
     {
       "type": "ruby_lsp",
       "request": "launch",
+      "name": "Run SolidJobs",
+      "program": "${workspaceFolder}/bin/rails solid_queue:start",
+      "env": {
+        "RAILS_ENV": "development"
+      }
+    },
+    {
+      "type": "ruby_lsp",
+      "request": "launch",
       "name": "Run TailwindCSS watch",
       "program": "${workspaceFolder}/bin/rails tailwindcss:watch",
       "env": {
