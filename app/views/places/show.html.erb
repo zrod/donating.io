@@ -75,7 +75,9 @@
 
       <div class="flex items-center gap-2">
         <%= image_tag "icons/flag.svg", class: "w-5 mt-1" %>
-        <a href="#" class="link link-secondary"><%= t("views.places.show.report_suggest_corrections") %></a>
+        <a href="#" class="link link-secondary" onclick="place_feedback_modal.showModal(); return false;">
+          <%= t("views.places.show.report_suggest_corrections") %>
+        </a>
       </div>
     </div>
 
@@ -184,3 +186,5 @@
     </div>
   </div>
 </div>
+
+<%= render "place_feedback_modal" %>

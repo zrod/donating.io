@@ -35,6 +35,8 @@ Rails.application.routes.draw do
       get :my_contributions
       delete :bulk_delete
     end
+
+    resources :place_feedbacks, only: [:create]
   end
 
   scope :pages do

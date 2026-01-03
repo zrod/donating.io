@@ -1,0 +1,44 @@
+<dialog id="place_feedback_modal" class="modal" data-controller="modal">
+  <div class="modal-box">
+    <h3 class="text-lg font-bold mb-4"><%= t("views.places.show.feedback_modal.title") %></h3>
+    <%= form_with model: [@place, PlaceFeedback.new], url: place_place_feedbacks_path(@place), data: { turbo: true, action: "turbo:submit-end->modal#handleSubmitEnd" } do |form| %>
+      <div class="form-control w-full mb-4">
+        <label for="place_feedback_reason" class="label">
+          <span class="label-text"><%= t("views.places.show.feedback_modal.reason_label") %></span>
+        </label>
+        <%= form.select :reason,
+          options_for_select([
+            [t("views.places.show.feedback_modal.reasons.incorrect_address"), "incorrect_address"],
+            [t("views.places.show.feedback_modal.reasons.closed"), "closed"],
+            [t("views.places.show.feedback_modal.reasons.no_longer_accepts_donations"), "no_longer_accepts_donations"],
+            [t("views.places.show.feedback_modal.reasons.wrong_information"), "wrong_information"],
+            [t("views.places.show.feedback_modal.reasons.other"), "other"]
+          ]),
+          { prompt: t("views.places.show.feedback_modal.reason_placeholder") },
+          { class: "select select-bordered w-full", required: true }
+        %>
+      </div>
+
+      <div class="form-control w-full mb-4">
+        <label for="place_feedback_details" class="label">
+          <span class="label-text"><%= t("views.places.show.feedback_modal.details_label") %></span>
+        </label>
+        <%= form.text_area :details,
+          class: "textarea textarea-bordered w-full",
+          rows: 4,
+          placeholder: t("views.places.show.feedback_modal.details_placeholder")
+        %>
+      </div>
+
+      <div class="modal-action">
+        <button type="button" class="btn" onclick="place_feedback_modal.close()">
+          <%= t("views.places.show.feedback_modal.cancel") %>
+        </button>
+        <%= form.submit t("views.places.show.feedback_modal.submit"), class: "btn btn-primary" %>
+      </div>
+    <% end %>
+  </div>
+  <form method="dialog" class="modal-backdrop">
+    <button>close</button>
+  </form>
+</dialog>

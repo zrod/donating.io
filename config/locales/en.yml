@@ -24,6 +24,9 @@ en:
         nothing_selected: "No places selected for deletion."
       authorize_place_owner:
         denied: "You can only edit your own places."
+    place_feedbacks:
+      create:
+        success: "Thank you for your feedback! We'll review it and take appropriate action."
     sessions:
       create:
         too_many_requests: "Too many login attempts. Please try again later."
@@ -106,8 +109,22 @@ en:
         day: "Day"
         time: "Time"
         get_directions: "Get Directions:"
-        report_suggest_corrections: "Report or suggest corrections"
+        report_suggest_corrections: "Report issue"
         click_to_reveal: "Click to reveal %{property_name}"
+        feedback_modal:
+          title: "Report issue"
+          reason_label: "Reason"
+          reason_placeholder: "Select a reason"
+          details_label: "Additional Details (Optional)"
+          details_placeholder: "Please provide any additional information that might help us..."
+          submit: "Submit Report"
+          cancel: "Cancel"
+          reasons:
+            incorrect_address: "Incorrect Address"
+            closed: "Closed"
+            no_longer_accepts_donations: "No Longer Accepts Donations"
+            wrong_information: "Wrong Information"
+            other: "Other"
       new:
         title: "Contribute"
         subheader: "If you know of a donation bin or organization that accepts donations and would like to share it with us, please fill out the form below with the details."
