@@ -19,6 +19,7 @@ Rails.application.routes.draw do
     create
     edit
     update
+    destroy
   ]
 
   resources :places, only: %i[
@@ -36,10 +37,14 @@ Rails.application.routes.draw do
     end
   end
 
-  scope "pages" do
+  scope :pages do
     get "about", to: "pages#about"
     get "privacy", to: "pages#privacy"
     get "terms", to: "pages#terms"
+  end
+
+  scope :account, as: :account do
+    get "/", to: "account#show"
   end
 
   post "geo_terms/search", to: "geo_terms_search#create"

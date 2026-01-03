@@ -43,6 +43,7 @@ en:
         about: "About"
       authenticated:
         greeting: "%{username}"
+        my_account: "My Account"
         my_contributions: "My Contributions"
         profile: "Profile"
         settings: "Settings"
@@ -296,6 +297,8 @@ en:
         buttons:
           apply_filters: "Apply Filters"
           reset: "Reset"
+          show_filters: "Show filters"
+          hide_filters: "Hide filters"
     sessions:
       new:
         email_address_placeholder: "Email address"
@@ -319,6 +322,14 @@ en:
         privacy_policy_link: "Privacy Policy"
       create:
         success: "Account created successfully! Please check your email for a confirmation link."
+      destroy:
+        success: "Your account has been deleted successfully."
+        invalid_password: "Invalid password. Please try again."
+    account:
+      title: "My Account"
+      keep_contributions: "Keep my contributions"
+      password_placeholder: "Enter your password to confirm"
+      delete_button: "Delete my account"
     pages:
       about:
         title: "About"

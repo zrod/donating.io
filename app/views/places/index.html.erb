@@ -10,8 +10,30 @@
 
   <div class="divider mb-8"></div>
 
-  <div class="flex flex-col lg:flex-row gap-6">
+  <div class="flex flex-col lg:flex-row gap-6" data-controller="filter-sidebar">
+    <div class="lg:hidden mb-4 order-first" data-filter-sidebar-target="toggleContainerShow">
+      <button
+        type="button"
+        class="btn btn-primary btn-sm w-full"
+        data-action="click->filter-sidebar#toggleMobileSidebar"
+        data-filter-sidebar-target="toggleButtonShow"
+        data-show-text="<%= t('views.places.filter_sidebar.buttons.show_filters') %>"
+        data-hide-text="<%= t('views.places.filter_sidebar.buttons.hide_filters') %>">
+        <span data-filter-sidebar-target="toggleButtonTextShow"><%= t('views.places.filter_sidebar.buttons.show_filters') %></span>
+      </button>
+    </div>
     <%= render "shared/filter_sidebar" %>
+    <div class="lg:hidden mt-4" data-filter-sidebar-target="toggleContainerHide" style="display: none;">
+      <button
+        type="button"
+        class="btn btn-outline btn-sm w-full"
+        data-action="click->filter-sidebar#toggleMobileSidebar"
+        data-filter-sidebar-target="toggleButtonHide"
+        data-show-text="<%= t('views.places.filter_sidebar.buttons.show_filters') %>"
+        data-hide-text="<%= t('views.places.filter_sidebar.buttons.hide_filters') %>">
+        <span data-filter-sidebar-target="toggleButtonTextHide"><%= t('views.places.filter_sidebar.buttons.hide_filters') %></span>
+      </button>
+    </div>
 
     <%= turbo_frame_tag "places_list", class: "flex-1 relative" do %>
       <div class="places-loading-indicator loading loading-spinner loading-sm my-2 opacity-40"></div>

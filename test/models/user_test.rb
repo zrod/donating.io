@@ -287,4 +287,26 @@ class UserTest < ActiveSupport::TestCase
     user.valid? # trigger normalization
     assert_equal "testuser123", user.username
   end
+
+  # schedule_for_deletion tests
+  test "should append _pending_delete to email address" do
+    user = users(:user_one)
+    original_email = user.email_address
+    expected_email = "#{original_email}_pending_delete"
+
+    user.schedule_for_deletion
+
+    assert_equal expected_email, user.email_address
+  end
+
+  test "should persist email address change to database" do
+    user = users(:user_one)
+    original_email = user.email_address
+    expected_email = "#{original_email}_pending_delete"
+
+    user.schedule_for_deletion
+    user.reload
+
+    assert_equal expected_email, user.email_address
+  end
 end

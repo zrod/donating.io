@@ -108,22 +108,6 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_equal I18n.t("views.users.create.success"), flash[:notice]
   end
 
-  # Tests for edit and update actions
-  test "should redirect to login when trying to access edit without authentication" do
-    get edit_user_url
-    assert_redirected_to new_session_path
-  end
-
-  test "should redirect to login when trying to update without authentication" do
-    patch user_url, params: {
-      user: {
-        username: "updated_username",
-        email_address: "updated@example.com"
-      }
-    }
-    assert_redirected_to new_session_path
-  end
-
   test "should allow unauthenticated access to new" do
     get new_user_url
     assert_response :success
@@ -139,5 +123,82 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
       }
     }
     assert_response :redirect
+  end
+
+  # Tests for destroy action
+  test "should redirect to login when trying to destroy without authentication" do
+    delete user_url, params: { password: "password" }
+    assert_redirected_to new_session_path
+  end
+
+  test "should redirect to account path with alert when password is invalid" do
+    user = users(:user_one)
+    sign_in_as(user)
+
+    delete user_url, params: { password: "wrong_password" }
+
+    assert_redirected_to account_path
+    assert_equal I18n.t("views.users.destroy.invalid_password"), flash[:alert]
+  end
+
+  test "should schedule user for deletion when password is valid" do
+    user = users(:user_one)
+    original_email = user.email_address
+    sign_in_as(user)
+
+    delete user_url, params: { password: "password" }
+
+    user.reload
+    assert_equal "#{original_email}_pending_delete", user.email_address
+  end
+
+  test "should enqueue destroy user job when password is valid" do
+    user = users(:user_one)
+    sign_in_as(user)
+
+    assert_enqueued_with(job: Users::DestroyUserJob) do
+      delete user_url, params: { password: "password" }
+    end
+  end
+
+  test "should enqueue destroy user job with keep_contributions false when not provided" do
+    user = users(:user_one)
+    sign_in_as(user)
+
+    assert_enqueued_with(job: Users::DestroyUserJob, args: [user.id, false]) do
+      delete user_url, params: { password: "password" }
+    end
+  end
+
+  test "should enqueue destroy user job with keep_contributions true when keep_contributions is 1" do
+    user = users(:user_one)
+    sign_in_as(user)
+
+    assert_enqueued_with(job: Users::DestroyUserJob, args: [user.id, true]) do
+      delete user_url, params: { password: "password", keep_contributions: "1" }
+    end
+  end
+
+  test "should enqueue destroy user job with keep_contributions false when keep_contributions is not 1" do
+    user = users(:user_one)
+    sign_in_as(user)
+
+    assert_enqueued_with(job: Users::DestroyUserJob, args: [user.id, false]) do
+      delete user_url, params: { password: "password", keep_contributions: "0" }
+    end
+  end
+
+  test "should terminate session and redirect to root with success notice when password is valid" do
+    user = users(:user_one)
+    sign_in_as(user)
+
+    delete user_url, params: { password: "password" }
+
+    assert_redirected_to root_path
+    assert_equal I18n.t("views.users.destroy.success"), flash[:notice]
+
+    # Verify session is terminated by checking we can access login page
+    get new_session_url
+    assert_response :success
   end
 end

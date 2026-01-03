@@ -4,8 +4,9 @@
 %>
 
 <aside
-  class="w-full lg:w-80 flex-shrink-0"
-  data-controller="filter-sidebar geo-search"
+  class="w-full lg:w-80 flex-shrink-0 hidden lg:block"
+  data-controller="geo-search"
+  data-filter-sidebar-target="sidebar"
   data-geo-search-poll-interval-value="<%= GeoTermsSearchController::POLL_INTERVAL_MS %>"
   data-geo-search-max-retries-value="<%= GeoTermsSearchController::MAX_RETRIES %>"
   data-geo-search-search-took-too-long-value="<%= t('views.places.geo_search.search_took_too_long') %>"

@@ -11,7 +11,17 @@ export default class extends Controller {
     "radiusField",
     "openingHoursToggle",
     "openingHoursForm",
-    "applyButton"
+    "applyButton",
+    "sidebar",
+    "toggleButton",
+    "toggleButtonText",
+    "toggleContainer",
+    "toggleContainerShow",
+    "toggleButtonShow",
+    "toggleButtonTextShow",
+    "toggleContainerHide",
+    "toggleButtonHide",
+    "toggleButtonTextHide"
   ]
 
   connect() {
@@ -143,5 +153,39 @@ export default class extends Controller {
 
     const url = `${this.formTarget.action}?${params.toString()}`
     Turbo.visit(url, { frame: 'places_list', action: 'advance' })
+  }
+
+  toggleMobileSidebar() {
+    if (!this.hasSidebarTarget || window.innerWidth >= 1024) {
+      return
+    }
+
+    const isHidden = this.sidebarTarget.classList.contains('hidden')
+
+    if (isHidden) {
+      // Show the sidebar
+      this.sidebarTarget.classList.remove('hidden')
+      this.sidebarTarget.classList.add('block')
+
+      // Hide "Show filters" button, show "Hide filters" button
+      if (this.hasToggleContainerShowTarget) {
+        this.toggleContainerShowTarget.style.display = 'none'
+      }
+      if (this.hasToggleContainerHideTarget) {
+        this.toggleContainerHideTarget.style.display = 'block'
+      }
+    } else {
+      // Hide the sidebar
+      this.sidebarTarget.classList.remove('block')
+      this.sidebarTarget.classList.add('hidden')
+
+      // Show "Show filters" button, hide "Hide filters" button
+      if (this.hasToggleContainerShowTarget) {
+        this.toggleContainerShowTarget.style.display = 'block'
+      }
+      if (this.hasToggleContainerHideTarget) {
+        this.toggleContainerHideTarget.style.display = 'none'
+      }
+    }
   }
 }

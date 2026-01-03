@@ -1,0 +1,35 @@
+<% content_for :title, t("views.account.title") %>
+
+<div class="w-full max-w-2xl">
+  <h1 class="text-5xl font-semibold text-primary mb-6">
+    <%= t("views.account.title") %>
+  </h1>
+
+  <h2 class="text-xl font-semibold mb-4">
+    Profile
+  </h2>
+
+  <div class="divider"></div>
+
+  <h2 class="text-xl mb-4">
+    Delete my account
+  </h2>
+
+  <%= form_with url: user_path, method: :delete do |form| %>
+    <% if current_user.places.any? %>
+      <div class="mb-4">
+        <label class="cursor-pointer flex items-center gap-2">
+          <%= check_box_tag "keep_contributions", "1", false, class: "checkbox checkbox-primary" %>
+          <span><%= t("views.account.keep_contributions") %></span>
+        </label>
+      </div>
+    <% end %>
+    <div class="mb-4">
+      <%= form.password_field :password,
+          class: "input input-bordered w-full text-lg",
+          placeholder: t("views.account.password_placeholder"),
+          required: true %>
+    </div>
+    <%= form.submit t("views.account.delete_button"), class: "btn btn-outline btn-error" %>
+  <% end %>
+</div>

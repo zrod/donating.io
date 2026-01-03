@@ -24,13 +24,29 @@ class UsersController < ApplicationController
     redirect_to root_path
   end
 
-  def edit
-  end
-
   def update
   end
 
+  def destroy
+    password = params[:password]
+
+    unless current_user.authenticate(password)
+      redirect_to account_path, alert: I18n.t("views.users.destroy.invalid_password")
+      return
+    end
+
+    keep_contributions = params[:keep_contributions] == "1"
+    destroy_user_account(keep_contributions:)
+    terminate_session
+    redirect_to root_path, notice: I18n.t("views.users.destroy.success")
+  end
+
   private
+    def destroy_user_account(keep_contributions: false)
+      current_user.schedule_for_deletion
+      Users::DestroyUserJob.perform_later(current_user.id, keep_contributions)
+    end
+
     def validate_honeypot!
       raise InvalidUserRequestError if honeypot_param.present?
     end

@@ -101,9 +101,8 @@
             </td>
             <td>
               <%= link_to place_path(place),
-                  method: :delete,
                   data: {
-                    confirm: t("views.places.my_contributions.confirmations.single_delete", name: place.name),
+                    turbo_confirm: t("views.places.my_contributions.confirmations.single_delete", name: place.name),
                     turbo_method: :delete
                   },
                   class: "flex items-center gap-2 text-error link" do %>

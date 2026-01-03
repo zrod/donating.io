@@ -67,7 +67,7 @@ class PlacesController < ApplicationController
 
   def destroy
     @place.destroy
-    redirect_to my_contributions_places_path, notice: t(".success")
+    redirect_to my_contributions_places_path, notice: I18n.t("controllers.places.destroy.success")
   end
 
   def bulk_delete

@@ -1,11 +1,15 @@
 class User < ApplicationRecord
+  COMMUNITY_USER_USERNAME = "community".freeze
+  COMMUNITY_USER_EMAIL = "community@localhost".freeze
+
   USERNAME_MIN_LENGTH = 3
   USERNAME_MAX_LENGTH = 20
-  USERNAME_BLACKLIST = %w[
-    admin
-    administrator
-    staff
-    user
+  USERNAME_BLACKLIST = [
+    "admin",
+    "administrator",
+    "staff",
+    "user",
+    COMMUNITY_USER_USERNAME
   ].freeze
 
   has_secure_password
@@ -25,7 +29,7 @@ class User < ApplicationRecord
               message: I18n.t("models.user.invalid_username_format")
             },
             exclusion: {
-              in: USERNAME_BLACKLIST,
+              in: ->(user) { user.creating_community_user? ? [] : USERNAME_BLACKLIST },
               message: I18n.t("models.user.reserved_username")
             },
             length: {
@@ -35,4 +39,38 @@ class User < ApplicationRecord
             }
 
   validates :email_address, presence: true, email: true, uniqueness: true
+
+  before_destroy :prevent_community_user_deletion
+
+  attr_accessor :creating_community_user
+
+  # Placeholder user for orphaned contributions
+  def self.community_user
+    find_or_create_by!(username: COMMUNITY_USER_USERNAME) do |user|
+      user.creating_community_user = true
+      user.email_address = COMMUNITY_USER_EMAIL
+      user.password = SecureRandom.hex(32)
+      user.password_confirmation = user.password
+    end
+  end
+
+  def community_user?
+    username == COMMUNITY_USER_USERNAME
+  end
+
+  def creating_community_user?
+    creating_community_user == true
+  end
+
+  def schedule_for_deletion
+    update_columns(email_address: [email_address, "_pending_delete"].join)
+  end
+
+  private
+    def prevent_community_user_deletion
+      if community_user?
+        errors.add(:base, "Community user cannot be deleted")
+        throw :abort
+      end
+    end
 end
