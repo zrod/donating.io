@@ -360,7 +360,7 @@ en:
         title: "About"
         content:
           - "Donating.io is a free, community-driven online database to help you find and share locations accepting various types of donations."
-          - "Would you like to contribute and help improve Donating.io? Visit our %{github_link} page."
+          - "Would you like to contribute and help improve Donating.io? Visit our %{repository_link} page."
       privacy:
         title: "Privacy Policy"
         subheader: "Donating.io is a platform for donating to charities."
