@@ -36,7 +36,31 @@ bundle install
 rails db:setup
 ```
 
-4. **Start the development server and Solid Queue**
+4. Create a credentials file
+
+Your credentials file should have the following structure:
+
+```yaml
+# To generate a secret, run: `rails secret`
+secret_key_base: <your-secret>
+
+mission_control:
+  http_basic_auth_user: dev
+  http_basic_auth_password: dev
+```
+
+```bash
+rails credentials:edit --environment=development
+```
+
+5. Create an .env file
+
+```
+# https://protomaps.com/account
+PROTOMAPS_KEY=<your-protomaps-key>
+```
+
+6. **Start the development server and Solid Queue**
 
 ```bash
 rails server
@@ -75,4 +99,5 @@ Check out the [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 ## License
 
 This project is licensed under the **GNU Affero General Public License v3.0** (AGPL-3.0).
+
 See the [LICENSE](LICENSE) file for more details.

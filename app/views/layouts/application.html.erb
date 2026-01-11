@@ -21,6 +21,8 @@
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "maplibre-gl", "data-turbo-track": "reload" %>
+    <script src="<%= asset_path("maplibre-gl.js") %>"></script>
     <%= javascript_importmap_tags %>
   </head>
 
