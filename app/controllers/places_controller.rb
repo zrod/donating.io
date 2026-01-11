@@ -15,6 +15,11 @@ class PlacesController < ApplicationController
 
     @pages = page_metadata[:pages]
     @places_total = page_metadata[:total]
+
+    respond_to do |format|
+      format.html
+      format.json
+    end
   end
 
   def my_contributions

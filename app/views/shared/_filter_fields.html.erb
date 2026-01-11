@@ -1,0 +1,185 @@
+<%#
+  Shared filter fields partial for places filtering.
+
+  Local variables:
+  - form: The form builder object (required)
+  - controller_prefix: The Stimulus controller prefix, e.g. "filter-sidebar" or "map-page" (required)
+  - show_location_search: Whether to show the geo search input (default: false)
+  - compact: Whether to use compact styling (default: false)
+%>
+<%
+  controller_prefix ||= "filter-sidebar"
+  show_location_search = local_assigns.fetch(:show_location_search, false)
+  compact = local_assigns.fetch(:compact, false)
+
+  has_location = params[:near_me] == "1" || (params[:near_me].blank? && params[:lat].present? && params[:lng].present?)
+
+  select_class = compact ? "select select-bordered select-sm w-full" : "select select-bordered w-full"
+  label_class = compact ? "label py-1" : "label"
+  label_text_class = compact ? "label-text text-sm" : "label-text"
+%>
+
+<!-- Hidden location fields -->
+<%= form.hidden_field :lat, value: params[:lat], id: "location_lat", data: { "#{controller_prefix}_target": "latField" } %>
+<%= form.hidden_field :lng, value: params[:lng], id: "location_lng", data: { "#{controller_prefix}_target": "lngField" } %>
+<%= form.hidden_field :radius, value: params[:radius] || 40, id: "location_radius", data: { "#{controller_prefix}_target": "radiusField" } %>
+
+<!-- Location section -->
+<div>
+  <% unless local_assigns[:hide_location_header] %>
+    <h3 class="font-semibold"><%= t('views.places.filter_sidebar.location.title') %></h3>
+    <div class="divider mt-0 mb-2"></div>
+  <% end %>
+
+  <div class="form-control">
+    <label class="label cursor-pointer justify-start gap-2">
+      <%= form.check_box :near_me, {
+        checked: has_location,
+        class: "checkbox",
+        id: "use_current_location",
+        data: {
+          "#{controller_prefix}_target": "locationCheckbox",
+          action: "change->#{controller_prefix}#toggleLocation"
+        }
+      }, "1", "0" %>
+      <span class="label-text"><%= t('views.places.filter_sidebar.location.use_current_location') %></span>
+    </label>
+  </div>
+
+  <div id="radius_selector" class="mt-4" style="<%= 'display: none;' unless has_location %>" data-<%= controller_prefix %>-target="radiusSelector">
+    <h4 class="font-semibold text-sm mb-3"><%= t('views.places.filter_sidebar.location.within') %></h4>
+    <div class="w-full">
+      <input type="range" min="20" max="100" value="<%= params[:radius] || 40 %>" step="20" class="range range-secondary w-full" id="radius_range" data-<%= controller_prefix %>-target="radiusRange" data-action="input-><%= controller_prefix %>#updateRadius" />
+      <div class="w-full flex justify-between text-xs mt-2">
+        <% %w[20km 40km 60km 80km 100km].each do |label| %>
+          <span class="text-center first:text-left last:text-right"><%= label %></span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Other filters -->
+<div>
+  <h3 class="font-semibold"><%= t('views.places.filter_sidebar.other.title') %></h3>
+  <div class="divider mt-0 mb-2"></div>
+
+  <%
+    select_fields = [
+      [:is_bin, 'views.places.filter_sidebar.other.is_bin'],
+      [:used_ok, 'views.places.filter_sidebar.other.used_ok'],
+      [:pickup, 'views.places.filter_sidebar.other.pickup'],
+      [:charity_support, 'views.places.filter_sidebar.other.charity_support']
+    ]
+  %>
+
+  <% select_fields.each do |field, translation_key| %>
+    <div class="form-control mb-3">
+      <label class="<%= label_class %>">
+        <span class="<%= label_text_class %>"><%= t("#{translation_key}.label") %></span>
+      </label>
+      <%= form.select field,
+            options_for_select([
+              [t("#{translation_key}.all"), ""],
+              [t("#{translation_key}.option1"), field == :charity_support ? "1" : "true"],
+              [t("#{translation_key}.option2"), "false"]
+            ], params[field]),
+            {}, class: select_class %>
+    </div>
+  <% end %>
+</div>
+
+<!-- Tax receipt -->
+<div class="form-control">
+  <label class="label cursor-pointer justify-start gap-2">
+    <%= form.check_box :tax_receipt, { checked: params[:tax_receipt] == "true", class: "checkbox" }, "true", "false" %>
+    <span class="label-text"><%= t('views.places.filter_sidebar.tax_receipt') %></span>
+  </label>
+</div>
+
+<!-- Categories -->
+<div>
+  <h3 class="font-semibold"><%= t('views.places.filter_sidebar.categories.title') %></h3>
+  <div class="divider mt-0 mb-2"></div>
+  <div class="form-control">
+    <%= form.select :category_ids,
+          options_for_select(Category.by_name.pluck(:name, :id), params[:category_ids]),
+          { include_blank: t('views.places.filter_sidebar.categories.all_categories') },
+          class: select_class %>
+  </div>
+</div>
+
+<!-- Hours -->
+<div>
+  <h3 class="font-semibold"><%= t('views.places.filter_sidebar.hours.title') %></h3>
+  <div class="divider mt-0 mb-2"></div>
+
+  <div class="form-control">
+    <label class="label cursor-pointer justify-start gap-2">
+      <%= form.check_box :opening_hours_filter, {
+        class: "checkbox",
+        checked: params[:opening_hours_filter] == "true" || (params[:opening_hours_filter].blank? && params[:opening_hours].blank?),
+        id: "opening_hours_toggle",
+        data: {
+          "#{controller_prefix}_target": "openingHoursToggle",
+          action: "change->#{controller_prefix}#toggleOpeningHours"
+        }
+      }, "true", "false" %>
+      <span class="label-text"><%= t('views.places.filter_sidebar.hours.any_day_and_time') %></span>
+    </label>
+  </div>
+
+  <div id="opening_hours_form" class="mt-4 space-y-3" style="<%= 'display: none;' if params[:opening_hours_filter] == 'true' || (params[:opening_hours_filter].blank? && params[:opening_hours].blank?) %>" data-<%= controller_prefix %>-target="openingHoursForm">
+    <div class="form-control">
+      <label class="<%= label_class %>">
+        <span class="<%= label_text_class %>"><%= t('views.places.filter_sidebar.hours.day') %></span>
+      </label>
+      <%= select_tag 'opening_hours[day_of_week]',
+            options_for_select([
+              [t('views.places.filter_sidebar.hours.days.sunday'), 0],
+              [t('views.places.filter_sidebar.hours.days.monday'), 1],
+              [t('views.places.filter_sidebar.hours.days.tuesday'), 2],
+              [t('views.places.filter_sidebar.hours.days.wednesday'), 3],
+              [t('views.places.filter_sidebar.hours.days.thursday'), 4],
+              [t('views.places.filter_sidebar.hours.days.friday'), 5],
+              [t('views.places.filter_sidebar.hours.days.saturday'), 6]
+            ], params.dig(:opening_hours, :day_of_week)),
+            include_blank: t('views.places.filter_sidebar.hours.any_day'),
+            class: select_class %>
+    </div>
+
+    <div class="grid grid-cols-2 gap-3">
+      <div class="form-control">
+        <label class="<%= label_class %>">
+          <span class="<%= label_text_class %>"><%= t('views.places.filter_sidebar.hours.from') %></span>
+        </label>
+        <%= select_tag 'opening_hours[start_time]',
+              options_for_select((0..23).map { |h|
+                period = h < 12 ? 'am' : 'pm'
+                display_hour = h == 0 ? 12 : (h > 12 ? h - 12 : h)
+                ["#{display_hour}:00 #{period}", h]
+              }, params.dig(:opening_hours, :start_time)),
+              include_blank: t('views.places.filter_sidebar.hours.select_time'),
+              class: select_class %>
+      </div>
+
+      <div class="form-control">
+        <label class="<%= label_class %>">
+          <span class="<%= label_text_class %>"><%= t('views.places.filter_sidebar.hours.to') %></span>
+        </label>
+        <%= select_tag 'opening_hours[end_time]',
+              options_for_select((0..24).map { |h|
+                if h == 24
+                  ["12:00 am (+1)", h]
+                else
+                  period = h < 12 ? 'am' : 'pm'
+                  display_hour = h == 0 ? 12 : (h > 12 ? h - 12 : h)
+                  ["#{display_hour}:00 #{period}", h]
+                end
+              }, params.dig(:opening_hours, :end_time)),
+              include_blank: t('views.places.filter_sidebar.hours.select_time'),
+              class: select_class %>
+      </div>
+    </div>
+  </div>
+</div>

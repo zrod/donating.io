@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
-  root "places#index"
+  root "pages#map"
 
   resource :user, only: %i[
     new
@@ -21,6 +21,8 @@ Rails.application.routes.draw do
     update
     destroy
   ]
+
+  get "directory", to: "places#index"
 
   resources :places, only: %i[
     index

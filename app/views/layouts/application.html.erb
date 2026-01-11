@@ -30,12 +30,18 @@
     <%= render "layouts/header" %>
     <%= render "layouts/flashes" %>
 
-    <main class="container mx-auto my-10 px-5 flex justify-center flex-grow">
-      <div class="w-full max-w-6xl justify-center flex">
+    <% if content_for?(:full_width) %>
+      <main class="flex-grow">
         <%= yield %>
-      </div>
-    </main>
+      </main>
+    <% else %>
+      <main class="container mx-auto my-10 px-5 flex justify-center flex-grow">
+        <div class="w-full max-w-6xl justify-center flex">
+          <%= yield %>
+        </div>
+      </main>
+    <% end %>
 
-    <%= render "layouts/footer" %>
+    <%= render "layouts/footer" unless content_for?(:hide_footer) %>
   </body>
 </html>

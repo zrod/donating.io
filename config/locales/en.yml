@@ -369,6 +369,15 @@ en:
       privacy:
         title: "Privacy Policy"
         subheader: "Donating.io is a platform for donating to charities."
+      map:
+        title: "Where can I donate?"
+        subtitle: "Find locations to donate items you no longer need."
+        locate_prompt: "To start, search for a location above or click on the"
+        locate_me: "Locate me"
+        locate_prompt_end: "button."
+        activate_map: "Activate map"
+        activate_hint: "Click to enable the map and share your location"
+        getting_location: "Getting your location..."
 
   models:
     user:

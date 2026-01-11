@@ -1,0 +1,143 @@
+<% content_for :title, t("views.menu.common.map") %>
+<% content_for :full_width, true %>
+<% content_for :hide_footer, true %>
+
+<%
+  poll_interval = GeoTermsSearchController::POLL_INTERVAL_MS
+  max_retries = GeoTermsSearchController::MAX_RETRIES
+%>
+
+<div class="drawer drawer-start w-full" style="height: calc(100vh - 64px);"
+     data-controller="map-page"
+     data-map-page-protomaps-key-value="<%= ENV['PROTOMAPS_KEY'] %>"
+     data-map-page-poll-interval-value="<%= poll_interval %>"
+     data-map-page-max-retries-value="<%= max_retries %>"
+     data-map-page-search-took-too-long-value="<%= t('views.places.geo_search.search_took_too_long') %>"
+     data-map-page-search-failed-value="<%= t('views.places.geo_search.search_failed') %>"
+     data-map-page-no-results-found-value="<%= t('views.places.geo_search.no_results_found') %>"
+     data-map-page-unknown-location-value="<%= t('views.places.geo_search.unknown_location') %>"
+     data-map-page-geolocation-error-value="<%= t('views.places.filter_sidebar.location.geolocation_error') %>"
+     data-map-page-geolocation-unsupported-value="<%= t('views.places.filter_sidebar.location.geolocation_unsupported') %>"
+     data-map-page-getting-location-value="<%= t('views.pages.map.getting_location') %>"
+     data-map-page-places-found-one-value="<%= t('views.places.index.places_found.one') %>"
+     data-map-page-places-found-other-value="<%= t('views.places.index.places_found.other') %>">
+
+  <input id="map-filters-drawer" type="checkbox" class="drawer-toggle" data-map-page-target="filtersDrawerCheckbox" />
+
+  <div class="drawer-content flex flex-col lg:flex-row h-full min-h-0 gap-0">
+    <aside class="w-full lg:w-[30%] flex flex-col bg-base-100 border-r border-base-300 overflow-hidden" data-map-page-target="sidebar">
+      <!-- Search Section -->
+      <div class="p-4 border-b border-base-300">
+        <h2 class="text-3xl font-bold text-primary mb-2 text-center"><%= t("views.pages.map.title", default: "Where can I donate?") %></h2>
+        <p class="text-sm opacity-70 mb-4 text-center"><%= t("views.pages.map.subtitle", default: "Find locations to donate items you no longer need.") %></p>
+
+        <!-- Address Search -->
+        <div class="relative" data-map-page-target="searchContainer">
+          <form data-action="submit->map-page#search">
+            <div class="join w-full">
+              <input
+                type="text"
+                class="input input-bordered join-item flex-1"
+                placeholder="<%= t('views.places.geo_search.placeholder') %>"
+                data-map-page-target="searchInput"
+              />
+              <button type="submit" class="btn btn-primary join-item" data-map-page-target="searchButton">
+                <span class="loading loading-spinner loading-sm hidden" data-map-page-target="searchLoading"></span>
+                <%= image_tag "icons/search.svg", class: "h-5 w-5 brightness-0 invert" %>
+              </button>
+            </div>
+          </form>
+
+          <!-- Search Results Overlay -->
+          <div class="hidden absolute top-full left-0 right-0 mt-2 z-50 bg-base-100 shadow-lg rounded-lg border border-base-300 max-h-96 overflow-y-auto"
+               data-map-page-target="searchResultsOverlay">
+            <div data-map-page-target="searchResults"></div>
+          </div>
+        </div>
+
+        <div class="hidden alert alert-error mt-3 text-sm" data-map-page-target="searchError"></div>
+
+        <div class="hidden alert mt-3 text-sm" data-map-page-target="locationStatus"></div>
+
+        <div class="mt-4 text-center" data-map-page-target="locateButton">
+          <p class="text-sm opacity-70 mb-3">
+            <%= t("views.pages.map.locate_prompt", default: "To start, search for a location above or click on the") %>
+            <strong><%= image_tag "icons/pin.svg", class: "h-4 w-4 inline" %> <%= t("views.pages.map.locate_me", default: "Locate me") %></strong>
+            <%= t("views.pages.map.locate_prompt_end", default: "button.") %>
+          </p>
+          <button type="button" class="btn btn-secondary btn-sm" data-action="click->map-page#locateMe">
+            <%= image_tag "icons/pin.svg", class: "h-4 w-4 mr-1 brightness-0 invert" %>
+            <%= t("views.pages.map.locate_me", default: "Locate me") %>
+          </button>
+        </div>
+
+        <div class="mt-4 hidden" data-map-page-target="showFiltersButton">
+          <label for="map-filters-drawer" class="btn btn-outline btn-sm w-full">
+            <%= image_tag "icons/filter.svg", class: "h-4 w-4 mr-1" %>
+            <%= t('views.places.filter_sidebar.buttons.show_filters') %>
+          </label>
+        </div>
+      </div>
+
+      <!-- Results Section -->
+      <div class="flex-1 overflow-y-auto hidden" data-map-page-target="resultsContainer">
+        <div class="px-4 py-2 border-b border-base-300 bg-base-200 hidden" data-map-page-target="resultsCount">
+          <span class="text-sm opacity-70"></span>
+        </div>
+
+        <div class="flex justify-center items-center py-8 hidden" data-map-page-target="resultsLoading">
+          <span class="loading loading-spinner loading-md"></span>
+        </div>
+
+        <div class="text-center py-8 px-4 hidden" data-map-page-target="resultsEmpty">
+          <p class="text-sm opacity-70"><%= t('views.places.index.empty') %></p>
+        </div>
+
+        <div class="divide-y divide-base-300 hidden" data-map-page-target="resultsList"></div>
+      </div>
+    </aside>
+
+    <!-- Right Map Section -->
+    <div class="flex-1 relative bg-base-200 min-h-full">
+      <div class="absolute inset-0 w-full h-full" data-map-page-target="map"></div>
+
+      <div class="absolute inset-0 w-full h-full flex items-center justify-center bg-base-200" data-map-page-target="mapOverlay">
+        <div class="text-center">
+          <div class="mb-4">
+            <%= image_tag "icons/map.svg", class: "h-16 w-16 mx-auto opacity-30" %>
+          </div>
+          <button type="button" class="btn btn-primary" data-action="click->map-page#activateMap" data-map-page-target="activateButton">
+            <%= image_tag "icons/map.svg", class: "h-5 w-5 mr-2 brightness-0 invert" %>
+            <%= t("views.pages.map.activate_map", default: "Activate map") %>
+          </button>
+          <p class="text-sm opacity-50 mt-2"><%= t("views.pages.map.activate_hint", default: "Click to enable the map and share your location") %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="drawer-side z-50">
+    <label for="map-filters-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
+    <div class="bg-base-100 min-h-full w-80 p-4" data-map-page-target="filtersDrawer">
+      <div class="flex items-center justify-between mb-4">
+        <h3 class="font-semibold text-lg"><%= t('views.places.filter_sidebar.buttons.show_filters') %></h3>
+        <label for="map-filters-drawer" class="btn btn-sm btn-ghost btn-circle">
+          <%= image_tag "icons/close.svg", class: "h-5 w-5" %>
+        </label>
+      </div>
+
+      <%= form_with url: places_path, method: :get, class: "space-y-6", data: { map_page_target: "filterForm", action: "submit->map-page#applyFilters" } do |f| %>
+        <%= render "shared/filter_fields", form: f, controller_prefix: "map-page", compact: true %>
+
+        <div class="flex flex-col space-y-2 pt-4">
+          <button type="submit" class="btn btn-primary btn-sm w-full">
+            <%= t('views.places.filter_sidebar.buttons.apply_filters') %>
+          </button>
+          <button type="button" class="btn btn-ghost btn-sm w-full" data-action="click->map-page#clearFilters">
+            <%= t('views.places.filter_sidebar.buttons.reset') %>
+          </button>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

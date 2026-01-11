@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import { createMap, createMarker } from "helpers/map_factory"
 
 export default class extends Controller {
   static values = {
@@ -13,24 +14,16 @@ export default class extends Controller {
       return
     }
 
-    const maplibregl = window.maplibregl
-
-    if (!maplibregl) {
-      console.error("Map controller: maplibre-gl is not loaded")
-      return
-    }
-
-    this.map = new maplibregl.Map({
+    this.map = createMap({
       container: this.element,
-      style: `https://api.protomaps.com/styles/v5/light/en.json?key=${this.protomapsKeyValue}`,
+      apiKey: this.protomapsKeyValue,
       center: [this.lngValue, this.latValue],
-      zoom: 15,
       interactive: false
     })
 
-    new maplibregl.Marker({ color: "#2A628F" })
-      .setLngLat([this.lngValue, this.latValue])
-      .addTo(this.map)
+    if (this.map) {
+      createMarker({ position: [this.lngValue, this.latValue], map: this.map })
+    }
   }
 
   disconnect() {

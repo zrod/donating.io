@@ -1,4 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
+import { escapeHtml } from "helpers/html_utils"
+import { createMap, createMarker } from "helpers/map_factory"
+import { GeoSearchService } from "services/geo_search_service"
 
 export default class extends Controller {
   static targets = ["searchInput", "searchButton", "loading", "error", "results", "mapContainer", "mapPlaceholder", "useLocationButton"]
@@ -15,12 +18,17 @@ export default class extends Controller {
     this.map = null
     this.marker = null
     this.selectedLocation = null
-    this.pollTimer = null
-    this.retryCount = 0
+
+    this.geoSearchService = new GeoSearchService({
+      pollInterval: this.pollIntervalValue,
+      maxRetries: this.maxRetriesValue,
+      searchTookTooLongMessage: this.searchTookTooLongValue,
+      searchFailedMessage: this.searchFailedValue
+    })
   }
 
   disconnect() {
-    this.stopPolling()
+    this.geoSearchService?.abort()
     this.destroyMap()
   }
 
@@ -56,73 +64,18 @@ export default class extends Controller {
     this.showLoading()
     this.hideError()
     this.hideResults()
-    this.stopPolling()
-    this.retryCount = 0
 
-    await this.performSearch(term)
-  }
-
-  async performSearch(term) {
-    if (this.retryCount >= this.maxRetriesValue) {
-      this.stopPolling()
-      this.showError(this.searchTookTooLongValue)
-      return
-    }
-
-    this.retryCount++
-
-    try {
-      const response = await fetch("/geo_terms/search", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-Token": this.getCSRFToken()
-        },
-        body: JSON.stringify({ term })
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}))
-        this.stopPolling()
-        this.showError(errorData.error || this.searchFailedValue)
-        return
-      }
-
-      const data = await response.json()
-
-      if (data.status === "complete") {
-        this.stopPolling()
-        this.displayResults(data.results, data.term || term)
-      } else if (data.status === "pending") {
-        this.startPolling(term)
-      } else if (data.error) {
-        this.stopPolling()
-        this.showError(data.error)
-      }
-    } catch (error) {
-      this.stopPolling()
-      this.showError(this.searchFailedValue)
-    }
-  }
-
-  startPolling(term) {
-    this.pollTimer = setTimeout(() => {
-      this.performSearch(term)
-    }, this.pollIntervalValue)
-  }
-
-  stopPolling() {
-    if (this.pollTimer) {
-      clearTimeout(this.pollTimer)
-      this.pollTimer = null
-    }
+    await this.geoSearchService.search(term, {
+      onComplete: (results, searchTerm) => this.displayResults(results, searchTerm),
+      onError: (message) => this.showError(message)
+    })
   }
 
   displayResults(results, term) {
     this.hideLoading()
 
     if (!results || results.length === 0) {
-      this.showError(this.noResultsFoundValue.replace("%{term}", this.escapeHtml(term)))
+      this.showError(this.noResultsFoundValue.replace("%{term}", escapeHtml(term)))
       return
     }
 
@@ -142,15 +95,15 @@ export default class extends Controller {
       return `
         <div class="cursor-pointer hover:bg-base-200 transition-colors p-3 ${!isLast ? 'border-b border-base-300' : ''}"
              data-action="click->location-picker#selectResult"
-             data-lat="${this.escapeHtml(String(lat))}"
-             data-lng="${this.escapeHtml(String(lng))}"
-             data-address="${this.escapeHtml(String(address))}"
-             data-city="${this.escapeHtml(String(city))}"
-             data-state="${this.escapeHtml(String(state))}"
-             data-country="${this.escapeHtml(String(country))}"
-             data-postal-code="${this.escapeHtml(String(postalCode))}">
-          <h3 class="font-semibold">${this.escapeHtml(displayName)}</h3>
-          ${address ? `<p class="text-sm opacity-70">${this.escapeHtml(String(address))}</p>` : ""}
+             data-lat="${escapeHtml(String(lat))}"
+             data-lng="${escapeHtml(String(lng))}"
+             data-address="${escapeHtml(String(address))}"
+             data-city="${escapeHtml(String(city))}"
+             data-state="${escapeHtml(String(state))}"
+             data-country="${escapeHtml(String(country))}"
+             data-postal-code="${escapeHtml(String(postalCode))}">
+          <h3 class="font-semibold">${escapeHtml(displayName)}</h3>
+          ${address ? `<p class="text-sm opacity-70">${escapeHtml(String(address))}</p>` : ""}
         </div>
       `
     }).join("")
@@ -185,34 +138,24 @@ export default class extends Controller {
   updateMap(lat, lng) {
     this.hideMapPlaceholder()
 
-    const maplibregl = window.maplibregl
-    if (!maplibregl) {
-      console.error("Location picker: maplibre-gl is not loaded")
-      return
-    }
-
     if (this.map) {
       this.map.setCenter([lng, lat])
 
       if (this.marker) {
         this.marker.setLngLat([lng, lat])
       } else {
-        this.marker = new maplibregl.Marker({ color: "#2A628F" })
-          .setLngLat([lng, lat])
-          .addTo(this.map)
+        this.marker = createMarker({ position: [lng, lat], map: this.map })
       }
     } else {
-      this.map = new maplibregl.Map({
+      this.map = createMap({
         container: this.mapContainerTarget,
-        style: `https://api.protomaps.com/styles/v5/light/en.json?key=${this.protomapsKeyValue}`,
-        center: [lng, lat],
-        zoom: 15,
-        interactive: true
+        apiKey: this.protomapsKeyValue,
+        center: [lng, lat]
       })
 
-      this.marker = new maplibregl.Marker({ color: "#2A628F" })
-        .setLngLat([lng, lat])
-        .addTo(this.map)
+      if (this.map) {
+        this.marker = createMarker({ position: [lng, lat], map: this.map })
+      }
     }
   }
 
@@ -303,19 +246,4 @@ export default class extends Controller {
     this.mapPlaceholderTarget.classList.add("hidden")
   }
 
-  escapeHtml(text) {
-    if (text == null) {
-      return ""
-    }
-
-    const div = document.createElement("div")
-    div.textContent = String(text)
-
-    return div.innerHTML
-  }
-
-  getCSRFToken() {
-    const token = document.querySelector('meta[name="csrf-token"]')
-    return token ? token.getAttribute('content') : ""
-  }
 }
