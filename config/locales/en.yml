@@ -175,7 +175,12 @@ en:
           latitude_placeholder: "e.g. 45.123456"
           longitude: "Longitude *"
           longitude_placeholder: "e.g. -75.123456"
-          coordinates_help: "You can find coordinates using Google Maps or other mapping services"
+          pin_location_button: "Pin location on map"
+          picker_modal:
+            title: "Search for a location"
+            map_placeholder: "Search for an address to show location on map"
+            use_location: "Use this location"
+            cancel: "Cancel"
         contact:
           title: "Contact Information"
           phone: "Phone"

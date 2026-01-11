@@ -65,11 +65,13 @@
 
       <div class="md:col-span-2">
         <div class="label block">
-          <span class="label-text-alt text-info break-words">
-            <%= I18n.t("views.places.form_sections.location.coordinates_help") %>
-          </span>
+          <button type="button" class="btn btn-primary w-full mb-4" onclick="location_picker_modal.showModal()">
+            <%= I18n.t("views.places.form_sections.location.pin_location_button") %>
+          </button>
         </div>
       </div>
     </div>
   </div>
 </fieldset>
+
+<%= render "places/form_sections/location_picker_modal" %>

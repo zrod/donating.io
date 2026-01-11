@@ -10,6 +10,7 @@ module GeoTerms
       state_code
       country
       country_code
+      postal_code
     ].freeze
 
     def self.format(results)
