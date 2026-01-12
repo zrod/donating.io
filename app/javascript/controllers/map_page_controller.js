@@ -17,6 +17,7 @@ export default class extends Controller {
     "searchResultsOverlay",
     "searchContainer",
     "locationStatus",
+    "locateButton",
     "resultsContainer",
     "resultsList",
     "resultsCount",
@@ -90,6 +91,7 @@ export default class extends Controller {
       if (this.hasResultsContainerTarget) {
         this.resultsContainerTarget.classList.remove("hidden")
       }
+      this.hideLocateButton()
 
       // Initialize map if it was active before, or if we have location data
       // This ensures the map is ready when user returns
@@ -145,6 +147,7 @@ export default class extends Controller {
     this.initializeMap(45.4215, -75.6972, 4)
     this.isMapActive = true
     this.hideMapOverlay()
+    this.hideLocateButton()
     this.cacheService?.saveState()
   }
 
@@ -187,6 +190,12 @@ export default class extends Controller {
     }
   }
 
+  hideLocateButton() {
+    if (this.hasLocateButtonTarget) {
+      this.locateButtonTarget.classList.add("hidden")
+    }
+  }
+
   // Location handling
   setLocation(lat, lng) {
     if (this.hasLatFieldTarget) {
@@ -201,6 +210,7 @@ export default class extends Controller {
     if (this.hasResultsContainerTarget) {
       this.resultsContainerTarget.classList.remove("hidden")
     }
+    this.hideLocateButton()
     this.cacheService?.saveState()
   }
 
