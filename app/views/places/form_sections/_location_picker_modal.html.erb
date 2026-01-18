@@ -42,7 +42,7 @@
     </div>
 
     <div class="flex flex-col gap-2">
-      <button type="button" class="btn btn-primary w-full" data-action="click->location-picker#useLocation" data-location-picker-target="useLocationButton" disabled>
+      <button type="button" class="btn btn-secondary w-full" data-action="click->location-picker#useLocation" data-location-picker-target="useLocationButton" disabled>
         <%= I18n.t("views.places.form_sections.location.picker_modal.use_location") %>
       </button>
       <button type="button" class="btn btn-ghost w-full" data-action="click->location-picker#close">
@@ -50,7 +50,7 @@
       </button>
     </div>
   </div>
-  <form method="dialog" class="modal-backdrop">
-    <button>close</button>
-  </form>
+  <div class="modal-backdrop" data-action="click->location-picker#close">
+    <button type="button">close</button>
+  </div>
 </dialog>

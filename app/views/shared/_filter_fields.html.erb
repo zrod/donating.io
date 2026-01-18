@@ -101,11 +101,15 @@
 <div>
   <h3 class="font-semibold"><%= t('views.places.filter_sidebar.categories.title') %></h3>
   <div class="divider mt-0 mb-2"></div>
-  <div class="form-control">
-    <%= form.select :category_ids,
-          options_for_select(Category.by_name.pluck(:name, :id), params[:category_ids]),
-          { include_blank: t('views.places.filter_sidebar.categories.all_categories') },
-          class: select_class %>
+  <div class="border border-base-content/20 rounded-lg max-h-48 sm:max-h-60 overflow-y-auto bg-base-100">
+    <div class="flex flex-col divide-y divide-base-200">
+      <%= form.collection_check_boxes :category_ids, Category.by_name, :id, :name, { include_hidden: false }, { multiple: true } do |b| %>
+        <label class="flex items-center gap-3 px-3 py-2.5 cursor-pointer hover:bg-base-200 active:bg-base-300 transition-colors">
+          <%= b.check_box(class: "checkbox checkbox-sm checkbox-primary", checked: Array(params[:category_ids]).include?(b.value.to_s)) %>
+          <span class="text-sm select-none"><%= b.text %></span>
+        </label>
+      <% end %>
+    </div>
   </div>
 </div>
 

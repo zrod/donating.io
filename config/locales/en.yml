@@ -195,7 +195,7 @@ en:
           from: "From"
           to: "To"
           presets: "Presets"
-          include_selected: "INCLUDE SELECTED HOURS"
+          include_selected: "Include selected hours"
           added_hours: "Added Hours"
           no_hours_added: "No hours added yet"
           select_days_instruction: "Select days to add hours"
@@ -259,7 +259,7 @@ en:
           submit_first_place: "Submit Your First Place"
       geo_search:
         title: "Search for a location"
-        placeholder: "50 Front st e, Toronto or Toronto, ON"
+        placeholder: "Enter an address, city or term"
         button: "Search"
         search_took_too_long: "Search took too long. Please try again."
         search_failed: "Search failed. Please try again."
@@ -371,13 +371,11 @@ en:
         subheader: "Donating.io is a platform for donating to charities."
       map:
         title: "Where can I donate?"
-        subtitle: "Find locations to donate items you no longer need."
-        locate_prompt: "To start, search for a location above or click on the"
-        locate_me: "Locate me"
-        locate_prompt_end: "button."
+        subtitle: "Locate the nearest places to drop off your donations."
         activate_map: "Activate map"
-        activate_hint: "Click to enable the map and share your location"
+        activate_hint: "Click to enable the map and share your location."
         getting_location: "Getting your location..."
+        sidebar_title: "Filters"
 
   models:
     user:

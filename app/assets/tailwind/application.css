@@ -68,11 +68,11 @@ body {
   --color-base-content: oklch(20% 0.042 265.755);
   --color-primary: #00B5AD;
   --color-primary-content: oklch(97% 0.014 308.299);
-  --color-secondary: #2A628F;
+  --color-secondary: #333452;
   --color-secondary-content: oklch(98% 0.018 155.826);
   --color-accent: #f6d8ae;
   --color-accent-content: oklch(20% 0.042 265.755);
-  --color-neutral: #333452;
+  --color-neutral: #D9D0DE;
   --color-neutral-content: oklch(98% 0.003 247.858);
   --color-info: oklch(71% 0.143 215.221);
   --color-info-content: oklch(98% 0.019 200.873);

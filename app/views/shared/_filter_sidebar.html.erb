@@ -27,7 +27,7 @@
             data-geo-search-target="input"
             value="<%= params[:keyword] %>"
             />
-          <button type="submit" class="btn btn-primary join-item" data-action="click->geo-search#search" data-geo-search-target="searchButton">
+          <button type="submit" class="btn btn-secondary join-item" data-action="click->geo-search#search" data-geo-search-target="searchButton">
             <span class="loading loading-spinner loading-sm hidden" data-geo-search-target="loading"></span>
             <%= t('views.places.geo_search.button') %>
           </button>
@@ -56,7 +56,7 @@
     <div class="flex flex-col space-y-2">
       <% has_active_filters = filter_params.any? { |param| params[param].present? } %>
       <%= f.submit t('views.places.filter_sidebar.buttons.apply_filters'),
-            class: "btn btn-primary btn-sm w-full", id: "apply_filters_btn", disabled: !has_active_filters, data: { filter_sidebar_target: "applyButton" } %>
+            class: "btn btn-secondary w-full", id: "apply_filters_btn", disabled: !has_active_filters, data: { filter_sidebar_target: "applyButton" } %>
       <button type="button" data-action="click->filter-sidebar#clearFilters" class="btn btn-ghost btn-sm w-full">
         <%= t('views.places.filter_sidebar.buttons.reset') %>
       </button>

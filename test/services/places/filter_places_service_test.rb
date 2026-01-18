@@ -221,7 +221,7 @@ module Places
         categories: [categories(:books)]
       )
       open_place.update!(status: 1)
-      open_place.place_hours.create!(day_of_week: 1, from_hour: 900, to_hour: 1700) # Monday 9am-5pm
+      open_place.place_hours.create!(day_of_week: 1, from_hour: 900, to_hour: 1700)
 
       closed_place = Place.create!(
         name: "Closed Place",
@@ -237,7 +237,7 @@ module Places
         categories: [categories(:books)]
       )
       closed_place.update!(status: 1)
-      closed_place.place_hours.create!(day_of_week: 1, from_hour: 1800, to_hour: 2000) # Monday 6pm-8pm
+      closed_place.place_hours.create!(day_of_week: 1, from_hour: 1800, to_hour: 2000)
 
       params = { opening_hours: { day_of_week: "1", start_time: "1000", end_time: "1600" } }
       results = FilterPlacesService.new(params:).call
@@ -271,7 +271,7 @@ module Places
       service = FilterPlacesService.new(params:)
 
       assert_nothing_raised do
-        service.call
+        service.call.to_a
       end
     end
 
@@ -280,18 +280,18 @@ module Places
       service = FilterPlacesService.new(params:)
 
       assert_nothing_raised do
-        service.call
+        service.call.to_a
       end
     end
 
     test "should handle near_me filter with missing coordinates" do
       # Test with missing lat
       service1 = FilterPlacesService.new(params: { near_me: "true", lng: "-74.0060" })
-      result1 = service1.call
+      result1 = service1.call.to_a
 
       # Test with missing lng
       service2 = FilterPlacesService.new(params: { near_me: "true", lat: "40.7128" })
-      result2 = service2.call
+      result2 = service2.call.to_a
 
       assert_respond_to result1, :each
       assert_respond_to result2, :each
@@ -302,7 +302,7 @@ module Places
       service = FilterPlacesService.new(params:)
 
       assert_nothing_raised do
-        service.call
+        service.call.to_a
       end
     end
 
@@ -311,7 +311,7 @@ module Places
       service = FilterPlacesService.new(params:)
 
       assert_nothing_raised do
-        service.call
+        service.call.to_a
       end
     end
 
@@ -320,7 +320,23 @@ module Places
       service = FilterPlacesService.new(params:)
 
       assert_nothing_raised do
-        service.call
+        service.call.to_a
+      end
+    end
+
+    test "should not error when combining geo + category_ids + opening_hours (forces distance ordering)" do
+      category = categories(:books)
+      params = {
+        tax_receipt: "false",
+        lat: "43.6531080645697",
+        lng: "-79.355078026259",
+        radius: "40",
+        category_ids: [category.id.to_s],
+        opening_hours: { start_time: "1400", end_time: "1900", day_of_week: "1" }
+      }
+
+      assert_nothing_raised do
+        FilterPlacesService.new(params:).call.to_a
       end
     end
 
@@ -362,6 +378,35 @@ module Places
 
       assert_includes results, pickup_and_cat_place
       assert_not_includes results, pickup_only_place
+    end
+
+    test "should ignore blank and string category_ids like controller params" do
+      place_with_cat1 = places(:published_bin_with_full_attributes_one)
+      category1 = place_with_cat1.categories.first
+      category2 = Category.where.not(id: category1.id).first
+
+      place_with_cat2 = Place.create!(
+        name: "Place with cat 2 (string params)",
+        address: "789 Sub St",
+        city: "Toronto",
+        lat: 43.661,
+        lng: -79.351,
+        description: "A place with category 2",
+        pickup: false,
+        used_ok: true,
+        country: countries(:canada),
+        user: users(:user_one),
+        categories: [category2]
+      )
+      place_with_cat2.update!(status: 1)
+
+      results = FilterPlacesService.new(params: { category_ids: ["", "0", category1.id.to_s] }).call
+      assert_includes results, place_with_cat1
+      assert_not_includes results, place_with_cat2
+
+      results = FilterPlacesService.new(params: { category_ids: ["", category1.id.to_s, category2.id.to_s] }).call
+      assert_includes results, place_with_cat1
+      assert_includes results, place_with_cat2
     end
 
     test "should handle partial filter params gracefully" do

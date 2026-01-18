@@ -46,7 +46,7 @@ module Places
 
       sort_by, order = calc_sort_by_order
 
-      scope = relation.includes(:categories, :place_hours)
+      scope = relation.preload(:categories, :place_hours)
       scope = apply_boolean_filters(scope)
       scope = apply_named_filters(scope)
       scope = filter_by_coordinates(scope) if filter_by_queried_latlng?
@@ -94,10 +94,12 @@ module Places
       end
 
       def with_category_ids(scope)
-        category_ids = Array(params[:category_ids]).reject(&:blank?).uniq
+        category_ids = Array(params[:category_ids]).map(&:to_i).reject(&:zero?)
         return scope if category_ids.empty?
 
-        scope.joins(:categories).where(categories: { id: category_ids })
+        scope.where(
+          id: CategoriesPlace.where(category_id: category_ids).select(:place_id)
+        )
       end
 
       def with_charity_support(scope)
@@ -120,19 +122,15 @@ module Places
         end_hour = hours_params[:end_time]
         return scope unless start_hour.present? && end_hour.present?
 
-        query = scope.joins(:place_hours)
+        hours_subquery = PlaceHour
+          .where("place_hours.from_hour < :end_hour AND place_hours.to_hour > :start_hour",
+                 start_hour: start_hour.to_i, end_hour: end_hour.to_i)
 
         if hours_params[:day_of_week].present?
-          query = query.where(place_hours: { day_of_week: hours_params[:day_of_week].to_i })
+          hours_subquery = hours_subquery.where(day_of_week: hours_params[:day_of_week].to_i)
         end
 
-        query = query.where(
-          "place_hours.from_hour < :end_hour AND place_hours.to_hour > :start_hour",
-          start_hour: start_hour.to_i,
-          end_hour: end_hour.to_i
-        )
-
-        query.distinct
+        scope.where(id: hours_subquery.select(:place_id))
       end
 
       def with_keyword(scope)

@@ -93,10 +93,11 @@ class PlacesController < ApplicationController
 
     def filter_params
       params.permit(
-        *filter_places_service::FILTERS,
+        *(filter_places_service::FILTERS - [:category_ids]),
         :lat,
         :lng,
         :radius,
+        category_ids: [],
         opening_hours: [:start_time, :end_time, :day_of_week]
       )
     end
