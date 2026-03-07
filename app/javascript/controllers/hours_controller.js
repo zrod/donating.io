@@ -1,16 +1,28 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["daySelector", "fromTime", "toTime", "selectionInfo", "hoursList", "hiddenFields"]
-  static values = { messages: Object, dayNames: Object, dayNamesShort: Object }
+  static targets = [
+    "daySelector",
+    "fromTime",
+    "toTime",
+    "selectionInfo",
+    "hoursList",
+    "hiddenFields"
+  ]
+
+  static values = {
+    messages: Object,
+    dayNames: Object,
+    dayNamesShort: Object
+  }
 
   connect() {
     this.selectedDays = []
     this.addedHours = []
     this.updateSelectionDisplay()
 
-    this.fromTimeTarget.value = '0900'
-    this.toTimeTarget.value = '1700'
+    this.fromTimeTarget.value = "0900"
+    this.toTimeTarget.value = "1700"
 
     this.rebuildHoursFromHiddenFields()
   }
@@ -22,10 +34,10 @@ export default class extends Controller {
 
     if (index > -1) {
       this.selectedDays.splice(index, 1)
-      element.classList.remove('selected')
+      element.classList.remove("selected")
     } else {
       this.selectedDays.push(day)
-      element.classList.add('selected')
+      element.classList.add("selected")
     }
 
     this.updateSelectionDisplay()
@@ -34,11 +46,11 @@ export default class extends Controller {
   updateSelectionDisplay() {
     if (this.selectedDays.length === 0) {
       this.selectionInfoTarget.textContent = this.messagesValue.select_days_instruction
-      this.selectionInfoTarget.className = 'text-sm text-base-content/60 mt-2'
+      this.selectionInfoTarget.className = "text-sm text-base-content/60 mt-2"
     } else {
-      const selectedDayNames = this.selectedDays.sort().map(day => this.dayNamesShortValue[day]).join(', ')
+      const selectedDayNames = this.selectedDays.sort().map(day => this.dayNamesShortValue[day]).join(", ")
       this.selectionInfoTarget.textContent = `${this.messagesValue.selected_label}: ${selectedDayNames}`
-      this.selectionInfoTarget.className = 'text-sm text-primary font-medium mt-2'
+      this.selectionInfoTarget.className = "text-sm text-primary font-medium mt-2"
     }
   }
 
@@ -71,7 +83,7 @@ export default class extends Controller {
     // Reset selection
     this.selectedDays = []
     this.daySelectorTargets.forEach(el => {
-      el.classList.remove('selected')
+      el.classList.remove("selected")
     })
     this.updateSelectionDisplay()
   }
@@ -89,25 +101,24 @@ export default class extends Controller {
       return
     }
 
-    const template = document.getElementById('hour-block-template')
+    this.hoursListTarget.innerHTML = ""
 
-    this.hoursListTarget.innerHTML = ''
-
+    const template = document.getElementById("hour-block-template")
     this.addedHours.forEach((hour, index) => {
       const clone = template.content.cloneNode(true)
       const fromFormatted = this.formatTimeForDisplay(hour.from)
       const toFormatted = this.formatTimeForDisplay(hour.to)
 
-      clone.querySelector('.hour-display').textContent = `${this.dayNamesValue[hour.day]}: ${fromFormatted} - ${toFormatted}`
-      clone.querySelector('.hour-remove-btn').dataset.index = index
-      clone.querySelector('.hour-remove-btn').dataset.action = 'click->hours#removeHour'
+      clone.querySelector(".hour-display").textContent = `${this.dayNamesValue[hour.day]}: ${fromFormatted} - ${toFormatted}`
+      clone.querySelector(".hour-remove-btn").dataset.index = index
+      clone.querySelector(".hour-remove-btn").dataset.action = "click->hours#removeHour"
 
       this.hoursListTarget.appendChild(clone)
     })
   }
 
   updateHiddenFields() {
-    this.hiddenFieldsTarget.innerHTML = ''
+    this.hiddenFieldsTarget.innerHTML = ""
 
     this.addedHours.forEach((hour, index) => {
       this.hiddenFieldsTarget.innerHTML += `
@@ -124,7 +135,9 @@ export default class extends Controller {
     const date = new Date()
 
     date.setHours(hour, minute)
-    return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true })
+
+    // @todo handle user language
+    return date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true })
   }
 
   applyPreset(event) {
@@ -132,19 +145,19 @@ export default class extends Controller {
     this.addedHours = []
 
     switch(preset) {
-      case '24hours':
+      case "24hours":
         for (let day = 1; day <= 7; day++) {
-          this.addedHours.push({ day, from: '0000', to: '2359' })
+          this.addedHours.push({ day, from: "0000", to: "2359" })
         }
         break
-      case 'working':
+      case "working":
         for (let day = 1; day <= 5; day++) {
-          this.addedHours.push({ day, from: '0900', to: '1700' })
+          this.addedHours.push({ day, from: "0900", to: "1700" })
         }
         break
-      case 'weekend':
-        this.addedHours.push({ day: 6, from: '0900', to: '1700' })
-        this.addedHours.push({ day: 7, from: '0900', to: '1700' })
+      case "weekend":
+        this.addedHours.push({ day: 6, from: "0900", to: "1700" })
+        this.addedHours.push({ day: 7, from: "0900", to: "1700" })
         break
     }
 
@@ -153,7 +166,7 @@ export default class extends Controller {
   }
 
   rebuildHoursFromHiddenFields() {
-    const hiddenInputs = this.hiddenFieldsTarget.querySelectorAll('input[type="hidden"]')
+    const hiddenInputs = this.hiddenFieldsTarget.querySelectorAll("input[type='hidden']")
     const hoursData = {}
 
     hiddenInputs.forEach(input => {

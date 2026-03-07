@@ -88,9 +88,11 @@ export default class extends Controller {
       if (this.hasShowFiltersButtonTarget) {
         this.showFiltersButtonTarget.classList.remove("hidden")
       }
+
       if (this.hasResultsContainerTarget) {
         this.resultsContainerTarget.classList.remove("hidden")
       }
+
       this.hideLocateButton()
 
       // Initialize map if it was active before, or if we have location data
@@ -133,7 +135,16 @@ export default class extends Controller {
         const lng = position.coords.longitude
         this.setLocation(lat, lng)
         this.hideLocationStatus()
+
+        if (this.hasLocationCheckboxTarget) {
+          this.locationCheckboxTarget.checked = true
+        }
+        if (this.hasRadiusSelectorTarget) {
+          this.radiusSelectorTarget.style.display = "block"
+        }
+
         this.initializeMap(lat, lng, 12)
+        this.cacheService?.saveState()
         this.loadPlaces()
       },
       () => {
@@ -144,7 +155,7 @@ export default class extends Controller {
   }
 
   initializeMapWithoutLocation() {
-    this.initializeMap(45.4215, -75.6972, 4)
+    this.initializeMap(0, 0, 4)
     this.isMapActive = true
     this.hideMapOverlay()
     this.hideLocateButton()
@@ -707,8 +718,7 @@ export default class extends Controller {
       this.openingHoursFormTarget.style.display = "none"
     }
 
-    this.cacheService?.saveState()
+    this.cacheService?.clearState()
     this.loadPlaces()
   }
-
 }

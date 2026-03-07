@@ -1,0 +1,40 @@
+<%
+  # @todo retrieve from user options
+  preferred_distance_unit = :km
+
+  radius_options = Radius.list(preferred_distance_unit)
+%>
+
+<div data-controller="filter-sidebar">
+  <% unless hide_location_header %>
+    <h3 class="font-semibold"><%= t('views.places.filter_sidebar.location.title') %></h3>
+    <div class="divider mt-0 mb-2"></div>
+  <% end %>
+
+  <div class="form-control">
+    <label class="label cursor-pointer justify-start gap-2">
+      <%= form.check_box :near_me, {
+        checked: has_location,
+        class: "checkbox",
+        id: "use_current_location",
+        data: {
+          "#{controller_prefix}_target": "locationCheckbox",
+          action: "change->#{controller_prefix}#toggleLocation"
+        }
+      }, "1", "0" %>
+      <span class="label-text"><%= t('views.places.filter_sidebar.location.use_current_location') %></span>
+    </label>
+  </div>
+
+  <div id="radius_selector" class="mt-4" style="<%= 'display: none;' unless has_location %>" data-<%= controller_prefix %>-target="radiusSelector">
+    <h4 class="font-semibold text-sm mb-3"><%= t('views.places.filter_sidebar.location.within') %></h4>
+    <div class="w-full">
+      <input type="range" min="20" max="100" value="<%= params[:radius] || 40 %>" step="20" class="range range-secondary w-full" id="radius_range" data-<%= controller_prefix %>-target="radiusRange" data-action="input-><%= controller_prefix %>#updateRadius" />
+      <div class="w-full flex justify-between text-xs mt-2">
+        <% radius_options.each do |label| %>
+          <span class="text-center first:text-left last:text-right"><%= label %><%= preferred_distance_unit %></span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

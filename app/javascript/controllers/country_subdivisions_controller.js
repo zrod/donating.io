@@ -22,16 +22,15 @@ export default class extends Controller {
       headers: {
         Accept: "text/vnd.turbo-stream.html"
       }
-    })
-      .then(response => {
-        if (!response.ok) throw new Error(`HTTP ${response.status}`)
+    }).then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`)
+        }
         return response.text()
       })
       .then(html => Turbo.renderStreamMessage(html))
       .catch(error => {
         console.error("Error loading subdivisions:", error)
-        // On error, server will return empty subdivisions array, which shows text input
       })
   }
 }
-

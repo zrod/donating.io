@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Country < ApplicationRecord
   has_many :country_subdivisions, dependent: :destroy
   has_many :places, dependent: :restrict_with_error

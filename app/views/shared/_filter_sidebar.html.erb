@@ -1,6 +1,14 @@
 <%
-  filter_params = %w[keyword lat is_bin used_ok pickup charity_support tax_receipt category_ids]
-  has_location = params[:near_me] == "1" || (params[:near_me].blank? && params[:lat].present? && params[:lng].present?)
+  filter_params = %w[
+    keyword
+    lat
+    is_bin
+    used_ok
+    pickup
+    charity_support
+    tax_receipt
+    category_ids
+  ]
 %>
 
 <aside
@@ -26,7 +34,7 @@
             placeholder="<%= t('views.places.geo_search.placeholder') %>"
             data-geo-search-target="input"
             value="<%= params[:keyword] %>"
-            />
+          />
           <button type="submit" class="btn btn-secondary join-item" data-action="click->geo-search#search" data-geo-search-target="searchButton">
             <span class="loading loading-spinner loading-sm hidden" data-geo-search-target="loading"></span>
             <%= t('views.places.geo_search.button') %>

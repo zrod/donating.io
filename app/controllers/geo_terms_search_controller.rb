@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GeoTermsSearchController < ApplicationController
   POLL_INTERVAL_MS = 2000
   MAX_RETRIES = 10

@@ -1,7 +1,17 @@
 import { Controller } from "@hotwired/stimulus"
+import { escapeHtml, getCSRFToken } from "helpers/html_utils"
 
 export default class extends Controller {
-  static targets = ["input", "results", "loading", "error", "searchButton", "resultsOverlay", "searchContainer"]
+  static targets = [
+    "input",
+    "results",
+    "loading",
+    "error",
+    "searchButton",
+    "resultsOverlay",
+    "searchContainer"
+  ]
+
   static values = {
     pollInterval: Number,
     maxRetries: Number,
@@ -53,10 +63,10 @@ export default class extends Controller {
       return
     }
 
-    this.showLoading()
     this.clearResults()
     this.hideError()
     this.stopPolling()
+    this.showLoading()
     this.retryCount = 0
 
     await this.performSearch(term)
@@ -76,7 +86,7 @@ export default class extends Controller {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-CSRF-Token": this.getCSRFToken()
+          "X-CSRF-Token": getCSRFToken()
         },
         body: JSON.stringify({ term })
       })
@@ -203,15 +213,6 @@ export default class extends Controller {
     }))
   }
 
-  escapeHtml(text) {
-    if (text == null) {
-      return ""
-    }
-    const div = document.createElement("div")
-    div.textContent = String(text)
-    return div.innerHTML
-  }
-
   showLoading() {
     this.loadingTarget.classList.remove("hidden")
   }
@@ -236,10 +237,5 @@ export default class extends Controller {
       this.resultsTarget.innerHTML = ""
     }
     this.hideResultsOverlay()
-  }
-
-  getCSRFToken() {
-    const token = document.querySelector('meta[name="csrf-token"]')
-    return token ? token.getAttribute('content') : ""
   }
 }

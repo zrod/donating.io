@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module GeoTerms
   class TermLookupService
     class BlankSearchTermError < StandardError; end

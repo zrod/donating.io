@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module PlacesHelper
   MAP_DIRECTION_PROVIDERS = [
     {

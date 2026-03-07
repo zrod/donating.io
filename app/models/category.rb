@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Category < ApplicationRecord
   has_many :categories_places, dependent: :destroy
   has_many :places, through: :categories_places

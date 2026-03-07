@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module Users
   class DestroyUserService
     attr_reader :user, :keep_contributions

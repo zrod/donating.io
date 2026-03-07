@@ -4,7 +4,17 @@ import { createMap, createMarker } from "helpers/map_factory"
 import { GeoSearchService } from "services/geo_search_service"
 
 export default class extends Controller {
-  static targets = ["searchInput", "searchButton", "loading", "error", "results", "mapContainer", "mapPlaceholder", "useLocationButton"]
+  static targets = [
+    "searchInput",
+    "searchButton",
+    "loading",
+    "error",
+    "results",
+    "mapContainer",
+    "mapPlaceholder",
+    "useLocationButton"
+  ]
+
   static values = {
     protomapsKey: String,
     pollInterval: Number,
@@ -245,5 +255,4 @@ export default class extends Controller {
   hideMapPlaceholder() {
     this.mapPlaceholderTarget.classList.add("hidden")
   }
-
 }

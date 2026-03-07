@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class PlaceFeedbacksController < ApplicationController
   before_action :load_place_by_slug
 

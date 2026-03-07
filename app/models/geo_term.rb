@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class GeoTerm < ApplicationRecord
   TERM_MAX_LENGTH = 255
 

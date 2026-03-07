@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class Place < ApplicationRecord
   NAME_MIN_LENGTH = 4
   ADDRESS_MIN_LENGTH = 4

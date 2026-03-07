@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class User < ApplicationRecord
   COMMUNITY_USER_USERNAME = "community".freeze
   COMMUNITY_USER_EMAIL = "community@localhost".freeze

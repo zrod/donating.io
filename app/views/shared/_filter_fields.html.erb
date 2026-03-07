@@ -1,63 +1,19 @@
-<%#
-  Shared filter fields partial for places filtering.
-
-  Local variables:
-  - form: The form builder object (required)
-  - controller_prefix: The Stimulus controller prefix, e.g. "filter-sidebar" or "map-page" (required)
-  - show_location_search: Whether to show the geo search input (default: false)
-  - compact: Whether to use compact styling (default: false)
-%>
 <%
-  controller_prefix ||= "filter-sidebar"
-  show_location_search = local_assigns.fetch(:show_location_search, false)
   compact = local_assigns.fetch(:compact, false)
-
+  controller_prefix = local_assigns[:controller_prefix]
+  hide_location_header = local_assigns.fetch(:hide_location_header, false)
   has_location = params[:near_me] == "1" || (params[:near_me].blank? && params[:lat].present? && params[:lng].present?)
 
-  select_class = compact ? "select select-bordered select-sm w-full" : "select select-bordered w-full"
-  label_class = compact ? "label py-1" : "label"
-  label_text_class = compact ? "label-text text-sm" : "label-text"
+  select_class = "select select-bordered w-full #{compact ? "select-sm" : ""}"
+  label_class = "label #{compact ? "py-1" : ""}"
+  label_text_class = "label-text #{compact ? "text-sm" : ""}"
 %>
 
-<!-- Hidden location fields -->
 <%= form.hidden_field :lat, value: params[:lat], id: "location_lat", data: { "#{controller_prefix}_target": "latField" } %>
 <%= form.hidden_field :lng, value: params[:lng], id: "location_lng", data: { "#{controller_prefix}_target": "lngField" } %>
 <%= form.hidden_field :radius, value: params[:radius] || 40, id: "location_radius", data: { "#{controller_prefix}_target": "radiusField" } %>
 
-<!-- Location section -->
-<div>
-  <% unless local_assigns[:hide_location_header] %>
-    <h3 class="font-semibold"><%= t('views.places.filter_sidebar.location.title') %></h3>
-    <div class="divider mt-0 mb-2"></div>
-  <% end %>
-
-  <div class="form-control">
-    <label class="label cursor-pointer justify-start gap-2">
-      <%= form.check_box :near_me, {
-        checked: has_location,
-        class: "checkbox",
-        id: "use_current_location",
-        data: {
-          "#{controller_prefix}_target": "locationCheckbox",
-          action: "change->#{controller_prefix}#toggleLocation"
-        }
-      }, "1", "0" %>
-      <span class="label-text"><%= t('views.places.filter_sidebar.location.use_current_location') %></span>
-    </label>
-  </div>
-
-  <div id="radius_selector" class="mt-4" style="<%= 'display: none;' unless has_location %>" data-<%= controller_prefix %>-target="radiusSelector">
-    <h4 class="font-semibold text-sm mb-3"><%= t('views.places.filter_sidebar.location.within') %></h4>
-    <div class="w-full">
-      <input type="range" min="20" max="100" value="<%= params[:radius] || 40 %>" step="20" class="range range-secondary w-full" id="radius_range" data-<%= controller_prefix %>-target="radiusRange" data-action="input-><%= controller_prefix %>#updateRadius" />
-      <div class="w-full flex justify-between text-xs mt-2">
-        <% %w[20km 40km 60km 80km 100km].each do |label| %>
-          <span class="text-center first:text-left last:text-right"><%= label %></span>
-        <% end %>
-      </div>
-    </div>
-  </div>
-</div>
+<% render "shared/filter_fields/location", form:, has_location:, controller_prefix:, hide_location_header: %>
 
 <!-- Other filters -->
 <div>

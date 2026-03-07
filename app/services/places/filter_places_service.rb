@@ -1,8 +1,9 @@
+# frozen_string_literal: true
+
 module Places
   class FilterPlacesService
-    DEFAULT_ORDER_BY  = "desc"
-    DEFAULT_SORT_BY   = "places.updated_at"
-    DEFAULT_RADIUS = 40
+    DEFAULT_ORDER_BY = "desc"
+    DEFAULT_SORT_BY = "places.updated_at"
     BOOLEAN_FILTERS = %i[
       pickup
       used_ok
@@ -144,9 +145,12 @@ module Places
         lng = params[:lng]
         return scope unless lat.present? && lng.present?
 
-        radius_km = params.fetch(:radius, DEFAULT_RADIUS).to_f
-        Rails.logger.info("filter_by_coordinates: #{lat}, #{lng}, #{radius_km}")
-        scope.near([lat.to_f, lng.to_f], radius_km, units: :km)
+        # @todo load and use user's preferred distance unit
+        preferred_distance_unit = :km
+        radius = params.fetch(:radius, Radius.default_radius(preferred_distance_unit)).to_f
+
+        Rails.logger.info("filter_by_coordinates: #{lat}, #{lng}, #{radius}")
+        scope.near([lat.to_f, lng.to_f], radius, units: preferred_distance_unit)
       end
 
       def calc_sort_by_order

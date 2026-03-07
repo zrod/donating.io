@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class CountrySubdivisionsController < ApplicationController
   CACHE_TTL = 1.week
 

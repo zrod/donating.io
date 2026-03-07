@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 module GeoTerms
   class GeocoderResultFormatter
     RESULT_KEYS = %i[

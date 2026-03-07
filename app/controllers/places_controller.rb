@@ -1,4 +1,7 @@
+# frozen_string_literal: true
+
 class PlacesController < ApplicationController
+  include GeoCacheKeyParams
   include Pagination
 
   allow_unauthenticated_access only: %i[index show new]
@@ -10,7 +13,9 @@ class PlacesController < ApplicationController
   def index
     @places, page_metadata = paginate(
       collection: filter_places_service.new(params: filter_params).call,
-      filter_params:
+      filter_params: cache_key_params(filter_params),
+      cache_key_prefix: "places_index",
+      includes: %i[categories place_hours]
     )
 
     @pages = page_metadata[:pages]

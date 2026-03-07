@@ -1,8 +1,10 @@
+# frozen_string_literal: true
+
 module PaginationHelper
   def pagination_links(current_page, total_pages, path, params = {}, turbo_frame: nil)
     return "" if total_pages <= 1
 
-    turbo_data = turbo_frame ? { turbo_frame: turbo_frame, turbo_action: "advance" } : {}
+    turbo_data = turbo_frame ? { turbo_frame:, turbo_action: "advance" } : {}
 
     content_tag :div, class: "join" do
       links = []
