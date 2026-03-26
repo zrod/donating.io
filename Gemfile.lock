@@ -1,7 +1,7 @@
 GEM
   remote: https://gem.coop/
   specs:
-    action_text-trix (2.1.16)
+    action_text-trix (2.1.17)
       railties
     actioncable (8.1.2.1)
       actionpack (= 8.1.2.1)
@@ -111,7 +111,7 @@ GEM
       railties (>= 6.1)
     drb (2.2.3)
     ed25519 (1.4.0)
-    erb (6.0.1)
+    erb (6.0.2)
     erubi (1.13.1)
     et-orbi (1.4.0)
       tzinfo
