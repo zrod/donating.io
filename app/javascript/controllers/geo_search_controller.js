@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
-import { escapeHtml, getCSRFToken } from "helpers/html_utils"
+import { escapeHtml, getCSRFToken } from "helpers/html"
+import { renderGeoResultLocation } from "presenters/location_presenter";
 
 export default class extends Controller {
   static targets = [
@@ -132,30 +133,13 @@ export default class extends Controller {
     this.hideLoading()
 
     if (!results || results.length === 0) {
-      this.showError(this.noResultsFoundValue.replace("%{term}", this.escapeHtml(term)))
+      this.showError(this.noResultsFoundValue.replace("%{term}", escapeHtml(term)))
       this.hideResultsOverlay()
       return
     }
 
     this.resultsTarget.innerHTML = results.map((result, index) => {
-      const parts = [result.city, result.state, result.country].filter(Boolean)
-      const displayName = parts.length > 0 ? parts.join(", ") : this.unknownLocationValue
-
-      const address = result.address || result.formatted_address || ""
-      const lat = result.latitude ?? result.lat ?? ""
-      const lng = result.longitude ?? result.lng ?? ""
-      const isLast = index === results.length - 1
-
-      return `
-        <div class="cursor-pointer hover:bg-base-200 transition-colors p-3 ${!isLast ? 'border-b border-base-300' : ''}"
-             data-action="click->geo-search#selectResult"
-             data-geo-search-lat="${this.escapeHtml(String(lat))}"
-             data-geo-search-lng="${this.escapeHtml(String(lng))}"
-             data-geo-search-display-name="${this.escapeHtml(displayName)}">
-          <h3 class="font-semibold">${this.escapeHtml(displayName)}</h3>
-          ${address ? `<p class="text-sm opacity-70">${this.escapeHtml(String(address))}</p>` : ""}
-        </div>
-      `
+      return renderGeoResultLocation(result, index, results.length, this.unknownLocationValue)
     }).join("")
 
     this.showResultsOverlay()

@@ -1,4 +1,4 @@
-import { getCSRFToken } from "helpers/html_utils"
+import { getCSRFToken } from "helpers/html"
 
 /**
  * Service for performing geo term searches with polling support.

@@ -1,5 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import FilterCacheService from "services/filter_cache_service"
+import { capitalize } from "helpers/string"
 
 const ACTIVE_FIELDS = [
   "keyword",
@@ -77,6 +78,7 @@ export default class extends Controller {
     if (isHidden) {
       this.openingHoursFormTarget.querySelectorAll("select").forEach(s => s.selectedIndex = 0)
     }
+
     this.updateState()
   }
 
@@ -254,24 +256,24 @@ export default class extends Controller {
   }
 
   safeValue(name, defaultValue = "") {
-    const key = name.charAt(0).toUpperCase() + name.slice(1)
+    const key = capitalize(name)
     return this[`has${key}Target`] ? this[`${name}Target`].value : defaultValue
   }
 
   setSafeValue(name, value) {
-    const key = name.charAt(0).toUpperCase() + name.slice(1)
+    const key = capitalize(name)
     if (this[`has${key}Target`]) {
       this[`${name}Target`].value = value
     }
   }
 
   safeChecked(name, defaultValue = false) {
-    const key = name.charAt(0).toUpperCase() + name.slice(1)
+    const key = capitalize(name)
     return this[`has${key}Target`] ? this[`${name}Target`].checked : defaultValue
   }
 
   setSafeChecked(name, value) {
-    const key = name.charAt(0).toUpperCase() + name.slice(1)
+    const key = capitalize(name)
     if (value !== undefined && this[`has${key}Target`]) {
       this[`${name}Target`].checked = value
     }

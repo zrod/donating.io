@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-import { escapeHtml } from "helpers/html_utils"
+import { escapeHtml } from "helpers/html"
 import { createMap, createMarker } from "helpers/map_factory"
 import { GeoSearchService } from "services/geo_search_service"
 

@@ -1,8 +1,9 @@
 import { Controller } from "@hotwired/stimulus"
-import { escapeHtml } from "helpers/html_utils"
+import { escapeHtml } from "helpers/html"
 import { createMap, createMarker, createPopup, createBounds, addNavigationControls } from "helpers/map_factory"
 import { GeoSearchService } from "services/geo_search_service"
 import MapPageCacheService from "services/map_page_cache_service"
+import { renderMapPageResultLocation } from "presenters/location_presenter";
 
 export default class extends Controller {
   static targets = [
@@ -284,23 +285,7 @@ export default class extends Controller {
     }
 
     this.searchResultsTarget.innerHTML = results.map((result, index) => {
-      const parts = [result.city, result.state, result.country].filter(Boolean)
-      const displayName = parts.length > 0 ? parts.join(", ") : this.unknownLocationValue
-      const address = result.address || result.formatted_address || ""
-      const lat = result.latitude ?? result.lat ?? ""
-      const lng = result.longitude ?? result.lng ?? ""
-      const isLast = index === results.length - 1
-
-      return `
-        <div class="cursor-pointer hover:bg-base-200 transition-colors p-3 ${!isLast ? 'border-b border-base-300' : ''}"
-             data-action="click->map-page#selectSearchResult"
-             data-lat="${escapeHtml(String(lat))}"
-             data-lng="${escapeHtml(String(lng))}"
-             data-display-name="${escapeHtml(displayName)}">
-          <h3 class="font-semibold">${escapeHtml(displayName)}</h3>
-          ${address ? `<p class="text-sm opacity-70">${escapeHtml(String(address))}</p>` : ""}
-        </div>
-      `
+      return renderMapPageResultLocation(result, index, results.length, this.unknownLocationValue)
     }).join("")
 
     this.showSearchResultsOverlay()
